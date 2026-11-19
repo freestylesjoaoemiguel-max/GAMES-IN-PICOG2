@@ -8,18 +8,25 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-ANDROID_JAR="${1:?usage: $0 /path/to/android.jar [outdir]}"
-OUT="${2:-$ROOT/build-manual}"
-PKG=com.joaolimz.operationzero
+ANDROID_JAR="${1:?usage: [MODULE=app|pegapega] $0 /path/to/android.jar [outdir]}"
+MODULE="${MODULE:-app}"
+OUT="${2:-$ROOT/build-manual/$MODULE}"
 VERSION_CODE=1
 VERSION_NAME=1.0.0
-APK_NAME=PICO-VR-Operation-Zero.apk
+if [ "$MODULE" = "pegapega" ]; then
+  PKG=com.joaolimz.pegapega
+  APK_NAME=PICO-VR-Pega-Pega.apk
+else
+  PKG=com.joaolimz.operationzero
+  APK_NAME=PICO-VR-Operation-Zero.apk
+fi
+SRC="$ROOT/$MODULE/src/main"
 
 rm -rf "$OUT"
 mkdir -p "$OUT/classes" "$OUT/gen"
 
 echo "== 1/6 compile Java"
-find "$ROOT/app/src/main/java" -name '*.java' > "$OUT/sources.txt"
+find "$SRC/java" -name '*.java' > "$OUT/sources.txt"
 javac -nowarn -Xlint:-options -source 8 -target 8 -encoding UTF-8 \
   -bootclasspath "$ANDROID_JAR" -d "$OUT/classes" @"$OUT/sources.txt"
 
@@ -34,10 +41,10 @@ fi
 
 echo "== 3/6 package resources (aapt)"
 # AGP takes the package from 'namespace'; aapt1 needs it in the manifest
-sed "s#<manifest #<manifest package=\"$PKG\" #" "$ROOT/app/src/main/AndroidManifest.xml" > "$OUT/AndroidManifest.xml"
+sed "s#<manifest #<manifest package=\"$PKG\" #" "$SRC/AndroidManifest.xml" > "$OUT/AndroidManifest.xml"
 ASSETS_ARG=()
-if [ -d "$ROOT/app/src/main/assets" ]; then ASSETS_ARG=(-A "$ROOT/app/src/main/assets"); fi
-aapt package -f -M "$OUT/AndroidManifest.xml" -S "$ROOT/app/src/main/res" "${ASSETS_ARG[@]}" \
+if [ -d "$SRC/assets" ]; then ASSETS_ARG=(-A "$SRC/assets"); fi
+aapt package -f -M "$OUT/AndroidManifest.xml" -S "$SRC/res" "${ASSETS_ARG[@]}" \
   -I "$ANDROID_JAR" --min-sdk-version 24 --target-sdk-version 29 \
   --version-code $VERSION_CODE --version-name $VERSION_NAME \
   -J "$OUT/gen" -F "$OUT/unsigned.apk"

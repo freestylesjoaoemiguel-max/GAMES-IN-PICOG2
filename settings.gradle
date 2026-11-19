@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "PICO-VR-Operation-Zero"
-include ':app'
+include ':app', ':pegapega'
