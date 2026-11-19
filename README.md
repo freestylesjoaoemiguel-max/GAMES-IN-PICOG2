@@ -19,6 +19,12 @@ foram criados neste projeto, nada vem de Boneworks/Bonelab ou de outros jogos.
 *Imagens geradas a partir da fila de renderização real do jogo por um rasterizador de teste em CPU
 (sem texto/HUD textual e sem a textura de detalhe); não são capturas do headset.*
 
+## Download direto
+
+**[⬇ PICO-VR-Operation-Zero.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/raw/ccr-3de8f23e-tx6y3b/release/PICO-VR-Operation-Zero.apk)**
+(SHA-256 em [`release/PICO-VR-Operation-Zero.apk.sha256`](release/PICO-VR-Operation-Zero.apk.sha256)) ·
+instalar: `adb install -r PICO-VR-Operation-Zero.apk`
+
 ---
 
 ## Sumário
