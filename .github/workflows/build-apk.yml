@@ -1,0 +1,103 @@
+# Builds PICO-VR-Operation-Zero.apk (Android / Pico G2 / G2 4K) and publishes it as a workflow artifact.
+#
+# The game is a native Android project (Java + OpenGL ES 3.0, own engine). Unity is NOT used, so no
+# Unity license / UNITY_* secrets are required. Everything needed is public: JDK, Android SDK, Gradle.
+name: Build APK
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      APK_NAME: PICO-VR-Operation-Zero.apk
+      PACKAGE: com.joaolimz.operationzero
+      VERSION_NAME: 1.0.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+
+      - name: Set up Gradle (cache)
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Unit + simulation tests (JVM)
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon testDebugUnitTest
+
+      - name: Build release APK (Gradle)
+        id: gradle
+        continue-on-error: true
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Fallback build without Gradle (aapt + dx + apksigner)
+        if: steps.gradle.outcome != 'success'
+        run: |
+          echo "::warning::Gradle build failed - using the manual toolchain fallback"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq aapt dalvik-exchange zipalign apksigner
+          tools/build-apk-manual.sh "$ANDROID_HOME/platforms/android-34/android.jar" build-manual
+          mkdir -p app/build/outputs/apk/release
+          cp build-manual/$APK_NAME app/build/outputs/apk/release/$APK_NAME
+
+      - name: Validate APK
+        run: |
+          APK=app/build/outputs/apk/release/$APK_NAME
+          test -f "$APK" || { echo "APK not found"; ls -R app/build/outputs || true; exit 1; }
+          BT="$ANDROID_HOME/build-tools/34.0.0"
+          "$BT/apksigner" verify --verbose "$APK"
+          "$BT/aapt2" dump badging "$APK" | tee badging.txt
+          grep -q "package: name='$PACKAGE'" badging.txt
+          grep -q "versionName='$VERSION_NAME'" badging.txt
+          ! grep -q "android.permission.INTERNET" badging.txt   # must stay fully offline
+          unzip -l "$APK" | grep -q classes.dex
+          SIZE=$(stat -c%s "$APK"); echo "APK size: $SIZE bytes"; test "$SIZE" -gt 50000
+          sha256sum "$APK" | tee "$APK.sha256"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PICO-VR-Operation-Zero
+          path: |
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk.sha256
+          if-no-files-found: error
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: app/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: Publish GitHub Release (tags v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk.sha256
