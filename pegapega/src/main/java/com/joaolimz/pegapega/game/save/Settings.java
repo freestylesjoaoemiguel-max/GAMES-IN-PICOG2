@@ -23,7 +23,16 @@ public final class Settings {
     /** 0 = both arms follow the controller (recommended on the G2), 1 = only the active arm. */
     public int armMode = 0;
     /** Extra push multiplier applied when letting go (jump strength). */
-    public float flingBoost = 1.15f;
+    public float flingBoost = 1.1f;
+    /** Use the controller accelerometer to add real arm motion to the hands. */
+    public boolean imuEnabled = true;
+    public float imuGain = 1.4f;
+    public int[] accelPerm = {1, 0, 0, 0, 1, 0, 0, 0, -1};
+    public boolean accelCalibrated = false;
+    public boolean accelGravity = true;
+    public float accelG = 9.81f;
+    /** 3DoF adaptation: raising the arm slides a stuck hand up a wall. */
+    public boolean climbAssist = true;
     /** Optional touchpad walking (off by default: you move with your arms). */
     public boolean touchpadWalk = false;
     public float walkSpeed = 2.2f;
@@ -86,6 +95,9 @@ public final class Settings {
                 .put("fov", fovDeg).put("ipd", ipd).put("flip", flipScreen)
                 .put("armLength", armLength).put("standHeight", standHeight).put("armMode", armMode).put("fling", flingBoost)
                 .put("touchpadWalk", touchpadWalk).put("walkSpeed", walkSpeed)
+                .put("imu", imuEnabled).put("imuGain", imuGain).putIntArray("accelPerm", accelPerm)
+                .put("accelCalibrated", accelCalibrated).put("accelGravity", accelGravity).put("accelG", accelG)
+                .put("climbAssist", climbAssist)
                 .put("turnMode", turnMode).put("snapAngle", snapAngle).put("smoothTurn", smoothTurnSpeed).put("vignette", vignette)
                 .put("master", master).put("sfx", sfx).put("ambient", ambient)
                 .put("mode", mode).put("bots", botCount).put("difficulty", difficulty).put("color", playerColor)
@@ -113,6 +125,14 @@ public final class Settings {
         armMode = clamp(kv.getInt("armMode", armMode), 0, 1);
         flingBoost = kv.getFloat("fling", flingBoost);
         touchpadWalk = kv.getBool("touchpadWalk", touchpadWalk);
+        imuEnabled = kv.getBool("imu", imuEnabled);
+        imuGain = kv.getFloat("imuGain", imuGain);
+        int[] ap = kv.getIntArray("accelPerm", accelPerm);
+        if (ap.length == 9) accelPerm = ap;
+        accelCalibrated = kv.getBool("accelCalibrated", accelCalibrated);
+        accelGravity = kv.getBool("accelGravity", accelGravity);
+        accelG = kv.getFloat("accelG", accelG);
+        climbAssist = kv.getBool("climbAssist", climbAssist);
         walkSpeed = kv.getFloat("walkSpeed", walkSpeed);
         turnMode = clamp(kv.getInt("turnMode", turnMode), 0, 1);
         snapAngle = kv.getInt("snapAngle", snapAngle);

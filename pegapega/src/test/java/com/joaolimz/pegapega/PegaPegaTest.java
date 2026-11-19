@@ -103,10 +103,12 @@ public class PegaPegaTest {
         float startY = rig.head.y;
         Quat c = new Quat();
         boolean wallGrab = false;
+        float maxY = startY;
         for (int s = 0; s < 6; s++) {
             for (int i = 0; i <= 25; i++) { // pull down
                 c.setEuler(yaw, 0.6f - 1.2f * i / 25f, 0f);
                 rig.update(ar.physics, c, true, 1, 0f, DT);
+                maxY = Math.max(maxY, rig.head.y);
                 for (ArmRig.Hand h : rig.hands) if (h.anchored && Math.abs(h.normal.y) < 0.6f) wallGrab = true;
             }
             for (int i = 0; i <= 25; i++) { // reach up again (hand slides up the pole)
@@ -115,7 +117,7 @@ public class PegaPegaTest {
             }
         }
         assertTrue("hands grabbed the pole", wallGrab);
-        assertTrue("climbed up the pole: " + rig.head.y, rig.head.y > startY + 1.0f);
+        assertTrue("climbed up the pole: max " + maxY, maxY > startY + 3.0f);
     }
 
     @Test

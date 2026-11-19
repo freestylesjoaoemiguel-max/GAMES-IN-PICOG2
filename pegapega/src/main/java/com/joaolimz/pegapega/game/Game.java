@@ -3,6 +3,7 @@ package com.joaolimz.pegapega.game;
 import com.joaolimz.pegapega.game.audio.AudioSystem;
 import com.joaolimz.pegapega.game.audio.Sfx;
 import com.joaolimz.pegapega.game.input.ControllerMapping;
+import com.joaolimz.pegapega.game.input.ImuHand;
 import com.joaolimz.pegapega.game.input.InputFrame;
 import com.joaolimz.pegapega.game.input.Platform;
 import com.joaolimz.pegapega.game.math.MathUtil;
@@ -74,6 +75,12 @@ public final class Game implements TagGame.Listener {
     private final float[][] calibTouch = new float[3][2];
     private String calibReturn = "main";
 
+    // controller accelerometer (real arm motion)
+    public final ImuHand imu = new ImuHand();
+    private final float[] accEma = new float[3];
+    private final float[][] calibAcc = new float[3][3];
+    private final Vec3 zero = new Vec3();
+
     private int windStream;
     private float windVol;
     private final Vec3 t0 = new Vec3(), t1 = new Vec3();
@@ -101,7 +108,16 @@ public final class Game implements TagGame.Listener {
     public void applySettings() {
         rig.armLength = settings.armLength;
         rig.standHeight = settings.standHeight;
-        rig.flingBoost = settings.flingBoost;
+        rig.jumpMultiplier = settings.flingBoost;
+        rig.climbAssist = settings.climbAssist;
+        imu.gain = settings.imuGain;
+        if (settings.accelCalibrated) {
+            System.arraycopy(settings.accelPerm, 0, imu.pa, 0, 9);
+            imu.gravityIncluded = settings.accelGravity;
+            imu.gravity = settings.accelG;
+        } else {
+            imu.setDefaultFromBody(settings.ctrlPb);
+        }
         audio.master = settings.master;
         audio.sfxVolume = settings.sfx;
         audio.ambientVolume = settings.ambient;
@@ -313,6 +329,7 @@ public final class Game implements TagGame.Listener {
         if (calibStep <= 2) {
             float[] r = calibRaw[calibStep];
             r[0] = in.ctrlX; r[1] = in.ctrlY; r[2] = in.ctrlZ; r[3] = in.ctrlW;
+            System.arraycopy(accEma, 0, calibAcc[calibStep], 0, 3);
             if (calibStep == 0) calibHeadYaw = in.head.yaw();
             if (calibStep == 2) {
                 float err = ctrlMap.solve(calibRaw[0], calibRaw[1], calibRaw[2]);
@@ -328,8 +345,18 @@ public final class Game implements TagGame.Listener {
                 System.arraycopy(ctrlMap.pb, 0, settings.ctrlPb, 0, 9);
                 settings.ctrlInverse = ctrlMap.inverse;
                 settings.ctrlCalibrated = true;
+                if (in.ctrlHasImu) {
+                    Quat[] rots = new Quat[3];
+                    for (int i = 0; i < 3; i++) rots[i] = ctrlMap.convert(calibRaw[i][0], calibRaw[i][1], calibRaw[i][2], calibRaw[i][3], new Quat());
+                    imu.solve(rots, calibAcc);
+                    System.arraycopy(imu.pa, 0, settings.accelPerm, 0, 9);
+                    settings.accelGravity = imu.gravityIncluded;
+                    settings.accelG = imu.gravity;
+                    settings.accelCalibrated = true;
+                    imu.reset();
+                }
                 saveSettings();
-                calibMessage = "Orientação calibrada! Agora o touchpad.";
+                calibMessage = "Orientação e sensor de movimento calibrados! Agora o touchpad.";
             }
             calibStep++;
             return;
@@ -387,6 +414,20 @@ public final class Game implements TagGame.Listener {
         trackButtons(dt);
         turning(dt);
         updateHead();
+
+        // accelerometer: smoothed raw value (for calibration) and the hand offset
+        float k = MathUtil.damp(10f, dt);
+        accEma[0] += (in.ctrlAccX - accEma[0]) * k;
+        accEma[1] += (in.ctrlAccY - accEma[1]) * k;
+        accEma[2] += (in.ctrlAccZ - accEma[2]) * k;
+        if (in.ctrlConnected && in.ctrlHasImu && settings.imuEnabled && in.hasControllerPose) {
+            float gyro = (float) Math.sqrt(in.ctrlGyroX * in.ctrlGyroX + in.ctrlGyroY * in.ctrlGyroY + in.ctrlGyroZ * in.ctrlGyroZ);
+            imu.update(in.ctrlAccX, in.ctrlAccY, in.ctrlAccZ, ctrlWorld, gyro, dt);
+            rig.setImuOffsets(imu.offset, imu.offset);
+        } else {
+            imu.reset();
+            rig.setImuOffsets(zero, zero);
+        }
 
         boolean playing = state == State.PLAYING;
         float walk = playing && settings.touchpadWalk ? (in.up ? 1f : in.down ? -1f : in.moveY) : 0f;

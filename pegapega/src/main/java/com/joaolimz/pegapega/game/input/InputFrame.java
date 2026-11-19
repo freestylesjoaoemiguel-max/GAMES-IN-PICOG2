@@ -41,6 +41,9 @@ public final class InputFrame {
     public boolean ctrlTouching;
     public int ctrlTouchX, ctrlTouchY;
     public int ctrlBattery = -1;
+    /** Raw accelerometer / gyroscope samples from the controller service (vendor axes). */
+    public float ctrlAccX, ctrlAccY, ctrlAccZ, ctrlGyroX, ctrlGyroY, ctrlGyroZ;
+    public boolean ctrlHasImu;
     /** Human readable service status (diagnostics). */
     public String ctrlStatus = "";
 
@@ -57,6 +60,9 @@ public final class InputFrame {
         ctrlTrigger = o.ctrlTrigger; ctrlClick = o.ctrlClick; ctrlApp = o.ctrlApp; ctrlHome = o.ctrlHome;
         ctrlTouching = o.ctrlTouching; ctrlTouchX = o.ctrlTouchX; ctrlTouchY = o.ctrlTouchY;
         ctrlBattery = o.ctrlBattery;
+        ctrlAccX = o.ctrlAccX; ctrlAccY = o.ctrlAccY; ctrlAccZ = o.ctrlAccZ;
+        ctrlGyroX = o.ctrlGyroX; ctrlGyroY = o.ctrlGyroY; ctrlGyroZ = o.ctrlGyroZ;
+        ctrlHasImu = o.ctrlHasImu;
         ctrlStatus = o.ctrlStatus;
     }
 }

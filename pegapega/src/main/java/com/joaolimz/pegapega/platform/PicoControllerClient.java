@@ -22,6 +22,8 @@ import java.util.List;
  *   2 getHBKeyEvent    -> int[8]   {touchX, touchY, home, app, click, volUp, volDown, battery}
  *   3 getConnectionState -> int (2 = connected)
  *   4 resetHBSensor
+ *  10 getAngularVelocity -> float[3] (gyroscope)
+ *  11 getAcceleration    -> float[3] (accelerometer)
  *  28 getTriggerKeyEvent -> int (1 = pressed)
  * No vendor library is bundled; on devices without the service this class simply stays disconnected.
  */
@@ -29,7 +31,7 @@ public final class PicoControllerClient {
     private static final String TAG = "OperationZero";
     private static final String DESCRIPTOR = "com.picovr.picovrlib.hummingbird.HummingBirdAIDLService";
     private static final String SERVICE_PACKAGE = "com.picovr.hummingbirdsvc";
-    private static final int TX_SENSOR = 1, TX_KEYS = 2, TX_STATE = 3, TX_RESET = 4, TX_TRIGGER = 28;
+    private static final int TX_SENSOR = 1, TX_KEYS = 2, TX_STATE = 3, TX_RESET = 4, TX_GYRO = 10, TX_ACCEL = 11, TX_TRIGGER = 28;
 
     private final Context ctx;
     private volatile IBinder binder;
@@ -42,6 +44,8 @@ public final class PicoControllerClient {
     private float qx, qy, qz, qw = 1f;
     private int touchX, touchY, battery = -1;
     private boolean home, app, click, trigger;
+    private final float[] acc = new float[3], gyro = new float[3];
+    private boolean hasImu;
     private String status = "serviço do controle Pico não encontrado";
     private int errors;
     private volatile boolean resetRequested;
@@ -145,7 +149,19 @@ public final class PicoControllerClient {
         float[] s = transactFloats(b, TX_SENSOR);
         int[] k = transactInts(b, TX_KEYS);
         int trig = transactInt(b, TX_TRIGGER);
+        float[] ac = null, gy = null;
+        try {
+            ac = transactFloats(b, TX_ACCEL);
+            gy = transactFloats(b, TX_GYRO);
+        } catch (RuntimeException e) {
+            ac = null; // older services without IMU access
+        }
         synchronized (this) {
+            if (ac != null && ac.length >= 3 && gy != null && gy.length >= 3) {
+                acc[0] = ac[0]; acc[1] = ac[1]; acc[2] = ac[2];
+                gyro[0] = gy[0]; gyro[1] = gy[1]; gyro[2] = gy[2];
+                hasImu = true;
+            }
             connected = true;
             if (s != null && s.length >= 4) {
                 // vendor Orientation(x=s1, y=s2, z=s3, w=s0)
@@ -230,5 +246,8 @@ public final class PicoControllerClient {
         f.ctrlTouchX = touchX;
         f.ctrlTouchY = touchY;
         f.ctrlBattery = battery;
+        f.ctrlHasImu = hasImu;
+        f.ctrlAccX = acc[0]; f.ctrlAccY = acc[1]; f.ctrlAccZ = acc[2];
+        f.ctrlGyroX = gyro[0]; f.ctrlGyroY = gyro[1]; f.ctrlGyroZ = gyro[2];
     }
 }

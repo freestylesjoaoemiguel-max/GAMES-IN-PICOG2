@@ -50,7 +50,7 @@ public final class Screens {
             m.lines.add("Aponte o controle para baixo até a mão tocar o chão: ela GRUDA.");
             m.lines.add("Puxe o controle para trás/baixo: seu corpo vai para frente.");
             m.lines.add("Empurre forte para baixo e solte: você PULA. Bata nas paredes e puxe: ESCALA.");
-            m.lines.add("Os dois braços seguem o controle. APP troca o braço (modo um braço).");
+            m.lines.add("Os dois braços seguem o controle e o sensor de movimento: empurrões reais do braço contam.");
             m.lines.add("INFECÇÃO: quem é pego vira infectado (roxo). Sobreviva até o tempo acabar.");
             m.lines.add("PEGA-PEGA: o pegador (coroa) passa a vez ao encostar em alguém.");
             m.lines.add("Polegar nos lados do touchpad: girar. Segurar HOME: recentralizar.");
@@ -68,14 +68,18 @@ public final class Screens {
             opt(m, "arms", "Braços: " + (s.armMode == 0 ? "OS DOIS SEGUEM O CONTROLE" : "UM BRAÇO (APP troca)"), L, 0.3f);
             opt(m, "armlen", "Comprimento do braço: " + String.format("%.2f m", s.armLength), L, 0.17f);
             opt(m, "height", "Altura: " + String.format("%.2f m", s.standHeight), L, 0.04f);
-            opt(m, "fling", "Força do pulo: " + String.format("%.2fx", s.flingBoost), L, -0.09f);
+            opt(m, "fling", "Multiplicador de pulo: " + String.format("%.2fx", s.flingBoost), L, -0.09f);
             opt(m, "walk", "Andar pelo touchpad: " + (s.touchpadWalk ? "LIGADO" : "DESLIGADO"), L, -0.22f);
+            opt(m, "imu", "Sensor de movimento: " + (s.imuEnabled ? "LIGADO" : "DESLIGADO"), L, -0.35f);
+            opt(m, "imugain", "Força do sensor: " + String.format("%.1fx", s.imuGain), R, -0.35f);
+            opt(m, "climb", "Ajuda na escalada: " + (s.climbAssist ? "LIGADA" : "DESLIGADA"), 0f, -0.48f);
             opt(m, "turn", "Rotação: " + (s.turnMode == 0 ? "SNAP" : "SUAVE"), R, 0.3f);
             opt(m, "snap", "Ângulo snap: " + s.snapAngle + "°", R, 0.17f);
             opt(m, "turnspeed", "Rotação suave: " + (int) s.smoothTurnSpeed + "°/s", R, 0.04f);
             opt(m, "vignette", "Vinheta: " + (s.vignette == 0 ? "DESLIGADA" : s.vignette == 1 ? "FRACA" : "FORTE"), R, -0.09f);
             opt(m, "recenter", "Recentralizar visão", R, -0.22f);
-            m.button("back", "VOLTAR", 0f, -0.52f, 0.6f, 0.09f);
+            m.height = 1.45f;
+            m.button("back", "VOLTAR", 0f, -0.62f, 0.6f, 0.08f);
         } else if (id.equals("graphics")) {
             m.clear("graphics", "GRÁFICOS");
             m.lines.add("LOW é o recomendado para o Pico G2.");
@@ -143,7 +147,9 @@ public final class Screens {
             m.lines.set(4, "Gatilho " + (in.ctrlTrigger ? "SIM" : "não") + " | Clique " + (in.ctrlClick ? "SIM" : "não") + " | APP "
                     + (in.ctrlApp ? "SIM" : "não") + " | HOME " + (in.ctrlHome ? "SIM" : "não"));
             m.lines.set(5, "Touchpad: " + (in.ctrlTouching ? in.ctrlTouchX + ", " + in.ctrlTouchY : "sem toque") + "   tecla Android: " + lastKey);
-            m.lines.set(6, "O laser deve seguir o controle. Se não, use CALIBRAR.");
+            m.lines.set(6, in.ctrlHasImu
+                    ? String.format("Acelerômetro: %.1f %.1f %.1f   mão +%.0f cm", in.ctrlAccX, in.ctrlAccY, in.ctrlAccZ, g.imu.offset.length() * 100f)
+                    : "Acelerômetro: indisponível (só rotação). O laser deve seguir o controle.");
         }
         if (in.lastKeyCode != 0) lastKey = in.lastKeyCode;
     }
@@ -175,8 +181,11 @@ public final class Screens {
         else if (id.equals("arms")) s.armMode = 1 - s.armMode;
         else if (id.equals("armlen")) s.armLength = s.armLength >= 1.3f ? 0.8f : s.armLength + 0.1f;
         else if (id.equals("height")) s.standHeight = s.standHeight >= 1.3f ? 0.8f : s.standHeight + 0.1f;
-        else if (id.equals("fling")) s.flingBoost = s.flingBoost >= 1.6f ? 1.0f : s.flingBoost + 0.15f;
+        else if (id.equals("fling")) s.flingBoost = s.flingBoost >= 1.5f ? 1.0f : s.flingBoost + 0.1f;
         else if (id.equals("walk")) s.touchpadWalk = !s.touchpadWalk;
+        else if (id.equals("imu")) s.imuEnabled = !s.imuEnabled;
+        else if (id.equals("imugain")) s.imuGain = s.imuGain >= 2.5f ? 0.6f : s.imuGain + 0.4f;
+        else if (id.equals("climb")) s.climbAssist = !s.climbAssist;
         else if (id.equals("turn")) s.turnMode = 1 - s.turnMode;
         else if (id.equals("snap")) s.snapAngle = s.snapAngle == 30 ? 45 : s.snapAngle == 45 ? 60 : s.snapAngle == 60 ? 90 : 30;
         else if (id.equals("turnspeed")) s.smoothTurnSpeed = s.smoothTurnSpeed >= 180f ? 60f : s.smoothTurnSpeed + 30f;
