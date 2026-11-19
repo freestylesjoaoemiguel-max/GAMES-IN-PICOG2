@@ -188,7 +188,7 @@ public class GameSimulationTest {
         input.trigger = true; step(40); input.trigger = false; step(3);
         assertEquals(24, game.player.inventory.reserve[WeaponType.AMMO_9MM]);
         // reach the ammo pouch on the hip and take a magazine
-        Vec3 pouch = Inventory.zone(Inventory.POUCH, game.player.eye, game.player.torso, true, new Vec3());
+        Vec3 pouch = Inventory.zone(Inventory.POUCH, game.player.eye, game.player.torso, true, -1f, new Vec3());
         float d = aimHandAt(pouch, false);
         assertTrue("pouch reachable, d=" + d, d < Inventory.radius(Inventory.POUCH));
         input.trigger = true; step(2);
@@ -221,7 +221,7 @@ public class GameSimulationTest {
         lookAt(pistol.body.pos);
         input.trigger = true; step(60); input.trigger = false; step(3);
         assertEquals(pistol, game.player.activeHand().held);
-        Vec3 hip = Inventory.zone(Inventory.HIP, game.player.eye, game.player.torso, true, new Vec3());
+        Vec3 hip = Inventory.zone(Inventory.HIP, game.player.eye, game.player.torso, true, 1f, new Vec3());
         float d = aimHandAt(hip, false);
         assertTrue("hip reachable d=" + d, d < Inventory.radius(Inventory.HIP));
         input.action = true; step(2); input.action = false; step(2);

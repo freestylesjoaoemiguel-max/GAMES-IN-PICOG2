@@ -30,16 +30,18 @@ public final class Inventory {
 
     /**
      * Slot grab zone in world space. The body frame is the torso (eye position + torso yaw).
-     * rightHanded mirrors HIP/POUCH so the holster is on the dominant side.
+     * Positions were chosen from measured arm-model reach (see tests) so that none of them overlaps the
+     * natural aiming pose: hip = point the hand straight down, back = point up and outward over the
+     * shoulder of that hand, pockets = point down and inward. rightHanded mirrors HIP/POUCH.
      */
-    public static Vec3 zone(int slot, Vec3 eye, Quat torso, boolean rightHanded, Vec3 out) {
+    public static Vec3 zone(int slot, Vec3 eye, Quat torso, boolean rightHanded, float handSide, Vec3 out) {
         float s = rightHanded ? 1f : -1f;
         switch (slot) {
-            case HIP: torso.rotate(0.21f * s, -0.74f, 0.08f, out); break;
-            case BACK: torso.rotate(0.12f * s, -0.02f, -0.12f, out); break;
-            case CHEST_L: torso.rotate(-0.12f, -0.42f, -0.2f, out); break;
-            case CHEST_R: torso.rotate(0.12f, -0.42f, -0.2f, out); break;
-            default: torso.rotate(-0.21f * s, -0.74f, 0.08f, out); break;
+            case HIP: torso.rotate(0.2f * s, -0.8f, 0.15f, out); break;
+            case BACK: torso.rotate(0.33f * handSide, -0.2f, -0.14f, out); break;
+            case CHEST_L: torso.rotate(-0.07f, -0.7f, -0.06f, out); break;
+            case CHEST_R: torso.rotate(0.07f, -0.7f, -0.06f, out); break;
+            default: torso.rotate(-0.2f * s, -0.8f, 0.15f, out); break;
         }
         return out.add(eye);
     }
@@ -48,16 +50,16 @@ public final class Inventory {
     public static Vec3 rest(int slot, Vec3 eye, Quat torso, boolean rightHanded, Vec3 out) {
         float s = rightHanded ? 1f : -1f;
         switch (slot) {
-            case HIP: torso.rotate(0.22f * s, -0.82f, 0.02f, out); break;
+            case HIP: torso.rotate(0.22f * s, -0.86f, 0.06f, out); break;
             case BACK: torso.rotate(0.05f * s, -0.45f, 0.2f, out); break;
-            case CHEST_L: torso.rotate(-0.1f, -0.42f, -0.13f, out); break;
-            case CHEST_R: torso.rotate(0.1f, -0.42f, -0.13f, out); break;
-            default: torso.rotate(-0.22f * s, -0.82f, 0.02f, out); break;
+            case CHEST_L: torso.rotate(-0.1f, -0.5f, -0.1f, out); break;
+            case CHEST_R: torso.rotate(0.1f, -0.5f, -0.1f, out); break;
+            default: torso.rotate(-0.22f * s, -0.86f, 0.06f, out); break;
         }
         return out.add(eye);
     }
 
-    public static float radius(int slot) { return slot == BACK ? 0.26f : slot == POUCH || slot == HIP ? 0.22f : 0.17f; }
+    public static float radius(int slot) { return slot == BACK ? 0.17f : slot == POUCH || slot == HIP ? 0.19f : 0.12f; }
 
     public boolean hasItemKind(int kind) {
         for (int i = 0; i < SLOTS; i++) if (items[i] != null && items[i].kind == kind) return true;

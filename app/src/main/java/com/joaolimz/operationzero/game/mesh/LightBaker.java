@@ -49,7 +49,7 @@ public final class LightBaker {
             float nd = (nx * dx + ny * dy + nz * dz) / d;
             if (nd <= 0f) continue;
             float att = 1f - d / L.radius;
-            att *= att;
+            att = att * (0.6f + 0.4f * att); // softer than quadratic: brighter rooms on dim mobile panels
             float k = nd * att;
             lr += L.r * k; lg += L.g * k; lb += L.b * k;
         }

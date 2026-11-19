@@ -102,7 +102,7 @@ public final class LevelBuilder {
         L.sectors.add(s0); L.sectors.add(s1); L.sectors.add(s2); L.sectors.add(s3); L.sectors.add(s4); L.sectors.add(s5); L.sectors.add(s6);
         for (int i = 0; i < SECTOR_COUNT; i++) {
             Sector s = L.sectors.get(i);
-            bk[i].ambient(s.outdoor ? 0.5f : 0.2f, s.outdoor ? 0.5f : 0.21f, s.outdoor ? 0.55f : 0.24f);
+            bk[i].ambient(s.outdoor ? 0.5f : 0.34f, s.outdoor ? 0.5f : 0.35f, s.outdoor ? 0.55f : 0.38f);
             bk[i].sun = s.outdoor;
         }
         bk[S_UNDER].floorY = -6f;
@@ -650,8 +650,8 @@ public final class LevelBuilder {
         crateProp(s, -21.5f, y, -44, true);
         crateProp(s, -16, y, -42, true);
         bottle(s, -20.3f, y + 1.1f, -48.2f);
-        light(s, -12, -2f, -34, 9, 0.45f, 0.6f, 0.45f);
-        light(s, -12, -2f, -46, 9, 0.45f, 0.6f, 0.45f);
+        light(s, -12, -2f, -34, 11, 0.7f, 0.85f, 0.65f);
+        light(s, -12, -2f, -46, 11, 0.7f, 0.85f, 0.65f);
         light(s, -4, -2f, -52, 6, 0.9f, 0.2f, 0.15f);
         spawn("under", s, -10, y, -44, 0);
         spawn("under", s, -20, y, -40, PI * 0.5f);
@@ -682,8 +682,8 @@ public final class LevelBuilder {
         factory.magazine(WeaponType.AMMO_RIFLE, 20, s, -23.2f, y + 1.16f, -58.6f);
         ammo(s, WeaponType.AMMO_RIFLE, 20, -23.2f, y + 1.1f, -61.4f);
         medkit(s, -9, y + 1.1f, -65.2f);
-        light(s, -13, -1f, -60, 10, 0.3f, 0.75f, 0.9f);
-        light(s, -13, -1f, -70, 10, 0.3f, 0.75f, 0.9f);
+        light(s, -13, -1f, -60, 12, 0.5f, 0.95f, 1.1f);
+        light(s, -13, -1f, -70, 12, 0.5f, 0.95f, 1.1f);
         spawn("secret", s, -20, y, -70, 0);
         spawn("secret", s, -6, y, -70, 0);
         spawn("alarm", s, -22, y, -74, 0);

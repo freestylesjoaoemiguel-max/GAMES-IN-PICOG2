@@ -292,7 +292,7 @@ public final class Interaction {
         if (!h.isEmpty()) return;
         // 1. inventory slots
         for (int sIdx = 0; sIdx <= Inventory.POUCH; sIdx++) {
-            Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, t0);
+            Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, h.side(), t0);
             if (h.pos.distance(t0) > Inventory.radius(sIdx)) continue;
             if (sIdx == Inventory.POUCH) {
                 if (takeFromPouch(h, other)) return;
@@ -491,9 +491,10 @@ public final class Interaction {
         Player p = g.player;
         h.held = null;
         pr.heldBy = null;
-        if (allowStore) {
+        // fast-moving hands are throwing, never storing
+        if (allowStore && h.velocity.length() < 1.5f) {
             for (int sIdx = 0; sIdx <= Inventory.POUCH; sIdx++) {
-                Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, t0);
+                Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, h.side(), t0);
                 if (h.pos.distance(t0) > Inventory.radius(sIdx)) continue;
                 if (!p.inventory.accepts(sIdx, pr)) continue;
                 if (sIdx == Inventory.POUCH) {
@@ -761,7 +762,7 @@ public final class Interaction {
             Weapon w = (Weapon) pr;
             // holster when the hand is over a compatible slot
             for (int sIdx = 0; sIdx < 2; sIdx++) {
-                Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, t0);
+                Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, h.side(), t0);
                 if (h.pos.distance(t0) < Inventory.radius(sIdx) && p.inventory.accepts(sIdx, w)) {
                     h.held = null;
                     w.heldBy = null;

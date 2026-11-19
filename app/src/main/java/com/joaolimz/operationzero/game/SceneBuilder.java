@@ -245,7 +245,7 @@ public final class SceneBuilder {
         // torso / legs (visible when looking down)
         p.neck(t0);
         q0.setYaw(p.torsoYaw);
-        q0.rotate(0f, 0f, 0.1f, t1);
+        q0.rotate(0f, -0.1f, 0.12f, t1); // a bit lower/behind so the chest never fills the view
         t0.add(t1);
         int idx = q.add(a.playerTorso, RenderQueue.LIT, 0, 1, 1, 1, 1);
         if (idx >= 0) Mat4.setTRS(q.model[idx], t0, q0, 1f);
@@ -267,16 +267,16 @@ public final class SceneBuilder {
         // inventory slot markers when the active hand is close (helps finding holsters)
         Hand ah = p.activeHand();
         for (int sIdx = 0; sIdx <= 4; sIdx++) {
-            com.joaolimz.operationzero.game.player.Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, t0);
+            com.joaolimz.operationzero.game.player.Inventory.zone(sIdx, p.eye, p.torso, g.settings.rightHanded, ah.side(), t0);
             float d = ah.pos.distance(t0);
             float r = com.joaolimz.operationzero.game.player.Inventory.radius(sIdx);
-            if (d > r * 2.2f) continue;
+            if (d > r * 1.6f || t0.distance(p.eye) < 0.3f) continue;
             boolean inside = d < r;
             q1.set(p.head);
             int k = q.add(a.marker, RenderQueue.UNLIT, RenderQueue.F_ALPHA | RenderQueue.F_NO_CULL, inside ? 0.4f : 1f, 1f, inside ? 0.4f : 1f, inside ? 0.9f : 0.4f);
             q0.setAxisAngle(1, 0, 0, MathUtil.PI * 0.5f);
             q1.mul(q0);
-            if (k >= 0) Mat4.setTRS(q.model[k], t0, q1, 0.35f);
+            if (k >= 0) Mat4.setTRS(q.model[k], t0, q1, 0.22f);
             if (inside) {
                 q1.set(p.head);
                 t0.y += 0.07f;
