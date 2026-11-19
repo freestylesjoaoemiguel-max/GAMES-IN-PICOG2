@@ -22,6 +22,7 @@ import com.joaolimz.operationzero.platform.AndroidAudio;
 import com.joaolimz.operationzero.platform.HeadTracker;
 import com.joaolimz.operationzero.platform.InputMapper;
 import com.joaolimz.operationzero.platform.ObjModelOverride;
+import com.joaolimz.operationzero.platform.PicoControllerClient;
 import com.joaolimz.operationzero.render.VrRenderer;
 
 import java.io.File;
@@ -40,6 +41,7 @@ public final class MainActivity extends Activity implements Platform, VrRenderer
     private HeadTracker head;
     private InputMapper inputMapper;
     private AndroidAudio audio;
+    private PicoControllerClient picoController;
     private Vibrator vibrator;
     private Settings settings;
     private int appliedQuality = -1;
@@ -54,6 +56,7 @@ public final class MainActivity extends Activity implements Platform, VrRenderer
         head.setFlip(settings.flipScreen);
         inputMapper = new InputMapper(settings);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        picoController = new PicoControllerClient(this);
         audio = new AndroidAudio(this);
         game = new Game(settings, this, new ObjModelOverride(getAssets()));
         game.audio.setSink(audio);
@@ -103,6 +106,7 @@ public final class MainActivity extends Activity implements Platform, VrRenderer
         super.onResume();
         head.setDisplayRotation(getWindowManager().getDefaultDisplay().getRotation());
         head.start();
+        picoController.start();
         view.onResume();
         audio.resumeAll();
         hideSystemUi();
@@ -113,6 +117,7 @@ public final class MainActivity extends Activity implements Platform, VrRenderer
             if (game.isPlaying()) game.pause();
         }
         head.stop();
+        picoController.stop();
         audio.pauseAll();
         view.onPause();
         super.onPause();
@@ -137,7 +142,8 @@ public final class MainActivity extends Activity implements Platform, VrRenderer
     @Override public void readInput(InputFrame dst) {
         head.read(dst.head);
         inputMapper.fill(dst);
-        dst.hasControllerPose = false; // Pico G2 controller orientation needs the vendor SDK (see README)
+        picoController.fill(dst);          // Pico G2 controller: orientation, trigger, touchpad (system service)
+        dst.hasControllerPose = false;     // the game enables it when the controller is connected
         head.setFlip(settings.flipScreen);
         if (appliedQuality != settings.quality) {
             runOnUiThread(new Runnable() { @Override public void run() { applySurfaceSize(); } });
@@ -205,7 +211,9 @@ public final class MainActivity extends Activity implements Platform, VrRenderer
         });
     }
 
-    @Override public void recenter() { head.requestRecenter(); }
+    @Override public void recenter() {
+        head.requestRecenter(); // the controller yaw is re-aligned to the head by the game
+    }
 
     @Override public String trackingStatus() { return head.status(); }
 }

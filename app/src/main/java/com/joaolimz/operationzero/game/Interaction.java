@@ -143,6 +143,7 @@ public final class Interaction {
         float fwd = in.moveY, strafe = in.moveX;
         if (in.up) fwd = 1f;
         if (in.down) fwd = -1f;
+        p.moveYaw = (s.moveDirection == 1 && in.hasControllerPose) ? p.activeHand().rot.yaw() : Float.NaN;
         if (s.moveMode == 1) {
             // teleport: hold forward to aim, release to jump
             boolean aiming = fwd > 0.5f;

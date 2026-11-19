@@ -64,7 +64,7 @@ instalar: `adb install -r PICO-VR-Operation-Zero.apk`
 |---|---|
 | **Um único controle 3DoF** (só rotação, sem posição) e sem botão de grip | Duas mãos virtuais com **modelo de braço 3DoF**: o controle comanda uma mão por vez; o botão **APP troca a mão ativa**. A outra mão fica "estacionada" numa pose alcançável (segurando a arma na frente do peito) ou apoia o guarda-mão das armas longas. O **gatilho pega objetos** quando a mão está vazia (armas ficam "presas" na mão; o gatilho então atira). Modo com botão grip dedicado disponível para gamepads. |
 | Sem rastreamento de posição (3DoF) | Objetos no chão são alcançados com **pegar à distância** (aponte + gatilho, o objeto voa até a mão). Botões/alavancas/terminais também funcionam apontando. Coldres e bolsa de munição ficam em posições que o modelo de braço alcança (verificado numericamente nos testes). |
-| A orientação do controle do G2 só é exposta pelo SDK proprietário da Pico | Sem o SDK, o app usa **mira pela cabeça** (a mão segue o olhar, com suavização). A interface `InputFrame.hasControllerPose/controller` já está pronta: integrando o SDK oficial (ou outro provedor de pose) basta preencher esses campos em `MainActivity.readInput`. Os botões do controle chegam como `KeyEvent` e são **remapeáveis dentro do jogo**. |
+| A orientação do controle do G2 não chega como evento Android comum | O jogo conversa direto com o **serviço de controle do sistema Pico** via Binder (`platform/PicoControllerClient`), com a mesma interface do SDK nativo oficial, e um **assistente de calibração** descobre a convenção de eixos. Sem o serviço (celular, outro headset) o jogo volta para a mira pela cabeça. Botões também chegam como `KeyEvent` e são remapeáveis. |
 | Sensores de cabeça | `TYPE_GAME_ROTATION_VECTOR` → `TYPE_ROTATION_VECTOR` → acelerômetro (fallback). O status aparece em *Configurações*. |
 | Distorção das lentes sem SDK | Pré-distorção radial (k1/k2) feita pelo próprio jogo em um passe barato; ajustável (ou desligável) em *Gráficos*. Opção de inverter a tela 180° caso o painel esteja montado invertido. |
 
@@ -171,15 +171,32 @@ Save/configurações ficam em `/data/data/com.joaolimz.operationzero/files/` (`s
 
 ## 6. Controles
 
-### Controle do Pico G2 (padrão)
+### Controle do Pico G2: mira, gatilho e touchpad
+
+O jogo lê o controle direto do **serviço de controle do sistema Pico** (`com.picovr.hummingbirdsvc`,
+mesma interface usada pelo SDK nativo oficial da Pico — nenhuma biblioteca proprietária é embutida):
+rotação 3DoF, gatilho, clique do touchpad, APP, Home e posição do polegar no touchpad.
+
+- **A mão/arma segue o controle** (modelo de braço 3DoF). Mirar = apontar o controle.
+- **Calibração automática na primeira vez** que o controle conecta (6 passos, ~20 s): apontar para
+  frente, para cima, para a direita, e tocar no centro, em cima e à direita do touchpad. Isso descobre os
+  eixos do controle e a orientação do touchpad do seu aparelho. Refazer: *CONTROLES → CALIBRAR CONTROLE PICO*.
+- **Andar:** encoste o polegar na parte de **cima** do touchpad (sem clicar) — quanto mais longe do centro,
+  mais rápido; parte de **baixo** anda para trás. **Esquerda/direita** do touchpad: girar.
+- **Recentralizar:** segure **Home** ~1 s (ou *Configurações → Recentralizar visão*) olhando e apontando
+  para frente.
+- *CONTROLES → DIAGNÓSTICO DO CONTROLE* mostra ao vivo: conexão, bateria, quaternion, mira, botões e touchpad.
+- *Configurações*: "Mirar com: CONTROLE/CABEÇA" e "Andar para: ONDE OLHA/ONDE APONTA".
+
+### Controle do Pico G2 (botões)
 | Botão | Ação |
 |---|---|
 | **Gatilho** | Mão vazia: **pegar** (segurar = segurando; soltar = solta/arremessa). Apontando para objeto distante: puxa até a mão. Com arma na mão: **atirar**. Apontando para botão/alavanca/terminal/porta: **usar**. |
 | **Touchpad (clique)** | Com arma: **ejetar carregador**; sem carregador: **engatilhar/bombear**; com a mão sobre o coldre/costas: **guardar arma**. Com kit médico: usar. **Segurar 0,7 s**: soltar o que estiver na mão. |
-| **Touchpad cima/baixo** | Andar para frente/trás (ou mirar o teleporte, se ativado) |
-| **Touchpad esquerda/direita** | Girar (snap ou suave) |
+| **Polegar em cima/embaixo do touchpad** | Andar para frente/trás (analógico; ou mirar o teleporte, se ativado) |
+| **Polegar à esquerda/direita do touchpad** | Girar (snap ou suave) |
 | **APP (voltar)** | Toque curto: **trocar a mão ativa** (esquerda/direita). Segurar 0,8 s: **pausa** |
-| **Home** | Sistema (recentralizar/sair, comportamento do firmware) |
+| **Home (segurar ~1 s)** | Recentralizar visão e controle |
 
 > Os códigos de tecla do controle variam conforme o firmware. Se algum botão não responder, use
 > **CONTROLES → Remapear** (a seleção nos menus também funciona só olhando fixo por 1,6 s).
@@ -320,7 +337,7 @@ Fontes: [Kenney Audio](https://kenney.nl/assets?q=audio) (CC0), [freesound.org](
 - **Shaders GLSL ES 3.00** compilados e linkados com `glslangValidator`.
 - **Capturas da cena real** (fila de renderização do jogo desenhada por um rasterizador de teste em CPU)
   para conferir mapa, NPCs, mãos/corpo, iluminação e HUD em todas as áreas.
-- **14 testes de simulação na JVM** (`app/src/test/.../GameSimulationTest.java`) usando o código real
+- **16 testes de simulação na JVM** (`app/src/test/.../GameSimulationTest.java`) usando o código real
   do jogo e entradas como as do Android:
 
 | Teste | Verifica |
@@ -337,6 +354,8 @@ Fontes: [Kenney Audio](https://kenney.nl/assets?q=audio) (CC0), [freesound.org](
 | `levelIsBuiltWithSectorsNavigationAndCover` | 7 setores, grafo de navegação conectado, coberturas, spawns |
 | `menuDwellStartsGame` | menu VR selecionável só com o olhar |
 | `aimingPoseNeverTouchesInventoryZonesButAllZonesAreReachable` | a pose de mira nunca ativa coldre/bolsos por engano, e todas as zonas são alcançáveis pela mão certa |
+| `PicoControllerTest.solveRecoversHiddenAxisConvention` | a calibração descobre uma convenção de eixos desconhecida do controle |
+| `PicoControllerTest.wizardCalibratesAndHandFollowsControllerNotHead` | assistente de calibração, mão segue o controle (não a cabeça), polegar no touchpad anda e gira |
 | `allSoundsSynthesize` / `settingsPersist` | áudio e configurações |
 
 Rodar: `./gradlew testDebugUnitTest` (relatório em `app/build/reports/tests/`).
@@ -355,6 +374,10 @@ recarregar → portão → enfrentar NPCs → morrer/recomeçar → modo avião 
 |---|---|
 | `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | Já existe versão assinada com outra chave: `adb uninstall com.joaolimz.operationzero`. |
 | `adb devices` vazio / `unauthorized` | Ative a depuração USB, troque o cabo (precisa ser de dados) e aceite a autorização no headset. |
+| A mira segue a cabeça e não o controle | Veja *CONTROLES → DIAGNÓSTICO*: "Conectado: SIM" é necessário. Confira *Configurações → Mirar com: CONTROLE*. |
+| A mira aponta para o lado errado | *CONTROLES → CALIBRAR CONTROLE PICO* e segure Home ~1 s olhando para frente. |
+| Polegar no touchpad não anda / anda ao contrário | Refaça a calibração (passos 4–6 do touchpad). Clicar o touchpad não anda: só encostar. |
+| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` ao atualizar | A versão anterior foi assinada com outra chave: `adb uninstall com.joaolimz.operationzero` e instale de novo. |
 | A visão não acompanha a cabeça | *Configurações* mostra o status do sensor. Se "sem sensor", gire com o touchpad/gamepad. Use *Recentralizar visão*. |
 | Imagem de cabeça para baixo / olhos trocados | *Gráficos → Inverter tela 180°*. |
 | Imagem dupla/desfocada | Ajuste *IPD*, *Curvatura lente* e *Campo de visão*; teste com a correção de lente desligada. |

@@ -32,6 +32,18 @@ public final class InputFrame {
     /** Last raw key code pressed this frame (for in-game remapping), or 0. */
     public int lastKeyCode;
 
+    // ---- Pico G2 controller read from the system controller service (raw, mapped by the game)
+    public boolean ctrlConnected;
+    /** Raw quaternion from the service, in the vendor Orientation convention (x, y, z, w). */
+    public float ctrlX, ctrlY, ctrlZ, ctrlW = 1f;
+    public boolean ctrlTrigger, ctrlClick, ctrlApp, ctrlHome;
+    /** Raw touchpad coordinates; touching is false when the service reports (0,0). */
+    public boolean ctrlTouching;
+    public int ctrlTouchX, ctrlTouchY;
+    public int ctrlBattery = -1;
+    /** Human readable service status (diagnostics). */
+    public String ctrlStatus = "";
+
     public void copyFrom(InputFrame o) {
         head.set(o.head);
         hasControllerPose = o.hasControllerPose;
@@ -40,5 +52,11 @@ public final class InputFrame {
         moveX = o.moveX; moveY = o.moveY; turnX = o.turnX;
         up = o.up; down = o.down; left = o.left; right = o.right;
         lastKeyCode = o.lastKeyCode;
+        ctrlConnected = o.ctrlConnected;
+        ctrlX = o.ctrlX; ctrlY = o.ctrlY; ctrlZ = o.ctrlZ; ctrlW = o.ctrlW;
+        ctrlTrigger = o.ctrlTrigger; ctrlClick = o.ctrlClick; ctrlApp = o.ctrlApp; ctrlHome = o.ctrlHome;
+        ctrlTouching = o.ctrlTouching; ctrlTouchX = o.ctrlTouchX; ctrlTouchY = o.ctrlTouchY;
+        ctrlBattery = o.ctrlBattery;
+        ctrlStatus = o.ctrlStatus;
     }
 }

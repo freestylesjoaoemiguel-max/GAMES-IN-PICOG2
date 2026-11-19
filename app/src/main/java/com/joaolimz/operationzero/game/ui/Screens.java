@@ -80,14 +80,19 @@ public final class Screens {
             opt(m, "grab", "Pegar com: " + (s.grabMode == 0 ? "GATILHO" : "BOTÃO GRIP"), COL_L, y - 0.13f);
             opt(m, "assist", "Recarga assistida: " + onOff(s.reloadAssist), COL_L, y - 0.26f);
             opt(m, "height", "Altura: " + String.format("%.2f m", s.playerHeight), COL_L, y - 0.39f);
+            opt(m, "aim", "Mirar com: " + (s.aimSource == 0 ? "CONTROLE" : "CABEÇA"), COL_R, y - 0.39f);
+            opt(m, "movedir", "Andar para: " + (s.moveDirection == 0 ? "ONDE OLHA" : "ONDE APONTA"), COL_L, y - 0.52f);
+            opt(m, "calibrate", "Calibrar controle Pico", COL_R, y - 0.52f);
+            m.height = 1.3f;
             opt(m, "perf", "Mostrar desempenho: " + onOff(s.showPerf), COL_R, y);
             opt(m, "recenter", "Recentralizar visão", COL_R, y - 0.13f);
             opt(m, "erase", "Apagar progresso", COL_R, y - 0.26f).enabled = g.save != null;
-            m.button("back", "VOLTAR", 0f, -0.42f, 0.6f, BH);
+            m.button("back", "VOLTAR", 0f, -0.56f, 0.6f, 0.09f);
         } else if (id.equals("controls")) {
             m.clear("controls", "CONTROLES");
-            m.lines.add("Pico G2: GATILHO pega/atira | TOUCHPAD clique: ejetar/engatilhar/coldre");
-            m.lines.add("Touchpad cima/baixo: andar | esq/dir: girar | APP: trocar mão (segurar = pausa)");
+            m.lines.add("Pico G2: mire com o CONTROLE | GATILHO pega/atira | clique no TOUCHPAD: ejetar/engatilhar");
+            m.lines.add("Polegar no touchpad: cima/baixo anda, esq/dir gira | APP: trocar mão | HOME segurar: recentralizar");
+            m.lines.add("Controle: " + g.in.ctrlStatus + (g.settings.ctrlCalibrated ? " (calibrado)" : " (não calibrado)"));
             float y = 0.2f;
             for (int i = 0; i < Settings.ACTIONS; i++) {
                 float x = i < 5 ? COL_L : COL_R;
@@ -96,7 +101,10 @@ public final class Screens {
                 b.small = true;
             }
             m.button("resetkeys", "RESTAURAR PADRÃO", COL_R, y - 4 * 0.115f, BW, 0.095f).small = true;
-            m.button("back", "VOLTAR", 0f, -0.46f, 0.6f, BH);
+            m.height = 1.32f;
+            m.button("calibrate", "CALIBRAR CONTROLE PICO", COL_L, -0.42f, BW, 0.1f).small = true;
+            m.button("diag", "DIAGNÓSTICO DO CONTROLE", COL_R, -0.42f, BW, 0.1f).small = true;
+            m.button("back", "VOLTAR", 0f, -0.56f, 0.6f, 0.09f);
         } else if (id.equals("remap")) {
             m.clear("remap", "REMAPEAR: " + Settings.ACTION_NAMES[g.remapAction]);
             m.lines.add("Pressione agora o botão desejado no controle ou gamepad.");
@@ -132,6 +140,20 @@ public final class Screens {
             opt(m, "vsfx", "Efeitos: " + Math.round(s.sfx * 100) + "%", 0f, y - 0.14f);
             opt(m, "vamb", "Ambiente: " + Math.round(s.ambient * 100) + "%", 0f, y - 0.28f);
             m.button("back", "VOLTAR", 0f, -0.42f, 0.6f, BH);
+        } else if (id.equals("calib")) {
+            m.clear("calib", "CALIBRAR CONTROLE PICO G2");
+            m.height = 1.2f;
+            for (int i = 0; i < 6; i++) m.lines.add("");
+            m.button("calib_cancel", "CANCELAR", COL_L, -0.42f, BW, BH);
+            m.button("calib_skip", "PULAR TOUCHPAD", COL_R, -0.42f, BW, BH);
+            live();
+        } else if (id.equals("diag")) {
+            m.clear("diag", "DIAGNÓSTICO DO CONTROLE");
+            m.height = 1.2f;
+            for (int i = 0; i < 9; i++) m.lines.add("");
+            m.button("calibrate", "CALIBRAR", COL_L, -0.45f, BW, BH);
+            m.button("back", "VOLTAR", COL_R, -0.45f, BW, BH);
+            live();
         } else if (id.equals("confirm_erase")) {
             m.clear("confirm_erase", "APAGAR PROGRESSO?");
             m.lines.add("O checkpoint salvo será removido.");
@@ -146,6 +168,41 @@ public final class Screens {
     public void place() {
         g.menu.place(g.player.eye, g.player.head.yaw(), 1.6f);
     }
+
+    /** Refreshes the live text of the calibration / diagnostics screens (called every frame). */
+    public void live() {
+        Menu m = g.menu;
+        com.joaolimz.operationzero.game.input.InputFrame in = g.in;
+        if (m.screen.equals("calib") && m.lines.size() >= 6) {
+            int st = Math.max(0, g.calibStep);
+            m.lines.set(0, st < 6 ? Game.CALIB_TEXT[st] : "Concluído");
+            m.lines.set(1, g.calibMessage);
+            m.lines.set(2, "Status: " + in.ctrlStatus);
+            m.lines.set(3, "Gatilho: " + (in.ctrlTrigger ? "APERTADO" : "solto") + "   Touchpad: "
+                    + (in.ctrlTouching ? in.ctrlTouchX + ", " + in.ctrlTouchY : "sem toque"));
+            m.lines.set(4, "Botões CANCELAR/PULAR: olhe fixo por 1,6 s.");
+            m.lines.set(5, "");
+        } else if (m.screen.equals("diag") && m.lines.size() >= 9) {
+            com.joaolimz.operationzero.game.math.Quat q = in.controller;
+            m.lines.set(0, "Status: " + in.ctrlStatus);
+            m.lines.set(1, "Conectado: " + (in.ctrlConnected ? "SIM" : "NÃO") + "   Bateria: " + in.ctrlBattery
+                    + "   Calibrado: " + (g.settings.ctrlCalibrated ? "SIM" : "NÃO"));
+            m.lines.set(2, String.format("Quaternion bruto: %.2f %.2f %.2f %.2f", in.ctrlX, in.ctrlY, in.ctrlZ, in.ctrlW));
+            m.lines.set(3, String.format("Mira do controle: yaw %.0f°  pitch %.0f°   cabeça: yaw %.0f°",
+                    q.yaw() * 57.3f, q.pitch() * 57.3f, in.head.yaw() * 57.3f));
+            m.lines.set(4, "Gatilho " + (in.ctrlTrigger ? "SIM" : "não") + " | Clique " + (in.ctrlClick ? "SIM" : "não")
+                    + " | APP " + (in.ctrlApp ? "SIM" : "não") + " | HOME " + (in.ctrlHome ? "SIM" : "não"));
+            m.lines.set(5, "Touchpad: " + (in.ctrlTouching ? in.ctrlTouchX + ", " + in.ctrlTouchY : "sem toque")
+                    + String.format("   andar %.2f  girar %.2f", in.moveY, in.turnX));
+            m.lines.set(6, "Última tecla Android: " + lastKey + "   (gatilho/ação por tecla: "
+                    + (in.trigger ? "G " : "") + (in.action ? "A " : "") + ")");
+            m.lines.set(7, "Aponte o controle: o cursor branco deve seguir a mão.");
+            m.lines.set(8, "Se a mira estiver errada, use CALIBRAR.");
+        }
+        if (in.lastKeyCode != 0) lastKey = in.lastKeyCode;
+    }
+
+    private int lastKey;
 
     private Menu.Button opt(Menu m, String id, String label, float x, float y) {
         Menu.Button b = m.button(id, label, x, y, BW, BH);
@@ -174,13 +231,23 @@ public final class Screens {
         if (id.equals("back")) { open(g.state == Game.State.PAUSED ? "pause" : "main"); return; }
         if (id.startsWith("mission")) { g.startMission(Integer.parseInt(id.substring(7))); return; }
         if (id.startsWith("remap")) { g.beginRemap(Integer.parseInt(id.substring(5))); open("remap"); return; }
+        if (id.equals("calibrate")) { g.startCalibration(); return; }
+        if (id.equals("calib_cancel")) { g.cancelCalibration(); return; }
+        if (id.equals("calib_skip")) {
+            if (g.calibStep >= 3 || g.settings.ctrlCalibrated) { g.calibStep = -1; open(g.state == Game.State.PAUSED ? "pause" : "main"); }
+            else g.calibMessage = "Primeiro conclua os 3 passos de orientação.";
+            return;
+        }
+        if (id.equals("diag")) { open("diag"); return; }
         if (id.equals("resetkeys")) { s.keys = Settings.copyKeys(Settings.DEFAULT_KEYS); }
+        else if (id.equals("aim")) { s.aimSource = 1 - s.aimSource; }
+        else if (id.equals("movedir")) { s.moveDirection = 1 - s.moveDirection; }
         else if (id.equals("hand")) { s.rightHanded = !s.rightHanded; }
         else if (id.equals("grab")) { s.grabMode = 1 - s.grabMode; }
         else if (id.equals("assist")) { s.reloadAssist = !s.reloadAssist; }
         else if (id.equals("height")) { s.playerHeight = s.playerHeight >= 1.9f ? 1.5f : s.playerHeight + 0.1f; }
         else if (id.equals("perf")) { s.showPerf = !s.showPerf; }
-        else if (id.equals("recenter")) { g.platform.recenter(); changed = false; }
+        else if (id.equals("recenter")) { g.recenterAll(); changed = false; }
         else if (id.equals("erase")) { open("confirm_erase"); return; }
         else if (id.equals("erase_yes")) {
             g.platform.deleteFile(SaveData.FILE);

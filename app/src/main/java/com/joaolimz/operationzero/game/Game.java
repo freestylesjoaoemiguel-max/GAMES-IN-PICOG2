@@ -5,6 +5,7 @@ import com.joaolimz.operationzero.game.ai.NpcSystem;
 import com.joaolimz.operationzero.game.audio.AudioSystem;
 import com.joaolimz.operationzero.game.audio.Sfx;
 import com.joaolimz.operationzero.game.fx.Effects;
+import com.joaolimz.operationzero.game.input.ControllerMapping;
 import com.joaolimz.operationzero.game.input.InputFrame;
 import com.joaolimz.operationzero.game.input.Platform;
 import com.joaolimz.operationzero.game.math.MathUtil;
@@ -78,6 +79,18 @@ public final class Game implements NpcSystem.Listener {
     public int remapAction = -1;
     private float remapDelay;
 
+    // ---- Pico G2 controller
+    public final ControllerMapping ctrlMap = new ControllerMapping();
+    private boolean ctrlAligned, calibOffered, ctrlWasConnected;
+    private float realignTimer = -1f, homeHeld;
+    /** Calibration wizard step (-1 = inactive). */
+    public int calibStep = -1;
+    public String calibMessage = "";
+    private final float[][] calibRaw = new float[3][4];
+    private float calibHeadYaw;
+    private final float[][] calibTouch = new float[3][2];
+    private String calibReturn = "main";
+
     public float fade;
     public float vignette;
     public float hintTimer;
@@ -92,6 +105,7 @@ public final class Game implements NpcSystem.Listener {
         this.scene = new SceneBuilder(this);
         this.screens = new Screens(this);
         this.save = SaveData.parse(platform.readFile(SaveData.FILE));
+        loadMappingFromSettings();
         loadLevel(0);
         applySettings();
         screens.open("main");
@@ -115,6 +129,159 @@ public final class Game implements NpcSystem.Listener {
     }
 
     public void saveSettings() { platform.writeFile(Settings.FILE, settings.serialize()); }
+
+    private void loadMappingFromSettings() {
+        System.arraycopy(settings.ctrlPw, 0, ctrlMap.pw, 0, 9);
+        System.arraycopy(settings.ctrlPb, 0, ctrlMap.pb, 0, 9);
+        ctrlMap.inverse = settings.ctrlInverse;
+    }
+
+    /** Recenters head tracking and re-aligns the controller with the head a moment later. */
+    public void recenterAll() {
+        platform.recenter();
+        realignTimer = 0.15f;
+        showHint("Visão e controle recentralizados");
+    }
+
+    /**
+     * Converts the raw Pico controller data into game input: orientation (aim), trigger/click/app buttons,
+     * touchpad to walk (up/down) and turn (left/right), Home long press to recenter.
+     */
+    private void processController(float dt) {
+        if (!in.ctrlConnected) {
+            ctrlWasConnected = false;
+            if (settings.aimSource == 1) in.hasControllerPose = false;
+            return;
+        }
+        if (!ctrlWasConnected) {
+            ctrlWasConnected = true;
+            ctrlAligned = false;
+            if (!settings.ctrlCalibrated && !calibOffered && state == State.MENU) {
+                calibOffered = true;
+                startCalibration();
+            } else if (!settings.ctrlCalibrated) {
+                showHint("Controle conectado. Calibre em CONTROLES > CALIBRAR CONTROLE");
+            }
+        }
+        if (realignTimer >= 0f) {
+            realignTimer -= dt;
+            if (realignTimer < 0f) ctrlAligned = false;
+        }
+        if (!ctrlAligned) {
+            ctrlMap.alignYaw(in.ctrlX, in.ctrlY, in.ctrlZ, in.ctrlW, in.head.yaw());
+            ctrlAligned = true;
+        }
+        ctrlMap.apply(in.ctrlX, in.ctrlY, in.ctrlZ, in.ctrlW, in.controller);
+        in.hasControllerPose = settings.aimSource == 0;
+        // buttons (OR with the key events the system may also send)
+        in.trigger |= in.ctrlTrigger;
+        in.action |= in.ctrlClick;
+        in.switchHand |= in.ctrlApp;
+        // Home long press = recenter
+        if (in.ctrlHome) {
+            homeHeld += dt;
+            if (homeHeld > 0.9f && homeHeld - dt <= 0.9f) recenterAll();
+        } else {
+            homeHeld = 0f;
+        }
+        // touchpad: thumb on the pad (without clicking) walks / turns
+        if (in.ctrlTouching && !in.ctrlClick && calibStep < 0) {
+            float dx = in.ctrlTouchX - settings.touchCX, dy = in.ctrlTouchY - settings.touchCY;
+            float fx = settings.touchFX - settings.touchCX, fy = settings.touchFY - settings.touchCY;
+            float rx = settings.touchRX - settings.touchCX, ry = settings.touchRY - settings.touchCY;
+            float fl = Math.max(1f, fx * fx + fy * fy), rl = Math.max(1f, rx * rx + ry * ry);
+            float fwd = MathUtil.clamp((dx * fx + dy * fy) / fl, -1f, 1f);
+            float rt = MathUtil.clamp((dx * rx + dy * ry) / rl, -1f, 1f);
+            if (Math.abs(rt) > 0.55f && Math.abs(rt) > Math.abs(fwd) * 1.2f) {
+                in.turnX = Math.signum(rt) * Math.max(0.65f, Math.abs(rt));
+            } else if (Math.abs(fwd) > 0.22f) {
+                float k = (Math.abs(fwd) - 0.22f) / 0.78f;
+                in.moveY = Math.signum(fwd) * Math.min(1f, k * 1.3f);
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------- calibration wizard
+    public void startCalibration() {
+        calibReturn = state == State.PAUSED ? "pause" : "main";
+        calibStep = 0;
+        calibMessage = "";
+        screens.open("calib");
+    }
+
+    public void cancelCalibration() {
+        calibStep = -1;
+        screens.open(calibReturn);
+    }
+
+    public static final String[] CALIB_TEXT = {
+            "1/6  Aponte o controle para FRENTE (para onde você olha) e aperte o GATILHO",
+            "2/6  Aponte o controle para CIMA (para o teto) e aperte o GATILHO",
+            "3/6  Aponte o controle para a sua DIREITA e aperte o GATILHO",
+            "4/6  Encoste o polegar no CENTRO do touchpad (sem clicar) e aperte o GATILHO",
+            "5/6  Encoste o polegar na parte de CIMA do touchpad e aperte o GATILHO",
+            "6/6  Encoste o polegar na parte DIREITA do touchpad e aperte o GATILHO"
+    };
+
+    private void updateCalibration() {
+        boolean press = in.ctrlTrigger && !prev.ctrlTrigger;
+        if (!in.ctrlConnected) {
+            calibMessage = "Controle não conectado: " + in.ctrlStatus;
+            return;
+        }
+        if (!press) return;
+        audio.play2D(Sfx.UI_CLICK, 0.6f);
+        if (calibStep <= 2) {
+            float[] r = calibRaw[calibStep];
+            r[0] = in.ctrlX; r[1] = in.ctrlY; r[2] = in.ctrlZ; r[3] = in.ctrlW;
+            if (calibStep == 0) calibHeadYaw = in.head.yaw();
+            if (calibStep == 2) {
+                float err = ctrlMap.solve(calibRaw[0], calibRaw[1], calibRaw[2]);
+                if (err > 1.4f) {
+                    loadMappingFromSettings();
+                    calibStep = 0;
+                    calibMessage = "Não reconheci os movimentos (erro " + String.format("%.2f", err) + "). Vamos repetir.";
+                    return;
+                }
+                ctrlMap.alignYaw(calibRaw[0][0], calibRaw[0][1], calibRaw[0][2], calibRaw[0][3], calibHeadYaw);
+                ctrlAligned = true;
+                System.arraycopy(ctrlMap.pw, 0, settings.ctrlPw, 0, 9);
+                System.arraycopy(ctrlMap.pb, 0, settings.ctrlPb, 0, 9);
+                settings.ctrlInverse = ctrlMap.inverse;
+                settings.ctrlCalibrated = true;
+                saveSettings();
+                calibMessage = "Orientação calibrada! Agora o touchpad.";
+            }
+            calibStep++;
+            return;
+        }
+        if (!in.ctrlTouching) {
+            calibMessage = "Encoste o polegar no touchpad (sem clicar) enquanto aperta o gatilho.";
+            return;
+        }
+        float[] t = calibTouch[calibStep - 3];
+        t[0] = in.ctrlTouchX; t[1] = in.ctrlTouchY;
+        calibStep++;
+        calibMessage = "";
+        if (calibStep == 6) {
+            float cx = calibTouch[0][0], cy = calibTouch[0][1];
+            float fx = calibTouch[1][0], fy = calibTouch[1][1];
+            float rx = calibTouch[2][0], ry = calibTouch[2][1];
+            boolean ok = (fx - cx) * (fx - cx) + (fy - cy) * (fy - cy) > 100f && (rx - cx) * (rx - cx) + (ry - cy) * (ry - cy) > 100f;
+            if (ok) {
+                settings.touchCX = cx; settings.touchCY = cy;
+                settings.touchFX = fx; settings.touchFY = fy;
+                settings.touchRX = rx; settings.touchRY = ry;
+                saveSettings();
+                showHint("Controle calibrado! Polegar em cima do touchpad = andar.");
+                calibStep = -1;
+                screens.open(calibReturn);
+            } else {
+                calibStep = 3;
+                calibMessage = "Os toques ficaram muito próximos. Repita o touchpad.";
+            }
+        }
+    }
 
     // ===================================================================== level lifecycle
     /** Builds a fresh copy of the facility and prepares it for the given mission index. */
@@ -498,7 +665,8 @@ public final class Game implements NpcSystem.Listener {
         time += dt;
         prev.copyFrom(in);
         in.copyFrom(input);
-        if (in.recenter && !prev.recenter) platform.recenter();
+        processController(dt);
+        if (in.recenter && !prev.recenter) recenterAll();
         player.updateHead(in.head, settings.cameraRecoil ? player.cameraPunch : 0f);
         if (player.cameraPunch > 0f) player.cameraPunch -= player.cameraPunch * MathUtil.damp(12f, dt);
         audio.setListener(player.eye, player.head);
@@ -619,6 +787,17 @@ public final class Game implements NpcSystem.Listener {
             origin = player.eye;
             player.head.forward(dir);
         }
+        if (calibStep >= 0 && menu.screen.equals("calib")) {
+            updateCalibration();
+            screens.live();
+            // the buttons of the wizard are selected with the head (the controller is not calibrated yet)
+            origin = player.eye;
+            player.head.forward(dir);
+            String c = menu.pointer(origin, dir, dt, true);
+            if (c != null) { audio.play2D(Sfx.UI_CLICK, 0.6f); screens.click(c); }
+            return;
+        }
+        if (menu.screen.equals("diag")) screens.live();
         if (remapAction >= 0) {
             remapDelay -= dt;
             if (remapDelay <= 0f && in.lastKeyCode != 0) {

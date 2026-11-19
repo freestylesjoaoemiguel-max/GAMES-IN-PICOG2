@@ -47,7 +47,9 @@ echo "== 4/6 zipalign"
 zipalign -f -p 4 "$OUT/unsigned.apk" "$OUT/aligned.apk"
 
 echo "== 5/6 sign"
-KS="${KEYSTORE:-$OUT/debug.keystore}"
+# standard Android debug keystore location (same key across builds -> updates install over the old version)
+KS="${KEYSTORE:-$HOME/.android/debug.keystore}"
+mkdir -p "$(dirname "$KS")"
 if [ ! -f "$KS" ]; then
   keytool -genkeypair -keystore "$KS" -storepass android -keypass android -alias androiddebugkey \
     -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" >/dev/null 2>&1

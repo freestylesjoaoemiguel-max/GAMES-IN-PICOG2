@@ -41,6 +41,20 @@ public final class Settings {
     // audio
     public float master = 0.9f, sfx = 1f, ambient = 0.6f;
 
+    // Pico G2 controller (filled by the calibration wizard)
+    /** 0 = aim with the controller when connected (default), 1 = always aim with the head. */
+    public int aimSource = 0;
+    /** 0 = walk where the head looks, 1 = walk where the controller points. */
+    public int moveDirection = 0;
+    public boolean ctrlCalibrated = false;
+    public int[] ctrlPw = {1, 0, 0, 0, 1, 0, 0, 0, -1};
+    public int[] ctrlPb = {1, 0, 0, 0, 1, 0, 0, 0, -1};
+    public boolean ctrlInverse = false;
+    /** Touchpad: center and the "forward"/"right" reference points (raw units). */
+    public float touchCX = 128f, touchCY = 128f;
+    public float touchFX = 128f, touchFY = 30f;
+    public float touchRX = 226f, touchRY = 128f;
+
     // input bindings (Android key codes); several codes per action
     public static final int A_TRIGGER = 0, A_GRIP = 1, A_ACTION = 2, A_SWITCH = 3, A_MENU = 4, A_UP = 5, A_DOWN = 6, A_LEFT = 7, A_RIGHT = 8;
     public static final int ACTIONS = 9;
@@ -87,6 +101,10 @@ public final class Settings {
                 .put("sensitivity", sensitivity).put("cameraRecoil", cameraRecoil)
                 .put("master", master).put("sfx", sfx).put("ambient", ambient);
         for (int i = 0; i < ACTIONS; i++) kv.putIntArray(ACTION_KEYS[i], keys[i]);
+        kv.put("aimSource", aimSource).put("moveDirection", moveDirection).put("ctrlCalibrated", ctrlCalibrated)
+                .putIntArray("ctrlPw", ctrlPw).putIntArray("ctrlPb", ctrlPb).put("ctrlInverse", ctrlInverse)
+                .put("touchCX", touchCX).put("touchCY", touchCY).put("touchFX", touchFX).put("touchFY", touchFY)
+                .put("touchRX", touchRX).put("touchRY", touchRY);
         return kv.serialize();
     }
 
@@ -118,6 +136,17 @@ public final class Settings {
         sfx = kv.getFloat("sfx", sfx);
         ambient = kv.getFloat("ambient", ambient);
         for (int i = 0; i < ACTIONS; i++) keys[i] = kv.getIntArray(ACTION_KEYS[i], keys[i]);
+        aimSource = clampI(kv.getInt("aimSource", aimSource), 0, 1);
+        moveDirection = clampI(kv.getInt("moveDirection", moveDirection), 0, 1);
+        ctrlCalibrated = kv.getBool("ctrlCalibrated", ctrlCalibrated);
+        int[] a = kv.getIntArray("ctrlPw", ctrlPw);
+        if (a.length == 9) ctrlPw = a;
+        a = kv.getIntArray("ctrlPb", ctrlPb);
+        if (a.length == 9) ctrlPb = a;
+        ctrlInverse = kv.getBool("ctrlInverse", ctrlInverse);
+        touchCX = kv.getFloat("touchCX", touchCX); touchCY = kv.getFloat("touchCY", touchCY);
+        touchFX = kv.getFloat("touchFX", touchFX); touchFY = kv.getFloat("touchFY", touchFY);
+        touchRX = kv.getFloat("touchRX", touchRX); touchRY = kv.getFloat("touchRY", touchRY);
     }
 
     private static int clampI(int v, int lo, int hi) { return v < lo ? lo : (v > hi ? hi : v); }

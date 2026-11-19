@@ -173,8 +173,11 @@ public final class Player {
     }
 
     /** Smooth locomotion relative to head yaw. Returns horizontal distance moved. */
+    /** Locomotion heading override (radians); NaN = walk where the head looks. */
+    public float moveYaw = Float.NaN;
+
     public float move(PhysicsWorld world, float forward, float strafe, float speed, float dt) {
-        float hy = head.yaw();
+        float hy = Float.isNaN(moveYaw) ? head.yaw() : moveYaw;
         float fx = -(float) Math.sin(hy), fz = -(float) Math.cos(hy);
         float rx = -fz, rz = fx;
         float len = (float) Math.sqrt(forward * forward + strafe * strafe);
