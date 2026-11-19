@@ -12,6 +12,13 @@ foram criados neste projeto, nada vem de Boneworks/Bonelab ou de outros jogos.
 - 100% offline: o APK **não pede permissão de INTERNET**, não usa conta, login, servidor, Google Play
   Services nem a loja Pico. A única permissão é `VIBRATE`.
 
+![Visão estéreo com pré-distorção de lente](docs/preview-stereo.png)
+
+![Áreas do Complexo Vantor-7](docs/preview-areas.png)
+
+*Imagens geradas a partir da fila de renderização real do jogo por um rasterizador de teste em CPU
+(sem texto/HUD textual e sem a textura de detalhe); não são capturas do headset.*
+
 ---
 
 ## Sumário

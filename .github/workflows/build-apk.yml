@@ -79,20 +79,39 @@ jobs:
           unzip -l "$APK" | grep -q classes.dex
           SIZE=$(stat -c%s "$APK"); echo "APK size: $SIZE bytes"; test "$SIZE" -gt 50000
           sha256sum "$APK" | tee "$APK.sha256"
+          {
+            echo "### PICO-VR-Operation-Zero.apk"
+            echo ""
+            echo "- package: \`$PACKAGE\` / versionName \`$VERSION_NAME\`"
+            echo "- size: $SIZE bytes"
+            echo "- sha256: \`$(cut -d' ' -f1 "$APK.sha256")\`"
+            echo "- signature: $("$BT/apksigner" verify "$APK" >/dev/null 2>&1 && echo OK)"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload APK artifact
+        id: upload
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 14
           name: PICO-VR-Operation-Zero
           path: |
             app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk
             app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk.sha256
           if-no-files-found: error
 
+      - name: Artifact upload status
+        if: steps.upload.outcome != 'success'
+        run: |
+          echo "::warning::The APK was built and validated, but uploading the artifact failed (usually the account's Actions artifact storage quota is full). Delete old artifacts in Settings > Actions or wait for the quota to be recalculated, then re-run; or push a tag v* to publish it as a GitHub Release."
+          echo "**Artifact upload failed** (storage quota?). The APK itself was built and validated - see the log above." >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload test reports
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 7
           name: test-reports
           path: app/build/reports/tests/
           if-no-files-found: ignore
