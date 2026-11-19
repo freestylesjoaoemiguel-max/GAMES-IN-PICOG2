@@ -60,7 +60,7 @@ public final class MainActivity extends Activity implements Platform, VrRenderer
 
         view = new GLSurfaceView(this);
         view.setEGLContextClientVersion(3);
-        view.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        // default config chooser (RGB888 + depth): rendering happens in our own eye framebuffer
         view.setPreserveEGLContextOnPause(true);
         renderer = new VrRenderer(game, this);
         view.setRenderer(renderer);

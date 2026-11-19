@@ -439,6 +439,44 @@ public class GameSimulationTest {
     }
 
     @Test
+    public void aimingPoseNeverTouchesInventoryZonesButAllZonesAreReachable() {
+        com.joaolimz.operationzero.game.player.Player p = new com.joaolimz.operationzero.game.player.Player();
+        p.spawn(new Vec3(0, 0, 0), 0f);
+        p.updateHead(new Quat(), 0f);
+        Vec3 hand = new Vec3(), zone = new Vec3();
+        Quat q = new Quat();
+        for (int side = 0; side < 2; side++) {
+            Hand h = p.hands[side];
+            // normal aiming / pointing range: yaw +-30 deg, pitch -25..+35 deg
+            for (float yaw = -0.5f; yaw <= 0.5f; yaw += 0.1f) {
+                for (float pitch = -0.45f; pitch <= 0.6f; pitch += 0.05f) {
+                    q.setEuler(yaw, pitch, 0f);
+                    p.armModel(h, q, hand);
+                    for (int z = 0; z <= Inventory.POUCH; z++) {
+                        Inventory.zone(z, p.eye, p.torso, true, h.side(), zone);
+                        assertTrue("slot " + z + " hit at yaw " + yaw + " pitch " + pitch, hand.distance(zone) > Inventory.radius(z));
+                    }
+                }
+            }
+        }
+        // every zone is reachable by the hand that uses it
+        int[][] use = {{Inventory.HIP, 1}, {Inventory.BACK, 1}, {Inventory.BACK, 0}, {Inventory.CHEST_L, 0}, {Inventory.CHEST_R, 1}, {Inventory.POUCH, 0}};
+        for (int[] u : use) {
+            Hand h = p.hands[u[1]];
+            Inventory.zone(u[0], p.eye, p.torso, true, h.side(), zone);
+            float best = Float.MAX_VALUE;
+            for (float yaw = -1.6f; yaw <= 1.6f; yaw += 0.05f) {
+                for (float pitch = -1.55f; pitch <= 1.55f; pitch += 0.05f) {
+                    q.setEuler(yaw, pitch, 0f);
+                    p.armModel(h, q, hand);
+                    best = Math.min(best, hand.distance(zone));
+                }
+            }
+            assertTrue("slot " + u[0] + " reachable by hand " + u[1] + " d=" + best, best < Inventory.radius(u[0]) * 0.6f);
+        }
+    }
+
+    @Test
     public void settingsPersist() {
         Settings s = new Settings();
         s.quality = Settings.HIGH;

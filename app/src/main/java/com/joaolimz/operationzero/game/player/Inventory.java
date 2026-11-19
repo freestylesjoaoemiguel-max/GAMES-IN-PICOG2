@@ -39,8 +39,8 @@ public final class Inventory {
         switch (slot) {
             case HIP: torso.rotate(0.2f * s, -0.8f, 0.15f, out); break;
             case BACK: torso.rotate(0.33f * handSide, -0.2f, -0.14f, out); break;
-            case CHEST_L: torso.rotate(-0.07f, -0.7f, -0.06f, out); break;
-            case CHEST_R: torso.rotate(0.07f, -0.7f, -0.06f, out); break;
+            case CHEST_L: torso.rotate(-0.07f, -0.77f, 0.0f, out); break;
+            case CHEST_R: torso.rotate(0.07f, -0.77f, 0.0f, out); break;
             default: torso.rotate(-0.2f * s, -0.8f, 0.15f, out); break;
         }
         return out.add(eye);

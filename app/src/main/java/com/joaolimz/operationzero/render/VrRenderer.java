@@ -247,7 +247,7 @@ public final class VrRenderer implements GLSurfaceView.Renderer {
             GLES30.glDepthMask(false);
             GLES30.glDisable(GLES30.GL_CULL_FACE);
             Mat4.setTRS(skyModel, eyePos.x, eyePos.y, eyePos.z, ident, 1f, 1f, 1f);
-            useUnlit(false);
+            useUnlit(true); // the dome is 80 m away: never fog it
             drawMesh(game.assets.sky, skyModel, uUnlit, 1, 1, 1, 1);
             GLES30.glDepthMask(true);
             GLES30.glEnable(GLES30.GL_CULL_FACE);

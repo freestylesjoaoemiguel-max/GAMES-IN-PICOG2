@@ -305,7 +305,9 @@ Fontes: [Kenney Audio](https://kenney.nl/assets?q=audio) (CC0), [freesound.org](
   apksigner): `apksigner verify` OK; `aapt dump badging`: `package com.joaolimz.operationzero`,
   `versionName 1.0.0`, `sdkVersion 24`, apenas a permissão `VIBRATE`.
 - **Shaders GLSL ES 3.00** compilados e linkados com `glslangValidator`.
-- **13 testes de simulação na JVM** (`app/src/test/.../GameSimulationTest.java`) usando o código real
+- **Capturas da cena real** (fila de renderização do jogo desenhada por um rasterizador de teste em CPU)
+  para conferir mapa, NPCs, mãos/corpo, iluminação e HUD em todas as áreas.
+- **14 testes de simulação na JVM** (`app/src/test/.../GameSimulationTest.java`) usando o código real
   do jogo e entradas como as do Android:
 
 | Teste | Verifica |
@@ -321,6 +323,7 @@ Fontes: [Kenney Audio](https://kenney.nl/assets?q=audio) (CC0), [freesound.org](
 | `physicsBudgetAndSleep` | orçamento de corpos ativos e sleep |
 | `levelIsBuiltWithSectorsNavigationAndCover` | 7 setores, grafo de navegação conectado, coberturas, spawns |
 | `menuDwellStartsGame` | menu VR selecionável só com o olhar |
+| `aimingPoseNeverTouchesInventoryZonesButAllZonesAreReachable` | a pose de mira nunca ativa coldre/bolsos por engano, e todas as zonas são alcançáveis pela mão certa |
 | `allSoundsSynthesize` / `settingsPersist` | áudio e configurações |
 
 Rodar: `./gradlew testDebugUnitTest` (relatório em `app/build/reports/tests/`).
