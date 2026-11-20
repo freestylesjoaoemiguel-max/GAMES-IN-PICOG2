@@ -1,6 +1,22 @@
 # Discord VR G2 — APK nativo + WebXR
 
+**[Abrir no GitHub Pages](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/)** · **[APK direto](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/downloads/Discord-VR-G2.apk)** · **[Passo a passo fácil](docs/COMO_USAR.md)**
+
+Publicação por `.github/workflows/pages.yml`, após merge na `main`. Preserva o site PicoVerso na raiz e adiciona este app em `/discord-vr-g2/`. Pages é somente modo local, sem backend OAuth2.
+
 Aplicativo **independente**, não afiliado ao Discord ou à PICO. Nome/package/versão: **Discord VR G2**, `com.picog2.discordvrg2`, **1.0.0**. Este projeto está separado do jogo Unity na raiz.
+
+## PICO — imagens de referência
+
+Imagens enviadas pelo usuário, em blocos separados. Mostram o aparelho e o sistema PICO; **não são capturas deste aplicativo nem comprovam compatibilidade**.
+
+### Headset e controle
+
+![Headset PICO preto com seu controle, sobre fundo branco](docs/images/pico-headset-controle.jpg)
+
+### Menu do sistema PICO
+
+![Menu do sistema PICO em ambiente virtual sobre o mar, com aplicativos e controle apontador visíveis](docs/images/pico-menu-sistema.jpg)
 
 ## Estado real da entrega
 
