@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b1020">
+<title>PicoVerso VR — jogo para Pico G2</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#070a16;overflow:hidden;font-family:Roboto,"Segoe UI",system-ui,sans-serif;color:#e8eaed;touch-action:none;-webkit-user-select:none;user-select:none}
+  canvas#view{position:fixed;inset:0;width:100%;height:100%;display:block}
+  #overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(1200px 700px at 70% 10%,#3b1d6e55,transparent),radial-gradient(900px 600px at 10% 90%,#0d6efd33,transparent),#070a16ee;z-index:5;transition:opacity .5s}
+  #overlay.hide{opacity:0;pointer-events:none}
+  .card{width:min(760px,92vw);padding:34px 36px;border-radius:28px;background:#171a2bcc;border:1px solid #ffffff22;box-shadow:0 30px 80px #000a;backdrop-filter:blur(14px);text-align:center}
+  h1{margin:0 0 4px;font-size:clamp(34px,6vw,58px);font-weight:700;letter-spacing:-1px}
+  h1 b:nth-child(1){color:#4285f4}h1 b:nth-child(2){color:#ea4335}h1 b:nth-child(3){color:#fbbc05}
+  h1 b:nth-child(4){color:#4285f4}h1 b:nth-child(5){color:#34a853}h1 b:nth-child(6){color:#ea4335}
+  h1 b:nth-child(7){color:#fbbc05}h1 b:nth-child(8){color:#4285f4}h1 b:nth-child(9){color:#34a853}
+  .sub{color:#aab2c5;margin:0 0 24px;font-size:17px}
+  button{display:block;width:100%;margin:10px 0;padding:18px 22px;border:0;border-radius:18px;font:600 19px/1.2 inherit;font-family:inherit;color:#fff;cursor:pointer;
+    background:linear-gradient(135deg,#4285f4,#7b3ff2);box-shadow:0 8px 24px #4285f455;transition:transform .15s,filter .15s}
+  button:hover{transform:translateY(-2px) scale(1.01);filter:brightness(1.1)}
+  button.alt{background:linear-gradient(135deg,#2a2f4a,#3a4066);box-shadow:none}
+  button[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+  button small{display:block;font-weight:400;font-size:13px;opacity:.8;margin-top:5px}
+  #msg{min-height:22px;margin-top:14px;font-size:14px;color:#ffb4a9}
+  .tips{margin-top:16px;font-size:13px;color:#8d96ad;line-height:1.5}
+  #loading{position:fixed;left:0;right:0;bottom:18px;text-align:center;font-size:13px;color:#8d96ad;z-index:6;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="view"></canvas>
+
+<div id="overlay">
+  <div class="card">
+    <h1><b>P</b><b>i</b><b>c</b><b>o</b><b>V</b><b>e</b><b>r</b><b>s</b><b>o</b></h1>
+    <p class="sub">Mundos 360° em 3D · casas · personagens com IA · feito para o controle do Pico G2</p>
+    <button id="btnXR" disabled>🥽 Entrar em VR (WebXR)<small id="xrNote">Verificando suporte do navegador…</small></button>
+    <button id="btnGyro">🧭 Tela cheia + giroscópio<small>Mova a cabeça/aparelho para olhar em volta · recomendado no app</small></button>
+    <button id="btnSplit" class="alt">📱 Modo óculos — tela dividida<small>Para o navegador do Pico sem WebXR · usa o giroscópio e o controle</small></button>
+    <button id="btnFlat" class="alt">🖥️ Jogar na tela<small>Mouse + teclado ou gamepad · ótimo para testar</small></button>
+    <div id="msg"></div>
+    <div class="tips">
+      <b>Controle:</b> deslize o <b>touch de trás</b> para frente/trás para andar · <b>clique</b> para selecionar botões, teclado, portas e pessoas · botão lateral abre o menu.
+    </div>
+  </div>
+</div>
+<div id="loading"></div>
+
+<script src="lib/three.min.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/brain.js"></script>
+<script src="js/world.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
