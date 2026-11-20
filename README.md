@@ -60,3 +60,8 @@ js/main.js      renderização, entrada do controle, braços, locomoção
 ```
 
 > Nota: desenvolvido e testado em Chromium (WebGL, mouse, teclado, gamepad simulado e tela dividida). O caminho WebXR segue a API padrão, mas não foi possível validar em um Pico G2 físico; use a calibração do controle se algum botão se comportar diferente.
+
+## APK e hospedagem (GitHub Actions)
+
+* **APK:** o workflow `Build APK` roda a cada push (ou manualmente em *Actions → Build APK → Run workflow*). Baixe `PicoVerso-apk` em *Artifacts* e instale com `adb install app-debug.apk`. O app é um WebView em tela cheia com o jogo embutido (offline). **WebView não tem WebXR**, então o APK usa o modo *óculos (tela dividida)* ou *tela*.
+* **WebXR de verdade:** o workflow `Deploy GitHub Pages` publica o jogo em HTTPS quando algo entra na `main`. Ative em *Settings → Pages → Source: GitHub Actions* e abra a URL no navegador do Pico para usar **Entrar em VR**.
