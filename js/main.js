@@ -59,8 +59,17 @@ function setSeg(m, a, b, r) { const d = _s1.subVectors(b, a), L = d.length() || 
 /* ---------- Cursor e laser ---------- */
 const cursor = new THREE.Group();
 const cMat = new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: false, transparent: true, opacity: 0.95 });
-cursor.add(new THREE.Mesh(new THREE.RingGeometry(0.018, 0.027, 28), cMat)); cursor.add(new THREE.Mesh(new THREE.CircleGeometry(0.006, 12), cMat));
+const arrowTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d');
+  x.beginPath(); x.moveTo(10, 6); x.lineTo(10, 92); x.lineTo(34, 70); x.lineTo(52, 112); x.lineTo(70, 104); x.lineTo(52, 64); x.lineTo(86, 64); x.closePath();
+  x.fillStyle = '#fff'; x.fill(); x.lineWidth = 8; x.lineJoin = 'round'; x.strokeStyle = '#1a2340'; x.stroke(); x.fill();
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+const arrowMat = new THREE.MeshBasicMaterial({ map: arrowTex, transparent: true, depthTest: false });
+const arrow = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.09), arrowMat);
+arrow.position.set(0.045 - 10 / 128 * 0.09, -0.045 + 6 / 128 * 0.09, 0); // a ponta da seta fica na origem
+cursor.add(arrow); cursor.add(new THREE.Mesh(new THREE.RingGeometry(0.012, 0.018, 24), cMat));
 cursor.children.forEach(m => m.renderOrder = 200); scene.add(cursor);
+// ponta de seta 3D na ponta do dedo da mão
+const tipArrow = new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.07, 12), new THREE.MeshBasicMaterial({ color: 0x4be08a, depthTest: false })); tipArrow.renderOrder = 198; scene.add(tipArrow);
 const laserMat = new THREE.MeshBasicMaterial({ color: 0x7fd3ff, transparent: true, opacity: 0.75, depthTest: false });
 const laser = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 6, 1, true), laserMat); laser.renderOrder = 199; scene.add(laser);
 const fadeMesh = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0, depthTest: false })); fadeMesh.position.z = -0.25; fadeMesh.renderOrder = 999; fadeMesh.visible = false; camera.add(fadeMesh);
@@ -352,7 +361,7 @@ function doInteract(dt) {
   const pt = t.type ? t.point : _b.copy(aim.origin).addScaledVector(aim.dir, 6); aim.point.copy(pt);
   const hov = (t.type === 'ui' && t.panel.hoverId) || t.type === 'npc' || t.type === 'door' || t.type === 'star';
   cursor.position.copy(pt); cursor.lookAt(camera.getWorldPosition(_a)); const dist = pt.distanceTo(camera.getWorldPosition(_a)); cursor.scale.setScalar(clamp(dist * 0.5, 0.8, 5) * (hov ? 1.25 : 1) * (1 + Math.max(0, dwell.t) * 0.3));
-  cMat.color.set(hov ? 0x4be08a : 0xffffff); cursor.visible = mode !== 'xr' || aim.type === 'ctrl' || true;
+  cMat.color.set(hov ? 0x4be08a : 0xffffff);
 }
 let holdT = 0;
 
@@ -394,6 +403,7 @@ function updateArms(dt, walking) {
   laser.position.copy(from).addScaledVector(_s1, 0.5); laser.quaternion.setFromUnitVectors(UP, _s1.normalize()); laser.scale.set(0.0035, L, 0.0035);
   laserMat.color.set(aim.target && (aim.target.type === 'npc' || aim.target.type === 'door' || aim.target.type === 'star' || (aim.target.type === 'ui' && aim.target.panel.hoverId)) ? 0x4be08a : 0x7fd3ff);
   laser.visible = mode === 'xr' || aim.type === 'ctrl' || aim.type === 'mouse';
+  tipArrow.position.copy(from).addScaledVector(_s1.copy(to).sub(from).normalize(), 0.035); tipArrow.quaternion.setFromUnitVectors(UP, _s1);
 }
 
 /* ---------- Locomoção ---------- */
@@ -418,7 +428,7 @@ function locomotion(dt) {
 const euler = new THREE.Euler(), q0 = new THREE.Quaternion(), q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)), zee = new V3(0, 0, 1);
 function updateOrientation() {
   if (mode === 'xr') return;
-  if (mode === 'split' && orient && orient.alpha !== null && orient.alpha !== undefined) {
+  if ((mode === 'split' || mode === 'gyro') && orient && orient.alpha !== null && orient.alpha !== undefined) {
     if (alpha0 === null) alpha0 = orient.alpha;
     const a = (orient.alpha - alpha0) * PI / 180, b = (orient.beta || 0) * PI / 180, g = (orient.gamma || 0) * PI / 180, o = ((screen.orientation && screen.orientation.angle) || window.orientation || 90) * PI / 180;
     euler.set(b, a, -g, 'YXZ'); camera.quaternion.setFromEuler(euler); camera.quaternion.multiply(q1); camera.quaternion.multiply(q0.setFromAxisAngle(zee, -o));
@@ -519,7 +529,7 @@ window.addEventListener('gamepadconnected', e => { if (started) Game.toast('🎮
 function showOverlay(msg) { $('overlay').classList.remove('hide'); if (msg) $('msg').textContent = msg; }
 function begin(m) {
   Sfx.init(); Sfx.set('music', Game.settings.music); Sfx.set('sfx', Game.settings.sfx); Sfx.set('voice', Game.settings.voice); Sfx.set('vol', Game.settings.vol);
-  mode = m; Game.inputMode = m; $('overlay').classList.add('hide'); started = true; camera.fov = m === 'split' ? 90 : 72; resize(); camera.updateProjectionMatrix();
+  mode = m; Game.inputMode = m; $('overlay').classList.add('hide'); started = true; camera.fov = m === 'split' ? 90 : m === 'gyro' ? 80 : 72; resize(); camera.updateProjectionMatrix();
   if (!Game.map || Game.map.id !== 'lobby') loadScene('lobby');
   Sfx.startMusic('lobby'); Sfx.startAmbience('lobby');
   setTimeout(() => { Game.openMenu('home'); const n = Brain.getName(); Game.toast(n ? 'Bem-vindo de volta, ' + n + '!' : 'Bem-vindo ao PicoVerso!', 2600); }, 250);
@@ -532,14 +542,15 @@ async function startXR() {
     begin('xr');
   } catch (e) { $('msg').textContent = 'Não foi possível iniciar o VR: ' + (e && e.message ? e.message : e) + ' — tente o modo óculos (tela dividida).'; }
 }
-async function startSplit() {
+async function startMotion(m) {
   try { if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) await DeviceOrientationEvent.requestPermission(); } catch (e) {}
   try { await document.documentElement.requestFullscreen(); } catch (e) {}
   try { await screen.orientation.lock('landscape'); } catch (e) {}
-  alpha0 = null; begin('split');
+  alpha0 = null; begin(m);
 }
 $('btnFlat').onclick = () => begin('flat');
-$('btnSplit').onclick = startSplit;
+$('btnSplit').onclick = () => startMotion('split'); $('btnGyro').onclick = () => startMotion('gyro');
+if (/[?&]app=1/.test(location.search)) { $('btnXR').style.display = 'none'; $('btnGyro').click(); }
 $('btnXR').onclick = startXR;
 if (navigator.xr && navigator.xr.isSessionSupported) {
   navigator.xr.isSessionSupported('immersive-vr').then(ok => {

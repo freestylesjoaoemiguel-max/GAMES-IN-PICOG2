@@ -319,7 +319,7 @@ function drawChatUI(p, c, x, y, w, h) {
 /* ---------- Painéis ---------- */
 function makeMainPanel() {
   return new Panel({
-    name: 'main', w: 4.4, h: 2.475, pw: 1280, ph: 720, R: 2.8, order: 10, fps: 30,
+    name: 'main', w: 3.4, h: 1.9125, pw: 1280, ph: 720, R: 1.9, order: 10, fps: 30,
     draw(p, c) {
       const t = T(), titles = { home: 'PicoVerso — Início', maps: 'PicoVerso — Mapas', set: 'PicoVerso — Ajustes', ctrl: 'PicoVerso — Controle', help: 'PicoVerso — Ajuda', chat: 'PicoVerso — Conversa' };
       const urls = { home: 'picoverso://inicio', maps: 'picoverso://mapas', set: 'picoverso://ajustes', ctrl: 'picoverso://controle', help: 'picoverso://ajuda', chat: 'picoverso://ia/' + (Game.chat ? Game.chat.npc.id : 'pico') };
@@ -339,7 +339,7 @@ function makeMainPanel() {
 }
 function makeChatPanel() {
   return new Panel({
-    name: 'chat', w: 2.3, h: 1.288, pw: 1250, ph: 700, R: 2.0, order: 11, fps: 30,
+    name: 'chat', w: 2.0, h: 1.12, pw: 1250, ph: 700, R: 1.6, order: 11, fps: 30,
     draw(p, c) {
       const t = T();
       c.save(); rr(c, 0, 0, p.pw, p.ph, 34); c.clip(); c.fillStyle = t.bg; c.fillRect(0, 0, p.pw, p.ph);
@@ -358,7 +358,7 @@ const KB_ROWS = [
 ];
 function makeKeyboard() {
   return new Panel({
-    name: 'kb', w: 2.2, h: 0.99, pw: 1100, ph: 495, R: 1.7, order: 12, bob: 0.008, fps: 30,
+    name: 'kb', w: 1.8, h: 0.81, pw: 1100, ph: 495, R: 1.3, order: 12, bob: 0.008, fps: 30,
     draw(p, c) {
       const t = T();
       c.save(); rr(c, 0, 0, p.pw, p.ph, 30); c.clip();

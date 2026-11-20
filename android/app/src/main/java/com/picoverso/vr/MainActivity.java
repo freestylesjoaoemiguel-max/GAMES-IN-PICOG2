@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
             }
         });
         setContentView(web);
-        web.loadUrl("https://appassets.androidplatform.net/index.html");
+        web.loadUrl("https://appassets.androidplatform.net/index.html?app=1");
     }
 
     @Override
