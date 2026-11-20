@@ -24,6 +24,7 @@ foram criados neste projeto, nada vem de Boneworks/Bonelab ou de outros jogos.
 | Jogo | Descrição | APK |
 |---|---|---|
 | **PICO VR: OPERATION ZERO** | FPS VR físico (este README) | [PICO-VR-Operation-Zero.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/raw/ccr-3de8f23e-tx6y3b/release/PICO-VR-Operation-Zero.apk) |
+| **PICO VR: Navegador (Discord web)** | navegador VR com teclado, para conversar/falar no Discord ([README](vrweb/README.md)) | [PICO-VR-Navegador.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/raw/ccr-3de8f23e-tx6y3b/release/PICO-VR-Navegador.apk) |
 | **PICO VR: PEGA-PEGA** | pega-pega/infecção com locomoção pelos braços ([README](pegapega/README.md)) | [PICO-VR-Pega-Pega.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/raw/ccr-3de8f23e-tx6y3b/release/PICO-VR-Pega-Pega.apk) |
 
 ## Download direto

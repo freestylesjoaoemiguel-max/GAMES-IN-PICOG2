@@ -8,7 +8,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-ANDROID_JAR="${1:?usage: [MODULE=app|pegapega] $0 /path/to/android.jar [outdir]}"
+ANDROID_JAR="${1:?usage: [MODULE=app|pegapega|vrweb] $0 /path/to/android.jar [outdir]}"
 MODULE="${MODULE:-app}"
 OUT="${2:-$ROOT/build-manual/$MODULE}"
 VERSION_CODE=1
@@ -16,6 +16,9 @@ VERSION_NAME=1.0.0
 if [ "$MODULE" = "pegapega" ]; then
   PKG=com.joaolimz.pegapega
   APK_NAME=PICO-VR-Pega-Pega.apk
+elif [ "$MODULE" = "vrweb" ]; then
+  PKG=com.joaolimz.vrweb
+  APK_NAME=PICO-VR-Navegador.apk
 else
   PKG=com.joaolimz.operationzero
   APK_NAME=PICO-VR-Operation-Zero.apk

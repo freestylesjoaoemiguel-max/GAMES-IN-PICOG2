@@ -62,7 +62,7 @@ jobs:
           echo "::warning::Gradle build failed - using the manual toolchain fallback"
           sudo apt-get update -qq
           sudo apt-get install -y -qq aapt dalvik-exchange zipalign apksigner
-          for m in app pegapega; do
+          for m in app pegapega vrweb; do
             MODULE=$m tools/build-apk-manual.sh "$ANDROID_HOME/platforms/android-34/android.jar" build-manual/$m
             mkdir -p $m/build/outputs/apk/release
             cp build-manual/$m/*.apk $m/build/outputs/apk/release/
@@ -72,13 +72,13 @@ jobs:
         run: |
           BT="$ANDROID_HOME/build-tools/34.0.0"
           validate() {
-            APK=$1; PKG=$2
+            APK=$1; PKG=$2; NET=${3:-no}
             test -f "$APK" || { echo "APK not found: $APK"; ls -R */build/outputs || true; exit 1; }
             "$BT/apksigner" verify --verbose "$APK"
             "$BT/aapt2" dump badging "$APK" | tee badging.txt
             grep -q "package: name='$PKG'" badging.txt
             grep -q "versionName='$VERSION_NAME'" badging.txt
-            ! grep -q "android.permission.INTERNET" badging.txt   # must stay fully offline
+            if [ "$NET" = "no" ]; then ! grep -q "android.permission.INTERNET" badging.txt; fi   # the games must stay fully offline
             unzip -l "$APK" | grep -q classes.dex
             SIZE=$(stat -c%s "$APK"); echo "APK size: $SIZE bytes"; test "$SIZE" -gt 50000
             sha256sum "$APK" | tee "$APK.sha256"
@@ -91,6 +91,7 @@ jobs:
           }
           validate app/build/outputs/apk/release/$APK_NAME $PACKAGE
           validate pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk com.joaolimz.pegapega
+          validate vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk com.joaolimz.vrweb net
 
       - name: Upload APK artifact
         id: upload
@@ -104,6 +105,8 @@ jobs:
             app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk.sha256
             pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk
             pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk.sha256
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk.sha256
           if-no-files-found: error
 
       - name: Artifact upload status
@@ -122,6 +125,7 @@ jobs:
           path: |
             app/build/reports/tests/
             pegapega/build/reports/tests/
+            vrweb/build/reports/tests/
           if-no-files-found: ignore
 
       - name: Publish GitHub Release (tags v*)
@@ -133,3 +137,5 @@ jobs:
             app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk.sha256
             pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk
             pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk.sha256
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk.sha256
