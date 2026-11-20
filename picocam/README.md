@@ -13,3 +13,6 @@ Projeto separado do jogo. Dois apps:
 5. Voltar (botão do controle) para a tela do IP · toque duplo recentraliza.
 
 APKs: baixe na Release `picocam-latest` (workflow *PicoCam APKs*).
+
+## Por USB (cabo)
+O celular compartilha a rede pelo cabo: **Configurações → Rede → Ponto de acesso/Tethering → Tethering USB**. O IP do celular nessa rede aparece no app (geralmente `192.168.42.129`). No app do Pico toque em **🔌 USB / Buscar celular automático**: ele testa os IPs comuns e conecta sozinho. Requer que o Pico aceite rede por USB (adaptador/ethernet). Também funciona com o ponto de acesso Wi-Fi do celular (Pico conectado nele).

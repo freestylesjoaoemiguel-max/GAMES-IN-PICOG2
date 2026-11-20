@@ -28,11 +28,25 @@ async function getJ(path) {
   const c = new AbortController(), t = setTimeout(() => c.abort(), 4500);
   try { const r = await fetch(base + path, { signal: c.signal }); return await r.json(); } finally { clearTimeout(t); }
 }
+/* USB (tethering) / busca automática: testa os IPs que o Android usa quando o celular compartilha rede por cabo ou ponto de acesso */
+const CANDIDATES = ['192.168.42.129', '192.168.42.1', '192.168.44.1', '192.168.45.1', '192.168.48.129', '192.168.49.1', '192.168.43.1', '192.168.137.1', '172.20.10.1', '192.168.0.1', '192.168.1.1'];
+async function probe(ip) {
+  const c = new AbortController(), t = setTimeout(() => c.abort(), 1800);
+  try { const r = await fetch('http://' + ip + ':8080/info', { signal: c.signal }); const j = await r.json(); return j && j.w ? ip : null; } catch (e) { return null; } finally { clearTimeout(t); }
+}
+async function autoFind() {
+  say('Procurando o celular… (USB: ative "Tethering USB" no celular e ligue o cabo)');
+  const list = [...new Set([S.ip.replace(/:.*/, ''), ...CANDIDATES, ...(location.hostname === 'localhost' ? ['127.0.0.1'] : [])].filter(x => /^\d+(\.\d+){3}$/.test(x)))];
+  const hit = (await Promise.all(list.map(probe))).find(Boolean);
+  if (!hit) { say('Não achei o celular. USB: Configurações → Rede → Tethering USB (celular) e confira se o app PicoCam (Celular) está aberto. Wi-Fi: mesma rede, sem "isolamento de clientes".', true); return; }
+  S.ip = hit; save(); drawIp(); say('Celular encontrado em ' + hit + '!'); connect();
+}
+$('#usb').onclick = autoFind;
 async function connect() {
   const raw = S.ip.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
   if (!/^\d{1,3}(\.\d{1,3}){3}(:\d+)?$/.test(raw)) { say('IP inválido. Exemplo: 192.168.0.12', true); return; }
   base = 'http://' + (raw.includes(':') ? raw : raw + ':8080'); say('Conectando em ' + base + '…');
-  try { info = await getJ('/info'); } catch (e) { say('Não achei o celular. Confira se está na mesma rede Wi-Fi, o IP e se o app do celular está aberto.', true); return; }
+  try { info = await getJ('/info'); } catch (e) { say('Não achei o celular em ' + base + '. Confira: app do celular aberto · mesma rede Wi-Fi (sem isolamento de clientes) · ou use o botão USB.', true); return; }
   try { const z = await getJ('/zoom?r=' + S.zoom); if (z && z.zoom) S.zoom = z.zoom; } catch (e) {}
   save(); start();
 }

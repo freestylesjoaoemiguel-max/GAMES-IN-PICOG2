@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         LinearLayout left = new LinearLayout(this); left.setOrientation(LinearLayout.VERTICAL);
         left.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
         TextView t = new TextView(this); t.setText("PicoVerso Câmera"); t.setTextColor(Color.WHITE); t.setTextSize(26);
-        TextView h = new TextView(this); h.setText("Digite este IP no Pico (tela 📷 Câmera):"); h.setTextColor(Color.parseColor("#a9c7ff")); h.setTextSize(16);
+        TextView h = new TextView(this); h.setText("Digite este IP no Pico. Por USB: ative \"Tethering USB\" nas Configurações e ligue o cabo (o IP aparece aqui; o Pico também tem o botão USB)."); h.setTextColor(Color.parseColor("#a9c7ff")); h.setTextSize(16);
         ipView = new TextView(this); ipView.setTextColor(Color.parseColor("#4be08a")); ipView.setTextSize(40); ipView.setTypeface(android.graphics.Typeface.DEFAULT_BOLD); ipView.setPadding(0, 12, 0, 12);
         statusView = new TextView(this); statusView.setTextColor(Color.parseColor("#ffd23f")); statusView.setTextSize(16); statusView.setText("Iniciando câmera…");
         zoomView = new TextView(this); zoomView.setTextColor(Color.WHITE); zoomView.setTextSize(16);
