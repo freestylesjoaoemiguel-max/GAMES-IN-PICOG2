@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>PicoCam</title>
+<style>
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;background:#070a16;color:#e8eaed;font-family:Roboto,system-ui,sans-serif;overflow:hidden}
+#setup{position:fixed;inset:0;display:flex;gap:28px;align-items:center;justify-content:center;padding:18px}
+.col{display:flex;flex-direction:column;gap:12px}
+h1{margin:0;font-size:34px}h1 span{color:#4be08a}
+.sub{color:#9aa3b8;font-size:15px;margin:0 0 6px;max-width:420px}
+#ip{font-size:42px;font-weight:700;letter-spacing:1px;padding:10px 18px;border-radius:16px;background:#151a2e;border:2px solid #4285f4;min-height:70px;min-width:420px;color:#fff}
+#keys{display:grid;grid-template-columns:repeat(4,84px);gap:10px}
+button{font:600 26px inherit;font-family:inherit;border:0;border-radius:16px;color:#fff;background:#252b45;padding:0;height:66px;cursor:pointer}
+button:active,button.on{background:#4285f4}
+#go{height:76px;background:linear-gradient(135deg,#1a9e50,#34c76f);font-size:28px;width:100%}
+#st{min-height:44px;font-size:16px;color:#ffd23f}
+.row{display:flex;gap:10px}.row button{flex:1;font-size:19px;height:54px}
+label{font-size:14px;color:#9aa3b8;margin-top:4px}
+#view{position:fixed;inset:0;width:100%;height:100%;display:none}
+#hud{position:fixed;left:0;right:0;bottom:10px;text-align:center;font-size:14px;color:#ffffffaa;display:none;pointer-events:none}
+</style></head><body>
+<div id="setup">
+  <div class="col">
+    <h1>Pico<span>Cam</span></h1>
+    <p class="sub">No celular abra o app <b>PicoCam (Celular)</b> e digite aqui o IP que aparece na tela dele.</p>
+    <div id="ip"></div>
+    <div id="keys"></div>
+  </div>
+  <div class="col" style="width:380px">
+    <label>Zoom da câmera do celular</label>
+    <div class="row" id="zoom"><button data-z="0.5">0.5x</button><button data-z="1">1x</button><button data-z="2">2x</button></div>
+    <label>Celular está…</label>
+    <div class="row" id="mode"><button data-m="head">No óculos</button><button data-m="window">Na mão (giroscópio)</button></div>
+    <label>Tela</label>
+    <div class="row" id="disp"><button data-d="split">Dividida (óculos)</button><button data-d="full">Cheia</button></div>
+    <button id="go">✔ Confirmar</button>
+    <div id="st"></div>
+  </div>
+</div>
+<canvas id="view"></canvas><div id="hud">Voltar = parar câmera · toque duplo = recentralizar</div>
+<script src="three.min.js"></script>
+<script src="viewer.js"></script>
+</body></html>
