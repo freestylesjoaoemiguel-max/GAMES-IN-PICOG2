@@ -1,26 +1,18 @@
-## Discord VR G2 — novo aplicativo independente
-
-**[Abrir WebXR](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/)** · **[Baixar APK](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/downloads/Discord-VR-G2.apk)** · **[Passo a passo fácil](discord-vr-g2/docs/COMO_USAR.md)**
-
-O site abaixo continua preservado na raiz. Discord VR G2 está em uma subpasta: modo local no Pages, WebXR exige navegador compatível, APK experimental sem validação no G2/runtime PICO. [Código e limites](discord-vr-g2/README.md).
-
-## PICO — imagens de referência
-
-Imagens enviadas pelo usuário, apresentadas separadamente. São referências do aparelho e do sistema PICO, não capturas do Discord VR G2 nem comprovação de compatibilidade do aplicativo.
-
-### Headset e controle
-
-![Headset PICO preto com seu controle, sobre fundo branco](discord-vr-g2/docs/images/pico-headset-controle.jpg)
-
-### Menu do sistema PICO
-
-![Menu do sistema PICO em ambiente virtual sobre o mar, com aplicativos e controle apontador visíveis](discord-vr-g2/docs/images/pico-menu-sistema.jpg)
-
----
-
 # PicoVerso VR — jogo 3D para Pico G2
 
 Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo Meta Quest): mundos em 360°, personagens 3D que andam e conversam com IA, casas com interior, braços que seguem o controle, sons e música. Tudo roda no navegador, sem instalar nada.
+
+## PICO — imagens de referência
+
+Imagens enviadas pelo usuário para o README do PicoVerso VR, apresentadas separadamente. Mostram o headset, o controle e o menu do sistema PICO; não são capturas do jogo nem comprovação de compatibilidade.
+
+### Headset e controle
+
+![Headset PICO preto com seu controle, sobre fundo branco](docs/images/pico-headset-controle.jpg)
+
+### Menu do sistema PICO
+
+![Menu do sistema PICO em ambiente virtual sobre o mar, com aplicativos e controle apontador visíveis](docs/images/pico-menu-sistema.jpg)
 
 ## Como jogar
 
@@ -85,3 +77,11 @@ js/main.js      renderização, entrada do controle, braços, locomoção
 
 * **APK:** o workflow `Build APK` roda a cada push (ou manualmente em *Actions → Build APK → Run workflow*). Baixe `PicoVerso-apk` em *Artifacts* e instale com `adb install app-debug.apk`. O app é um WebView em tela cheia com o jogo embutido (offline). **WebView não tem WebXR**, então o APK usa o modo *óculos (tela dividida)* ou *tela*.
 * **WebXR de verdade:** o workflow `Deploy GitHub Pages` publica o jogo em HTTPS quando algo entra na `main`. Ative em *Settings → Pages → Source: GitHub Actions* e abra a URL no navegador do Pico para usar **Entrar em VR**.
+
+---
+
+## Discord VR G2 — novo aplicativo independente
+
+**[Abrir WebXR](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/)** · **[Baixar APK](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/downloads/Discord-VR-G2.apk)** · **[Passo a passo fácil](discord-vr-g2/docs/COMO_USAR.md)**
+
+O PicoVerso VR continua preservado na raiz. Discord VR G2 está em uma subpasta: modo local no Pages, WebXR exige navegador compatível, APK experimental sem validação no G2/runtime PICO. [Código e limites](discord-vr-g2/README.md).
