@@ -1,0 +1,68 @@
+name: Discord VR G2 - APK and WebXR
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'discord-vr-g2/**'
+      - '.github/workflows/build-discord-vr-g2.yml'
+  pull_request:
+    paths:
+      - 'discord-vr-g2/**'
+      - '.github/workflows/build-discord-vr-g2.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: discord-vr-g2/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install web dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: discord-vr-g2
+      - name: Check JavaScript syntax and run model/security tests
+        working-directory: discord-vr-g2
+        run: |
+          set -euo pipefail
+          for f in web/src/*.js server/*.mjs; do node --check "$f"; done
+          npm test
+      - name: Compile Java, DEX, package and sign APK
+        run: bash discord-vr-g2/tools/bootstrap_android.sh
+      - name: Package portable static WebXR (local mode, no OAuth secrets)
+        working-directory: discord-vr-g2
+        run: node tools/build_web.mjs
+      - name: Verify static WebXR and native APK download
+        working-directory: discord-vr-g2
+        run: |
+          set -euo pipefail
+          python3 -m http.server 5174 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5174/webxr/ node tools/check_browser.mjs
+      - name: Upload portable WebXR site
+        uses: actions/upload-artifact@v4
+        with:
+          name: Discord-VR-G2-WebXR-static
+          path: discord-vr-g2/build/webxr/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish real APK and validation report (not headset certification)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Discord-VR-G2-1.0.0-development
+          path: |
+            discord-vr-g2/web/downloads/Discord-VR-G2.apk
+            discord-vr-g2/web/downloads/Discord-VR-G2.apk.sha256
+            discord-vr-g2/docs/ANDROID_BUILD.txt
+            discord-vr-g2/docs/BROWSER_TESTS.json
+          if-no-files-found: error
+          retention-days: 30

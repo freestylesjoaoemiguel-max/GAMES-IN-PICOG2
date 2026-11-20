@@ -1,0 +1,22 @@
+{
+  "passed": [
+    "Local mode prominently disclosed",
+    "Message send works locally and HTML is escaped",
+    "Search filters local messages",
+    "On-screen keyboard edits text and backspaces",
+    "Preferences, giant screen and reset synchronize",
+    "Missing OAuth configuration cannot pretend to log in",
+    "Raycast on curved 3D key Q edits the actual composer",
+    "Unsupported immersive WebXR is reported, not faked",
+    "Download serves the exact signed APK bytes",
+    "Mobile composer remains accessible",
+    "No uncaught JavaScript errors in exercised flows"
+  ],
+  "notTested": [
+    "Physical headset or immersive XR session",
+    "PICO controller pose",
+    "APK installation or Android runtime",
+    "Real Discord authorization, webhook delivery or voice"
+  ],
+  "errors": []
+}

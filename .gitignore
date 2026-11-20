@@ -1,0 +1,47 @@
+# Unity generated data
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/Builds/
+/Artifacts/
+/MemoryCaptures/
+/.cache/
+/.venv/
+*.csproj
+*.sln
+*.user
+*.pidb
+*.booproj
+*.apk
+*.aab
+*.jks
+*.keystore
+*.ulf
+*.unitypackage
+# Proprietary SDK: imported only by its licensee; do not commit.
+/Assets/PicoMobileSDK/
+/Assets/PicoMobileSDK.meta
+/Assets/Pvr_UnitySDK/
+/Assets/Pvr_UnitySDK.meta
+/Assets/Pvr_Controller/
+/Assets/Pvr_Controller.meta
+/Assets/Plugins/
+/Assets/Plugins.meta
+/Assets/Resources/DeviceRig.prefab*
+/sdk-import-report.json
+/sdk.unitypackage
+__pycache__/
+*.pyc
+# User-supplied APKs: analysis only, never redistribute in Git.
+/google_drive/
+# Separate native Android / WebXR application
+/discord-vr-g2/node_modules/
+/discord-vr-g2/build/
+/discord-vr-g2/.env
+/discord-vr-g2/.env.*
+!/discord-vr-g2/.env.example
+*.idsig
+# Requested, small original compiled deliverable (no vendor runtime bundled).
+!/discord-vr-g2/web/downloads/Discord-VR-G2.apk

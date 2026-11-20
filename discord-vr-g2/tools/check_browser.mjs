@@ -1,0 +1,33 @@
+import {chromium as playwright} from '@playwright/test';
+import chromium from '@sparticuz/chromium';
+import fs from 'node:fs';import path from 'node:path';import zlib from 'node:zlib';import {execFileSync} from 'node:child_process';import assert from 'node:assert/strict';import crypto from 'node:crypto';import {fileURLToPath} from 'node:url';
+import {keyPosition} from '../web/src/model.js';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),libs=path.resolve(root,'../.cache/chromium-libs');
+fs.mkdirSync(libs,{recursive:true});
+fs.writeFileSync(path.join(libs,'libs.tar'),zlib.brotliDecompressSync(fs.readFileSync(path.join(root,'node_modules/@sparticuz/chromium/bin/al2023.tar.br'))));
+execFileSync('tar',['xf',path.join(libs,'libs.tar'),'-C',libs]);
+process.env.LD_LIBRARY_PATH=path.join(libs,'lib')+(process.env.LD_LIBRARY_PATH?':'+process.env.LD_LIBRARY_PATH:'');
+const browser=await playwright.launch({executablePath:await chromium.executablePath(),args:chromium.args.filter(a=>!a.includes('disable-web-security')&&!a.includes('allow-running-insecure-content')),headless:true});
+const passed=[],errors=[];
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(process.env.PREVIEW_BASE_URL||'http://127.0.0.1:5173');await page.locator('#messages article').first().waitFor();
+ await page.screenshot({path:path.join(root,'docs/preview-desktop.png'),fullPage:true});
+ assert((await page.locator('#localNotice').textContent()).includes('demonstração'));passed.push('Local mode prominently disclosed');
+ await page.locator('#draft').fill('Teste de mensagem local <img src=x onerror=alert(1)>');await page.locator('#send').click();
+ assert((await page.locator('#messages').textContent()).includes('<img src=x'));assert.equal(await page.locator('#messages img').count(),0);passed.push('Message send works locally and HTML is escaped');
+ await page.locator('#search').fill('string sem resultados');assert.equal(await page.locator('#messages article').count(),0);await page.locator('#search').fill('');passed.push('Search filters local messages');
+ await page.locator('#openKeyboard').click();await page.locator('[data-key="Q"]').click();assert.equal(await page.locator('#draft').inputValue(),'q');await page.locator('[data-key="⌫"]').click();assert.equal(await page.locator('#draft').inputValue(),'');await page.locator('#openKeyboard').click();passed.push('On-screen keyboard edits text and backspaces');
+ await page.locator('#settingsTop').click();await page.locator('#pref-size').selectOption('3');assert.equal(await page.locator('#sizeQuick').inputValue(),'Gigante');await page.locator('#settingsReset').click();await page.locator('#closeModal').click();passed.push('Preferences, giant screen and reset synchronize');
+ await page.locator('#login').click();assert(await page.locator('#oauthBasic').isDisabled());await page.locator('#localExplore').click();passed.push('Missing OAuth configuration cannot pretend to log in');
+ await page.locator('#previewVR').click();await page.locator('#xrStage canvas').waitFor();await page.locator('#xrKeyboard').click();await page.waitForTimeout(400);
+ const p=keyPosition(0,10,0,2,1),tan=Math.tan(65*Math.PI/360),x=(1+(p.x/-p.z)/(tan*1.44))*720,y=(1-(p.y/-p.z)/tan)*500;
+ await page.mouse.click(x,y);await page.waitForTimeout(150);assert.equal(await page.locator('#draft').inputValue(),'q');passed.push('Raycast on curved 3D key Q edits the actual composer');
+ await page.screenshot({path:path.join(root,'docs/preview-spatial.png')});
+ await page.locator('#xrImmersive').click();await page.waitForTimeout(250);assert((await page.locator('#toast').textContent()).includes('não está disponível'));passed.push('Unsupported immersive WebXR is reported, not faked');
+ await page.locator('#xrExit').click();assert(await page.locator('#xrStage').isHidden());
+ const response=await page.request.get(new URL('./downloads/Discord-VR-G2.apk',page.url()).href);assert.equal(response.status(),200);const binary=await response.body();assert.equal(crypto.createHash('sha256').update(binary).digest('hex'),crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'web/downloads/Discord-VR-G2.apk'))).digest('hex'));passed.push('Download serves the exact signed APK bytes');
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(root,'docs/preview-mobile.png'),fullPage:true});assert(await page.locator('#draft').isVisible());assert(await page.locator('#send').isVisible());passed.push('Mobile composer remains accessible');
+ assert.deepEqual(errors,[]);passed.push('No uncaught JavaScript errors in exercised flows');
+ const result={passed,notTested:['Physical headset or immersive XR session','PICO controller pose','APK installation or Android runtime','Real Discord authorization, webhook delivery or voice'],errors};fs.writeFileSync(path.join(root,'docs/BROWSER_TESTS.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
+}finally{await browser.close();}
