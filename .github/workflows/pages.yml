@@ -52,7 +52,19 @@ jobs:
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
           PREVIEW_BASE_URL=http://127.0.0.1:5174/webxr/ node tools/check_browser.mjs
-      - name: Preserve PicoVerso and add both independent WebXR apps
+      - name: Build and test MonkeGo (screen APK + browser VR)
+        run: |
+          set -euo pipefail
+          bash monke-go/tools/bootstrap_android.sh
+          cd monke-go
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test
+          npm run build
+          python3 -m http.server 5177 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5177/webxr/ npm run test:browser
+      - name: Preserve PicoVerso and add independent WebXR apps
         run: |
           set -euo pipefail
           mkdir -p site/discord-vr-g2
@@ -65,6 +77,10 @@ jobs:
           cp -r pulse-saber-g2/build/webxr/. site/pulse-saber-g2/
           (cd pulse-saber-g2/build/webxr && zip -qr ../Pulse-Saber-G2-WebXR.zip .)
           cp pulse-saber-g2/build/Pulse-Saber-G2-WebXR.zip site/pulse-saber-g2/downloads/
+          mkdir -p site/monke-go
+          cp -r monke-go/build/webxr/. site/monke-go/
+          (cd monke-go/build/webxr && zip -qr ../MonkeGo-WebXR.zip .)
+          cp monke-go/build/MonkeGo-WebXR.zip site/monke-go/downloads/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

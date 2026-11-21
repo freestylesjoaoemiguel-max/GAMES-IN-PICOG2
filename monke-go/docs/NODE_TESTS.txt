@@ -1,0 +1,98 @@
+
+> monkego-pico-g2@1.0.0 test
+> node --test tests/*.test.cjs
+
+TAP version 13
+# Subtest: orientation rejects null, zero, NaN and infinity; normalizes
+ok 1 - orientation rejects null, zero, NaN and infinity; normalizes
+  ---
+  duration_ms: 1.59802
+  type: 'test'
+  ...
+# Subtest: source chosen by identity and handedness, not inputSources index
+ok 2 - source chosen by identity and handedness, not inputSources index
+  ---
+  duration_ms: 0.323976
+  type: 'test'
+  ...
+# Subtest: legacy mapping configurable and safe with missing axes
+ok 3 - legacy mapping configurable and safe with missing axes
+  ---
+  duration_ms: 0.399611
+  type: 'test'
+  ...
+# Subtest: xr-standard uses trigger zero and never treats stick click as menu
+ok 4 - xr-standard uses trigger zero and never treats stick click as menu
+  ---
+  duration_ms: 0.25244
+  type: 'test'
+  ...
+# Subtest: touchpad zero axis is preserved, never mixed with stick
+ok 5 - touchpad zero axis is preserved, never mixed with stick
+  ---
+  duration_ms: 0.211517
+  type: 'test'
+  ...
+# Subtest: axis swap and inversion are explicit calibration options
+ok 6 - axis swap and inversion are explicit calibration options
+  ---
+  duration_ms: 0.153129
+  type: 'test'
+  ...
+# Subtest: select events tied to XRInputSource remain correct on reorder
+ok 7 - select events tied to XRInputSource remain correct on reorder
+  ---
+  duration_ms: 2.891157
+  type: 'test'
+  ...
+# Subtest: lost XR pose is not replaced with stale legacy gamepad
+ok 8 - lost XR pose is not replaced with stale legacy gamepad
+  ---
+  duration_ms: 1.30538
+  type: 'test'
+  ...
+# Subtest: disconnect does not synthesize jump from released touchpad
+ok 9 - disconnect does not synthesize jump from released touchpad
+  ---
+  duration_ms: 1.642036
+  type: 'test'
+  ...
+# Subtest: legacy null pose discarded; reconnect valid orientation resumes
+ok 10 - legacy null pose discarded; reconnect valid orientation resumes
+  ---
+  duration_ms: 1.825588
+  type: 'test'
+  ...
+# Subtest: App menu is edge-triggered, no repeated toggle
+ok 11 - App menu is edge-triggered, no repeated toggle
+  ---
+  duration_ms: 1.50186
+  type: 'test'
+  ...
+# Subtest: WebXR frame resolves source targetRaySpace and rejects missing pose
+ok 12 - WebXR frame resolves source targetRaySpace and rejects missing pose
+  ---
+  duration_ms: 1.964228
+  type: 'test'
+  ...
+# Subtest: PICO detected by display with generic UA, low graphics and no Cardboard fallback
+ok 13 - PICO detected by display with generic UA, low graphics and no Cardboard fallback
+  ---
+  duration_ms: 2.171672
+  type: 'test'
+  ...
+# Subtest: all supplied game assets kept byte-for-byte
+ok 14 - all supplied game assets kept byte-for-byte
+  ---
+  duration_ms: 21.154506
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 136.377499
