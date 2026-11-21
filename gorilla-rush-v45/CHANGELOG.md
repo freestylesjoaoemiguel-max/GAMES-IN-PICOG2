@@ -1,10 +1,17 @@
 # Alterações — v45 / PICO G2
 
+## 1.0.4 — sem piscar NO AR/NO CHÃO e sem voar
+- Relato no G2: parado, o painel alternava NO AR/NO CHÃO rapidamente e o corpo "voava". Reproduzido com tremor real de mão (2–3° a 9 Hz) e poses repetidas: 45 trocas em 3 s, deriva de 2 corpos e subida de 2 alturas.
+- Contato decidido por **histerese de ângulo**, não por velocidade: solta só ao inclinar ~5° de volta a partir do ponto mais fundo; só agarra de novo após inclinar para baixo outra vez (ou depois de sair da superfície).
+- Com a mão aberta no chão, o corpo segue o ponto **mais fundo** do empurrão: voltar o controle ou tremer não puxa para trás nem empurra para cima. Removida a regra "só empurra" que acumulava cada tremida como subida.
+- Filtro mais forte da orientação (12/s); impulso de soltura só após contato ≥ 0,1 s e subida limitada.
+- Simulado com tremor de 3°: 0 trocas em repouso, altura máxima 0,07 do corpo, ~1 corpo por empurrão. 25 testes Node (novos: tremor em repouso, retorno sem arrasto) e 12 de navegador. Sem headset físico.
+
 ## 1.0.3 — locomoção estilo Gorilla Tag
 - Braço 3DoF longo e reto pivotando no ombro; inclinação do pulso amplificada 2×, caminho achatado perto do chão. Controle reto = mão logo acima do chão; ~13° para baixo = mão no chão; ~45° = mão atrás do corpo.
 - Soltura imediata ao inclinar o controle de volta para cima (detector sem filtro + filtrado); o retorno passa pelo ar e não puxa o corpo para trás. Varrer o braço para trás continua empurrando.
 - Impulso de soltura 1,25× (limite 6,5 × escala/s). Desvio lateral girando o controle com a mão no chão.
-- Painel **GORILA 1.0.3** com instruções novas; cache `v45-gorila-4`; link WebXR `v=1.0.3-gorila` no README e no launcher do APK (1.0.3/code 4).
+- Painel **GORILA 1.0.3** com instruções novas; cache `v45-gorila-4`; link WebXR `v=1.0.4-gorila` no README e no launcher do APK (1.0.3/code 4).
 - Testes: 23 Node (novos: passadas curtas com ruído, mão perto do chão com controle reto) e os 12 cenários de navegador com ângulos atualizados. Poses simuladas; sem headset físico.
 
 ## 1.0.2 — âncora e colisão da mão
