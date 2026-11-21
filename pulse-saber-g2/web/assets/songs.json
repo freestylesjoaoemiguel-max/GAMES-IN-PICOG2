@@ -1,0 +1,26 @@
+[
+  {
+    "id": "neon-drift",
+    "title": "Neon Drift",
+    "bpm": 108,
+    "duration": 58.33,
+    "genre": "SYNTHWAVE",
+    "color": "Ciano"
+  },
+  {
+    "id": "orbital",
+    "title": "Orbital Run",
+    "bpm": 124,
+    "duration": 51.45,
+    "genre": "ELECTRO",
+    "color": "Violeta"
+  },
+  {
+    "id": "solar",
+    "title": "Solar Rush",
+    "bpm": 140,
+    "duration": 46.14,
+    "genre": "BASS / ARCADE",
+    "color": "Âmbar"
+  }
+]

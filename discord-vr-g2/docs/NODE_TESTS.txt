@@ -1,0 +1,128 @@
+
+> discord-vr-g2@1.0.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: medium quality and VR curvature are defaults
+ok 1 - medium quality and VR curvature are defaults
+  ---
+  duration_ms: 0.948301
+  type: 'test'
+  ...
+# Subtest: preferences clamp untrusted values
+ok 2 - preferences clamp untrusted values
+  ---
+  duration_ms: 0.303508
+  type: 'test'
+  ...
+# Subtest: keys form a symmetric arc facing the user
+ok 3 - keys form a symmetric arc facing the user
+  ---
+  duration_ms: 1.158465
+  type: 'test'
+  ...
+# Subtest: immersive curvature is stronger than soft
+ok 4 - immersive curvature is stronger than soft
+  ---
+  duration_ms: 0.161058
+  type: 'test'
+  ...
+# Subtest: flat mode is nearly planar
+ok 5 - flat mode is nearly planar
+  ---
+  duration_ms: 0.125054
+  type: 'test'
+  ...
+# Subtest: required keys are present
+ok 6 - required keys are present
+  ---
+  duration_ms: 0.184739
+  type: 'test'
+  ...
+# Subtest: backspace preserves unicode code points
+ok 7 - backspace preserves unicode code points
+  ---
+  duration_ms: 0.201308
+  type: 'test'
+  ...
+# Subtest: shift and special keys
+ok 8 - shift and special keys
+  ---
+  duration_ms: 0.1435
+  type: 'test'
+  ...
+# Subtest: message length is capped
+ok 9 - message length is capped
+  ---
+  duration_ms: 0.365182
+  type: 'test'
+  ...
+# Subtest: unconfigured login is explicit, not fake
+ok 10 - unconfigured login is explicit, not fake
+  ---
+  duration_ms: 53.31883
+  type: 'test'
+  ...
+# Subtest: OAuth state is bound to a secure browser cookie
+ok 11 - OAuth state is bound to a secure browser cookie
+  ---
+  duration_ms: 14.803377
+  type: 'test'
+  ...
+# Subtest: basic OAuth returns only approved public data, no secrets
+ok 12 - basic OAuth returns only approved public data, no secrets
+  ---
+  duration_ms: 13.103158
+  type: 'test'
+  ...
+# Subtest: OAuth state cannot be replayed
+ok 13 - OAuth state cannot be replayed
+  ---
+  duration_ms: 13.386899
+  type: 'test'
+  ...
+# Subtest: no unauthenticated messages
+ok 14 - no unauthenticated messages
+  ---
+  duration_ms: 15.861892
+  type: 'test'
+  ...
+# Subtest: message posting is channel-bound, attributed and mention-safe
+ok 15 - message posting is channel-bound, attributed and mention-safe
+  ---
+  duration_ms: 18.980278
+  type: 'test'
+  ...
+# Subtest: repeat request id is idempotent
+ok 16 - repeat request id is idempotent
+  ---
+  duration_ms: 13.000249
+  type: 'test'
+  ...
+# Subtest: cross-site logout/message requests are rejected
+ok 17 - cross-site logout/message requests are rejected
+  ---
+  duration_ms: 8.434985
+  type: 'test'
+  ...
+# Subtest: logout deletes session and attempts revocation
+ok 18 - logout deletes session and attempts revocation
+  ---
+  duration_ms: 12.065561
+  type: 'test'
+  ...
+# Subtest: native pairing requires its private polling credential and is single use
+ok 19 - native pairing requires its private polling credential and is single use
+  ---
+  duration_ms: 15.243139
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 368.750309

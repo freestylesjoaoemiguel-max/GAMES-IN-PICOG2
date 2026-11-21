@@ -2,6 +2,18 @@
 
 Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo Meta Quest): mundos em 360°, personagens 3D que andam e conversam com IA, casas com interior, braços que seguem o controle, sons e música. Tudo roda no navegador, sem instalar nada.
 
+## PICO — imagens de referência
+
+Imagens enviadas pelo usuário para o README do PicoVerso VR, apresentadas separadamente. Mostram o headset, o controle e o menu do sistema PICO; não são capturas do jogo nem comprovação de compatibilidade.
+
+### Headset e controle
+
+![Headset PICO preto com seu controle, sobre fundo branco](docs/images/pico-headset-controle.jpg)
+
+### Menu do sistema PICO
+
+![Menu do sistema PICO em ambiente virtual sobre o mar, com aplicativos e controle apontador visíveis](docs/images/pico-menu-sistema.jpg)
+
 ## Como jogar
 
 * **Andar:** deslize o **touch de trás** do controle para frente/trás (← → gira em passos de 30°).
@@ -65,3 +77,21 @@ js/main.js      renderização, entrada do controle, braços, locomoção
 
 * **APK:** o workflow `Build APK` roda a cada push (ou manualmente em *Actions → Build APK → Run workflow*). Baixe `PicoVerso-apk` em *Artifacts* e instale com `adb install app-debug.apk`. O app é um WebView em tela cheia com o jogo embutido (offline). **WebView não tem WebXR**, então o APK usa o modo *óculos (tela dividida)* ou *tela*.
 * **WebXR de verdade:** o workflow `Deploy GitHub Pages` publica o jogo em HTTPS quando algo entra na `main`. Ative em *Settings → Pages → Source: GitHub Actions* e abra a URL no navegador do Pico para usar **Entrar em VR**.
+
+---
+
+## Pulse Saber G2 — jogo de ritmo original
+
+**[Jogar WebXR](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/pulse-saber-g2/)** · **[Baixar APK direto](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/pulse-saber-g2/downloads/Pulse-Saber-G2.apk)** · **[Guia, código e testes](pulse-saber-g2/README.md)**
+
+Um sabre, três músicas originais, nove mapas, modelos externos CC0, combos, bombas, resultados e recordes locais. Jogo independente inspirado no gênero — não Beat Saber nem seu conteúdo comercial. WebXR requer navegador compatível; APK Java/OpenGL monoscópico experimental, **sem runtime PICO ou teste físico no G2**. O PicoVerso permanece intacto na raiz.
+
+![Menu do jogo original Pulse Saber G2](pulse-saber-g2/docs/preview-menu.png)
+
+---
+
+## Discord VR G2 — novo aplicativo independente
+
+**[Abrir WebXR](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/)** · **[Baixar APK](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/downloads/Discord-VR-G2.apk)** · **[Passo a passo fácil](discord-vr-g2/docs/COMO_USAR.md)**
+
+O PicoVerso VR continua preservado na raiz. Discord VR G2 está em uma subpasta: modo local no Pages, WebXR exige navegador compatível, APK experimental sem validação no G2/runtime PICO. [Código e limites](discord-vr-g2/README.md).
