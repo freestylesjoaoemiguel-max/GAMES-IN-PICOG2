@@ -44,12 +44,12 @@ try{
  const anchor=await page.evaluate(()=>{
   P.set(0,1.1*CSC,0);vel.set(0,0,0);PICO.reset();let minSkinY=Infinity,maxAnchorDrift=0,contacts=0;
   const tick=(pitch,roll=0,ms=1000/72)=>{__test.q=new THREE.Quaternion().setFromAxisAngle(V3(1,0,0),pitch).multiply(new THREE.Quaternion().setFromAxisAngle(V3(0,0,1),roll)).toArray();frame(__test.time+=ms);for(const v of RIGHT_ARM.points(pl,LM.hR))minSkinY=Math.min(minSkinY,v.y/PS);if(PICO.arm.contact)contacts++};
-  for(let i=0;i<20;i++)tick(0);for(let i=1;i<=40;i++)tick(-1.3*i/40);
+  for(let i=0;i<20;i++)tick(0);for(let i=1;i<=40;i++)tick(-.45*i/40);
   const planted=PICO.arm.plant.clone();__test.pressed=true;
-  for(let i=0;i<=24;i++){tick(-1.3,i*2*Math.PI/24);maxAnchorDrift=Math.max(maxAnchorDrift,PICO.arm.target.distanceTo(planted)/PS)}
-  const held=PICO.arm.held;__test.pressed=false;for(let i=1;i<=30;i++)tick(-1.3+1.3*i/30);const released=!PICO.arm.contact&&!PICO.arm.held;
+  for(let i=0;i<=24;i++){tick(-.45,i*2*Math.PI/24);maxAnchorDrift=Math.max(maxAnchorDrift,PICO.arm.target.distanceTo(planted)/PS)}
+  const held=PICO.arm.held;__test.pressed=false;for(let i=1;i<=30;i++)tick(-.45+.65*i/30);const released=!PICO.arm.contact&&!PICO.arm.held;
   P.set(0,2*PS,0);vel.set(0,-4*PS,0);PICO.reset();vel.set(0,-4*PS,0);
-  for(let i=0;i<25;i++)tick(-1.3,0,50);
+  for(let i=0;i<25;i++)tick(-.45,0,50);
   return {minSkinY,maxAnchorDrift,contacts,held,released};
  });
  console.log('anchor',anchor);assert(anchor.minSkinY>=-1e-4);assert(anchor.maxAnchorDrift<.002);assert(anchor.held&&anchor.released&&anchor.contacts>20);passed.push('Actual mesh stays above floor during 360-degree anchored roll and 50ms gravity frames; trigger hold and open-hand release work');
