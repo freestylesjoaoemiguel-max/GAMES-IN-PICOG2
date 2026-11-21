@@ -45,3 +45,9 @@ __pycache__/
 *.idsig
 # Requested, small original compiled deliverable (no vendor runtime bundled).
 !/discord-vr-g2/web/downloads/Discord-VR-G2.apk
+/discord-vr-g2/web/downloads/*.zip
+# Original rhythm game: keep source assets and requested signed APK, not caches.
+/pulse-saber-g2/node_modules/
+/pulse-saber-g2/build/
+/pulse-saber-g2/web/downloads/*.zip
+!/pulse-saber-g2/web/downloads/Pulse-Saber-G2.apk

@@ -1,11 +1,19 @@
 name: Build APK
 on:
   push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'index.html'
+      - 'js/**'
+      - 'lib/**'
+      - '.github/workflows/apk.yml'
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
   apk:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

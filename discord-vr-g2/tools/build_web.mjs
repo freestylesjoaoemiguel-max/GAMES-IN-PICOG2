@@ -7,7 +7,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'build/webxr');
 await fs.rm(out,{recursive:true,force:true});
 await fs.mkdir(out,{recursive:true});
-await fs.cp(path.join(root,'web'),out,{recursive:true});
+await fs.cp(path.join(root,'web'),out,{recursive:true,filter:file=>!file.endsWith('.zip')&&!file.endsWith('.idsig')});
 const index=path.join(out,'index.html');
 let html=await fs.readFile(index,'utf8');
 html=html.replace('<head>','<head><meta name="discord-vr-static" content="true">')

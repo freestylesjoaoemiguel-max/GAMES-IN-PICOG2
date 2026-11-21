@@ -48,4 +48,4 @@ GitHub Pages hospeda arquivos estáticos, não o backend OAuth2. Portanto, neste
 3. Aguarde os dois jobs, **build** e **deploy**, ficarem verdes.
 4. Recarregue o site. Se necessário, tente uma aba anônima.
 
-O Pages publica automaticamente após alterações na `main`. O workflow **Discord VR G2 - APK and WebXR** compila o APK separadamente e fornece artefatos de desenvolvimento. O APK oferecido pelo Pages é a versão assinada incluída no código, não uma troca automática por uma nova chave a cada deploy.
+O Pages publica automaticamente após alterações na `main`. O workflow **Discord VR G2 - APK and WebXR** compila o APK separadamente e fornece artefatos de desenvolvimento. O Pages também recompila o APK no GitHub. Sem keystore estável configurada, cada execução usa uma nova chave de desenvolvimento: uma atualização pode exigir reinstalação e apagar dados locais. Não é uma release com assinatura estável.
