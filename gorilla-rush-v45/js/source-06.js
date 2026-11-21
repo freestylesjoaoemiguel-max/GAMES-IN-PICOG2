@@ -165,6 +165,16 @@ function hit(o,d,far){const ex=o.x+d.x*far,ey=o.y+d.y*far,ez=o.z+d.z*far,qx0=Mat
  for(let q=0;q<BIG.length;q++)tri(BIG[q]);
  if(bi<0)return null;const b=bi*9,e1=V3(TRI[b+3]-TRI[b],TRI[b+4]-TRI[b+1],TRI[b+5]-TRI[b+2]),e2=V3(TRI[b+6]-TRI[b],TRI[b+7]-TRI[b+1],TRI[b+8]-TRI[b+2]),n=e1.cross(e2).normalize();if(n.dot(d)>0)n.negate();
  return{distance:bt,point:V3(o.x+d.x*bt,o.y+d.y*bt,o.z+d.z*bt),n,cls:TM[bi],mi:TMI[bi]}}
+// Broad phase for a finite-radius hand. Includes triangle edges and the BIG list.
+function handTriangles(from,to,radius,visit){
+ if(!TRI)return;const lo=from.clone().min(to).addScalar(-radius),hi=from.clone().max(to).addScalar(radius),a=V3(),b=V3(),c=V3();sc++;
+ const take=i=>{if(stamp[i]===sc)return;stamp[i]=sc;const k=i*6;if(TB[k]>hi.x||TB[k+3]<lo.x||TB[k+1]>hi.y||TB[k+4]<lo.y||TB[k+2]>hi.z||TB[k+5]<lo.z)return;const j=i*9;visit(a.fromArray(TRI,j),b.fromArray(TRI,j+3),c.fromArray(TRI,j+6),TM[i])};
+ for(let x=Math.floor(lo.x/CS);x<=Math.floor(hi.x/CS);x++)for(let y=Math.floor(lo.y/CS);y<=Math.floor(hi.y/CS);y++)for(let z=Math.floor(lo.z/CS);z<=Math.floor(hi.z/CS);z++){
+  const list=GM.get(((x+1024)*2048+(y+1024))*2048+(z+1024));if(!list)continue;
+  if(list.f){for(let fx=Math.floor(Math.max(lo.x,x*CS)/FS);fx<=Math.floor(Math.min(hi.x,(x+1)*CS)/FS);fx++)for(let fy=Math.floor(Math.max(lo.y,y*CS)/FS);fy<=Math.floor(Math.min(hi.y,(y+1)*CS)/FS);fy++)for(let fz=Math.floor(Math.max(lo.z,z*CS)/FS);fz<=Math.floor(Math.min(hi.z,(z+1)*CS)/FS);fz++){const fine=list.f.get(((fx+8192)*16384+(fy+8192))*16384+(fz+8192));if(fine)for(const i of fine)take(i)}}else for(const i of list)take(i);
+ }
+ for(const i of BIG)take(i);
+}
 function copyTxt(t){const fb=()=>{try{const a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;left:-999px;top:0;opacity:0';document.body.appendChild(a);a.select();a.setSelectionRange(0,t.length);document.execCommand('copy');a.remove()}catch(e){}};try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).catch(fb);return}}catch(e){}fb()}
 function pickAim(){if(state!='play')return;const d=V3(0,0,-1).applyQuaternion(cam.quaternion),h=hit(cam.position,d,80);if(!h){toast('NOTHING IN AIM',1400);return}
  const f=v=>(Math.round(v*100)/100).toFixed(2),t=f(h.point.x)+', '+f(h.point.y)+', '+f(h.point.z);copyTxt(t);toast('COPIED X,Y,Z: '+t,2600)}

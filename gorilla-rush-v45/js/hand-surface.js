@@ -1,34 +1,61 @@
-// Original lightweight swept-hand contact solver. Not an exact port of Gorilla Tag's locomotion.
-// cast(origin, unitDirection, distance) returns {point, n, distance, cls} or null.
+// Continuous sphere/triangle collision: faces, edges and vertices, not offset rays.
+// query(from, to, radius, visit) visits nearby world triangles (a,b,c,materialClass).
 (function(root){'use strict';
- function solve(from,to,radius,cast){
-  const pos=from.clone(),goal=to.clone(),normal=from.clone().set(0,0,0);let contact=false,cls=0;
-  // Large resets are seeded by locomotion, never swept through the entire map.
-  if(![...from.toArray(),...to.toArray()].every(Number.isFinite)){const safe=from.clone();if(!from.toArray().every(Number.isFinite))safe.set(0,0,0);return {position:safe,contact:false,normal,cls};}
-  if(from.distanceTo(to)>2)return {position:goal,contact:false,normal,cls};
-  for(let pass=0;pass<2;pass++){
-   const delta=goal.clone().sub(pos),len=delta.length();if(len<1e-6)break;const dir=delta.clone().divideScalar(len);
-   let distance=len,found=null;
-   const offsets=[[0,0,0],[radius,0,0],[-radius,0,0],[0,radius,0],[0,-radius,0],[0,0,radius],[0,0,-radius]];
-   for(let i=0;i<offsets.length;i++){
-    const offset=pos.clone().fromArray(offsets[i]),h=cast(pos.clone().add(offset),dir,len+(i===0?radius:0)+.003);
-    // An offset ray can start slightly inside a triangle while the hand centre is
-    // outside. Never let its back-face hit pull a departing hand under the floor.
-    if(!h||pos.clone().sub(h.point).dot(h.n)<-1e-5)continue;
-    const padding=i===0?radius/Math.max(.05,-h.n.dot(dir)):0,t=Math.max(0,h.distance-padding-.002);
-    if(t<distance){distance=t;found=h;}
+ function create(THREE,query){
+  const V=()=>new THREE.Vector3(),tri=new THREE.Triangle(),near=V(),n=V(),edge=V(),rel=V(),vel=V();
+  function sweep(from,to,radius){
+   const delta=to.clone().sub(from),speed2=delta.lengthSq(),skin=Math.max(1e-6,radius*.002);
+   let best=null,time=1;
+   function accept(t,point,normal,cls,depth=0){
+    if(t<0||t>time||normal.lengthSq()<.5)return;
+    if(depth<=skin&&delta.dot(normal)>=-1e-10)return; // Lift away, including initial overlap.
+    time=t;best={time:t,point:point.clone(),normal:normal.clone(),cls,depth};
    }
-   if(!found){pos.copy(goal);break}
-   contact=true;cls=found.cls||0;normal.copy(found.n);pos.addScaledVector(dir,distance);
-   // Slide tangentially, rather than gluing an open hand to the wall.
-   const remain=goal.clone().sub(pos);remain.addScaledVector(normal,-Math.min(0,remain.dot(normal)));goal.copy(pos).add(remain);
+   function sphere(center,r,cls,segment){
+    rel.copy(from).sub(center);vel.copy(delta);
+    if(segment){const along=rel.dot(edge),travel=vel.dot(edge);rel.addScaledVector(edge,-along);vel.addScaledVector(edge,-travel)}
+    const a=vel.lengthSq(),b=rel.dot(vel),c=rel.lengthSq()-r*r,disc=b*b-a*c;
+    if(a<1e-14||disc<0)return;
+    const t=(-b-Math.sqrt(disc))/a;if(t<0||t>time)return;
+    const p=from.clone().addScaledVector(delta,t);let closest=center;
+    if(segment){const u=p.clone().sub(center).dot(edge);if(u<0||u>segment)return;closest=center.clone().addScaledVector(edge,u)}
+    accept(t,closest,p.sub(closest).normalize(),cls);
+   }
+   query(from,to,radius+skin,(a,b,c,cls)=>{
+    tri.set(a,b,c);tri.getNormal(n);if(n.lengthSq()<.5)return;
+    tri.closestPointToPoint(from,near);const dist=from.distanceTo(near);
+    if(dist<radius+skin){const normal=from.clone().sub(near);if(dist>1e-9)normal.divideScalar(dist);else{normal.copy(n);if(normal.dot(delta)>0)normal.negate()}
+     // A shallow overlap on departure must not glue the hand to the underside.
+     if(delta.dot(normal)<0||dist<radius*.9)accept(0,near,normal,cls,Math.max(0,radius-dist));
+    }
+    if(speed2<1e-16)return;
+    const signed=from.clone().sub(a).dot(n),rate=delta.dot(n);
+    if(Math.abs(rate)>1e-12)for(const side of [-1,1]){
+     const t=(side*radius-signed)/rate;if(t<0||t>time)continue;
+     const normal=n.clone().multiplyScalar(side),point=from.clone().addScaledVector(delta,t).addScaledVector(normal,-radius);
+     if(tri.containsPoint(point))accept(t,point,normal,cls);
+    }
+    for(const pair of [[a,b],[b,c],[c,a]]){edge.copy(pair[1]).sub(pair[0]);const len=edge.length();if(len>1e-10){edge.divideScalar(len);sphere(pair[0],radius,cls,len)}sphere(pair[0],radius,cls,0)}
+   });
+   return best;
   }
-  // Real radius-only contact; no old half-metre magnet to the floor.
-  for(const axis of [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]){
-   const d=pos.clone().fromArray(axis),h=cast(pos,d,radius+.004);
-   if(h&&h.distance<=radius+.003){contact=true;cls=h.cls||0;normal.copy(h.n);pos.addScaledVector(h.n,Math.max(0,radius-h.distance));}
+  function solve(from,to,radius){
+   const pos=from.clone(),goal=to.clone(),normal=V(),skin=Math.max(1e-6,radius*.002);let contact=false,cls=0,point=null;
+   if(![...from.toArray(),...to.toArray(),radius].every(Number.isFinite)||radius<=0)return {position:pos,contact:false,normal,cls,point};
+   for(let pass=0;pass<5;pass++){
+    const h=sweep(pos,goal,radius);if(!h){pos.copy(goal);break}
+    contact=true;normal.copy(h.normal);cls=h.cls||0;point=h.point;
+    const d=goal.clone().sub(pos);pos.addScaledVector(d,h.time).addScaledVector(normal,h.depth+skin);
+    const remain=goal.clone().sub(pos);remain.addScaledVector(normal,-Math.min(0,remain.dot(normal)));goal.copy(pos).add(remain);
+   }
+   // Persistent contact tolerance, independent of frame displacement and scale.
+   if(!contact)query(pos,pos,radius+skin*3,(a,b,c,material)=>{
+    tri.set(a,b,c);tri.closestPointToPoint(pos,near);const distance=pos.distanceTo(near);
+    if(distance<=radius+skin*3&&distance>1e-9){contact=true;normal.copy(pos).sub(near).divideScalar(distance);point=near.clone();cls=material||0}
+   });
+   return {position:pos,contact,normal,cls,point};
   }
-  return {position:pos,contact,normal,cls};
+  return {solve,sweep};
  }
- const api={solve};root.HAND_SURFACE=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
+ const api={create};root.HAND_SURFACE=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

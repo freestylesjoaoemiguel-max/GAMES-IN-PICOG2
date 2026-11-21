@@ -37,7 +37,7 @@ jobs:
           python3 -m http.server 5180 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
           PID=$!
           trap 'kill "$PID"' EXIT
-          PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ npm run test:browser
+          PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
           npm run build
           python3 tools/package_project.py
       - uses: actions/upload-artifact@v4

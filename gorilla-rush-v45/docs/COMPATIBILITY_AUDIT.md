@@ -41,7 +41,7 @@ Foi encontrada uma alternativa comunitária Wolvic específica para G2, baseada 
 
 O repositório público `Another-Axiom/GorillaLocomotion` disponibiliza um sistema de locomoção sob MIT. Inspecionamos README e Player.cs: utiliza posições de `leftHandTransform/rightHandTransform`, colisores/casts e Rigidbody Unity. Não foi importado como se funcionasse em JavaScript, nem copiado para alegar fidelidade exata. [6](https://github.com/Another-Axiom/GorillaLocomotion)
 
-Um controle G2 3DoF não mede essas duas posições. A adaptação implementada é própria, com casts aproximados da esfera da mão, apoio, correção do corpo e soltura. Pode reproduzir o princípio de empurrar superfícies com um braço virtual, mas não a mesma entrada/física de duas mãos 6DoF. Torção/rotação é medida; translação é estimada. Ragdoll e dedos medidos não foram implementados nem simulados como tracking real.
+Um controle G2 3DoF não mede essas duas posições. A adaptação implementada é própria, com varredura contínua de uma esfera conservadora envolvendo a mão contra triângulos, âncora na superfície, correção do corpo e soltura. O volume não reproduz cada dedo separadamente e pode deixar folga visual; o pulso é alinhado ao alvo após IK. Pode reproduzir o princípio de empurrar superfícies com um braço virtual, mas não a mesma entrada/física de duas mãos 6DoF. Torção/rotação é medida; translação é estimada. Ragdoll e dedos medidos não foram implementados nem simulados como tracking real.
 
 ## Otimizações aplicadas
 

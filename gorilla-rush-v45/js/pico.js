@@ -4,7 +4,8 @@
 'use strict';
 const PICO=(()=>{
  const p={starting:false,mode:'flat',presenting:false,frame:null,session:null,display:null,head:new THREE.Quaternion(),rawHead:new THREE.Quaternion(),headPosition:V3(),yaw:0,source:null,menu:false,choice:0,assist:false,nearFloor:null,buttonMap:{padClick:0,padTrig:1,padApp:2},ctrl:{present:false,quat:new THREE.Quaternion(),raw:new THREE.Quaternion(),trigger:false},select:new WeakMap(),needsRelease:true,reason:'Entre em VR para ler o controle',stats:{frames:0,eyes:0},calibration:null};
- const arm=ARM_PHYSICS.create(THREE,HAND_SURFACE.solve);p.arm=arm;
+ const surface=HAND_SURFACE.create(THREE,handTriangles);p.surface=surface;
+ const arm=ARM_PHYSICS.create(THREE,surface.solve);p.arm=arm;p.handRadius=.36;
  const yawQ=new THREE.Quaternion(),lastPosition=V3(),eye=V3(),forward=V3(0,0,-1),right=V3(1,0,0);
  const rig=new THREE.Group();S.add(rig);rig.add(cam);const ecam=new THREE.PerspectiveCamera();ecam.matrixAutoUpdate=false;
  let lastTrigger=false,lastClick=false,clickTime=0,clickX=0,longClick=false,lastMenu=false,menuAxis=false,lastText='',hudTime=0,sourceKey=null,ready=false;
@@ -50,11 +51,11 @@ const PICO=(()=>{
   // The source map uses a miniature player: all distances must use PS, not metres.
   let aq=p.ctrl.quat;if(p.calibration)aq=p.ctrl.quat.clone().multiply(p.calibration);
   const was=arm.contact;
-  const touching=arm.update({position:P,eye,quat:p.ctrl.quat,armQuat:aq,forward:fw,right:rt,scale:PS,dt,present:p.ctrl.present,paused:p.menu,trigger:p.ctrl.trigger,needsRelease:p.needsRelease,cast:hit,
+  const touching=arm.update({position:P,eye,quat:p.ctrl.quat,armQuat:aq,forward:fw,right:rt,scale:PS,handRadius:p.handRadius,dt,present:p.ctrl.present,paused:p.menu,trigger:p.ctrl.trigger,needsRelease:p.needsRelease,
    move(delta,stepDt){const n=Math.max(1,Math.ceil(delta.length()/(.04*PS)));const saved=vel.clone();vel.copy(delta).divideScalar(stepDt);const y=P.y;for(let i=0;i<n;i++){stepMove(stepDt/n);wallFix()}sweepFloor(y);vel.copy(saved)}
   });
   tgt[1].copy(arm.target);tgt[0].copy(P);touch[0]=false;touch[1]=touching;
-  if(touching&&!was){tapSound(1,lastCls,.6)}
+  if(touching&&!was){tapSound(1,arm.cls,.6)}
   if(touching)vel.copy(arm.velocity);else if(was)vel.copy(arm.velocity);
   const floor=hit(arm.target,V3(0,-1,0),2*PS);p.nearFloor=floor?floor.distance/PS:null;
  };
@@ -74,21 +75,28 @@ const PICO=(()=>{
  };
  p.afterPose=(fw,rt)=>{
   if(!p.presenting)return;
-  if(!arm.contact){const shift=P.clone().sub(lastPosition);tgt[1].add(shift);arm.target.copy(tgt[1]);arm.last=arm.target.clone()}
+  if(P.distanceTo(lastPosition)>PS*2){p.reset();return}
+  arm.afterMove(P.clone().sub(lastPosition));tgt[1].copy(arm.target);touch[1]=arm.contact;
+  // The original IK clamps its reach; pin the actual wrist to the collision target
+  // after elbow solving, otherwise the visible skin can disagree with the anchor.
+  if(!p.wristRest)p.wristRest=LM.hR.position.clone();
+  LM.hR.position.copy(p.wristRest);LM.hR.updateMatrixWorld(true);
   arm2(LM,'R',tgt[1],fw,rt,PS*1.32);
+  LM.hR.position.copy(LM.hR.parent.worldToLocal(tgt[1].clone()));LM.hR.updateMatrixWorld(true);
   const q=p.ctrl.present?p.ctrl.quat:p.head;
   handPose(LM,'R',V3(0,0,-1).applyQuaternion(q),V3(1,0,0).applyQuaternion(q),p.ctrl.trigger?[.65,.9,.9]:[.1,.1,.1]);
   HO[1].d=V3(0,0,-1).applyQuaternion(q);HO[1].A=V3(1,0,0).applyQuaternion(q);
+  if(!p.radiusMeasured){p.handRadius=Math.max(.36,RIGHT_ARM.radius(pl,LM.hR)/PS*1.08);p.radiusMeasured=true}
   HUD3.m.visible=false;
   if(P.distanceTo(lastPosition)>PS*2)p.reset();
   p.drawHUD();
  };
  p.drawHUD=()=>{
   const now=performance.now(),b=p.ctrl.controls;
-  const status=!p.ctrl.present?'SEM POSE':arm.contact?'APOIADA - EMPURRE / LEVANTE PARA SOLTAR':'NO AR - APONTE MAIS PARA BAIXO';
+  const status=!p.ctrl.present?'SEM POSE':arm.contact?'ANCORADA - EMPURRE / LEVANTE PARA SOLTAR':'NO AR - APONTE MAIS PARA BAIXO';
   const diag=[p.mode+' | '+status,'Piso: '+(p.nearFloor==null?'fora de alcance':p.nearFloor.toFixed(2)+' m virtuais')+' | Caminho: '+arm.travel.toFixed(2)+' m virtuais','3DoF: gire o controle; deslocar sem girar nao e medido.'];
   const text=JSON.stringify([p.menu,p.choice,p.assist,diag,p.reason,b&&b.pressed]);
-  if(text!==lastText&&now-hudTime>100){lastText=text;hudTime=now;ctx.clearRect(0,0,768,448);ctx.fillStyle='rgba(9,22,16,.93)';ctx.fillRect(0,0,768,p.menu?448:150);ctx.textBaseline='middle';ctx.font='bold 25px sans-serif';ctx.fillStyle='#e6ffe9';ctx.fillText('GORILLA RUSH V45 - PICO G2 / TESTE 1',20,25);
+  if(text!==lastText&&now-hudTime>100){lastText=text;hudTime=now;ctx.clearRect(0,0,768,448);ctx.fillStyle='rgba(9,22,16,.93)';ctx.fillRect(0,0,768,p.menu?448:150);ctx.textBaseline='middle';ctx.font='bold 25px sans-serif';ctx.fillStyle='#e6ffe9';ctx.fillText('GORILLA RUSH V45 - PICO G2 / ANCORA 1.0.2',20,25);
    ctx.font='20px sans-serif';if(p.menu){rows.forEach((r,i)=>{ctx.fillStyle=i===p.choice?'#ffcc66':'#e6ffe9';ctx.fillText((i===p.choice?'> ':'  ')+r+(i===2?(p.assist?'LIGADA':'DESLIGADA'):''),20,80+i*45)});ctx.font='16px sans-serif';ctx.fillStyle='#b9e4c4';ctx.fillText(p.reason.slice(0,86),20,330);ctx.fillText('Botoes: '+(b?b.pressed.join(','):'sem pose')+' | Touchpad cima/baixo: escolher',20,360);ctx.fillText('Gatilho: confirmar | Segure clique do touchpad: menu',20,390)}else{diag.forEach((t,i)=>{ctx.fillStyle=i===0?'#ffcc66':'#d4eadb';ctx.fillText(t,20,62+i*29)})}tex.needsUpdate=true;
   }
   const e=P.clone().add(V3(0,EYEUP,0)),f=V3(0,0,-1).applyQuaternion(p.head),u=V3(0,1,0).applyQuaternion(p.head);
@@ -97,7 +105,7 @@ const PICO=(()=>{
    const rc=new THREE.Raycaster(ray.position,V3(0,0,-1).applyQuaternion(p.ctrl.quat));panel.updateMatrixWorld();const h=rc.intersectObject(panel)[0];if(h&&h.uv){const y=(1-h.uv.y)*448,i=Math.round((y-80)/45);if(i>=0&&i<rows.length&&p.choice!==i){p.choice=i;lastText=''}}
   }
  };
- function exit(){p.presenting=false;p.mode='flat';p.frame=null;p.session=null;p.display=null;p.source=null;p.ctrl.present=false;p.menu=false;p.reset();panel.visible=ray.visible=false;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);R.xr.enabled=false;vrView=false;rs();R.setAnimationLoop(frame);document.body.classList.remove('vr-presenting');p.refreshStart();document.getElementById('pico-status').textContent='VR encerrado. Clique em INICIAR VR para voltar.'}
+ function exit(){if(p.wristRest){LM.hR.position.copy(p.wristRest);LM.hR.updateMatrixWorld(true);p.wristRest=null}p.presenting=false;p.mode='flat';p.frame=null;p.session=null;p.display=null;p.source=null;p.ctrl.present=false;p.menu=false;p.reset();panel.visible=ray.visible=false;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);R.xr.enabled=false;vrView=false;rs();R.setAnimationLoop(frame);document.body.classList.remove('vr-presenting');p.refreshStart();document.getElementById('pico-status').textContent='VR encerrado. Clique em INICIAR VR para voltar.'}
  p.stop=()=>{if(p.session)p.session.end();else if(p.display)p.display.exitPresent()};
  p.render=()=>{
   if(!p.presenting)return false;
@@ -152,7 +160,7 @@ const PICO=(()=>{
   p.refreshStart();
  };
  document.getElementById('pico-vr').onclick=p.start;document.getElementById('pico-solo').onclick=()=>enter('solo');
- document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-start-vr-2',userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+ document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-anchor-3',userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,anchor:arm.plant&&arm.plant.toArray(),handRadius:arm.radius,target:arm.target.toArray(),desired:arm.desired.toArray(),floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
  try{Object.assign(p.buttonMap,JSON.parse(localStorage.getItem('v45-buttons')||'{}'))}catch(e){}
  for(const k of ['padClick','padTrig','padApp']){const s=document.getElementById(k);s.value=p.buttonMap[k];s.onchange=p.configureButtons}
  p.detect();return p;
