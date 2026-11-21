@@ -1,8 +1,8 @@
-# Gorilla Rush v45 — adaptação de navegador para PICO G2 (gorila 1.0.3)
+# Gorilla Rush v45 — adaptação de navegador para PICO G2 (gorila 1.0.4)
 
 **Não é uma declaração de compatibilidade física certificada.** O usuário confirmou que a versão anterior acompanhava a cabeça/controle em Firefox Reality ou Wolvic, mas não permitia andar por gesto. Esta edição usa o **novo TXT v45**, em endereço e pacote separados. MonkeGo 1.3 permanece intacto.
 
-- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.3-gorila
+- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.4-gorila
 - APK: `downloads/Gorilla-Rush-v45-PicoG2.apk` — **tela offline + abrir navegador externo**, não VR nativo.
 - Projeto completo: `downloads/Gorilla-Rush-v45-projeto.zip`.
 - Versão anterior: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3
@@ -18,6 +18,10 @@
 7. Se continuar sem andar, veja se o painel mostra **NO AR**, **ANCORADA** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
 
 A interface 2D do jogo original permite selecionar salas, acessórios e modos antes da sessão. A entrada rápida online, o modo tela e os diagnósticos ficam em **Configurações → Controles**, não em um painel flutuante no topo. O botão VR inicia Solo se você ainda não entrou em um modo. Para um modo de rede, entre pela interface original primeiro e então entre em VR. As telas de perfil/amigos/microfone do original continuam 2D; não foram todas reescritas como UI imersiva. Rede PeerJS, voz, câmera opcional e conforto de VR não foram validados em hardware.
+
+## Correção de tremor — 1.0.4
+
+No G2 real, a mão treme e a pose oscila; na 1.0.3 isso fazia o painel piscar NO AR/NO CHÃO e o corpo subir sozinho. Agora soltar e agarrar dependem do **ângulo** (é preciso inclinar ~5° de volta para soltar e voltar a inclinar para baixo para agarrar de novo), e com a mão no chão o corpo segue o ponto mais fundo do empurrão, então tremer ou voltar o controle não move você. Testado com tremor simulado de 3°: parado não pisca nem sobe.
 
 ## Locomoção estilo Gorilla — 1.0.3
 
