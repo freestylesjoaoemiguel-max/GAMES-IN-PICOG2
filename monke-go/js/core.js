@@ -89,6 +89,7 @@ function build(g){pl=g.scene;cloneMats(pl,mats);paint(mats,color);pg.add(pl);S.a
  const s0=1/(r1+r2),mid=sL.clone().add(sR).multiplyScalar(.5);
  ['L','R'].forEach(k=>{const hb=M['h'+k];hb.updateWorldMatrix(true,false);M['pn'+k]=Up.clone().negate().applyQuaternion(hb.getWorldQuaternion(new THREE.Quaternion()).invert())});pl.scale.setScalar(s0);pl.quaternion.copy(qM);pl.position.copy(mid.applyQuaternion(qM).multiplyScalar(-s0));pg.updateMatrixWorld(true);
  L1=r1*s0;L2=r2*s0;ARM=(L1+L2)*.98;LM=Object.assign(M,{g:pg,o:pl,m:mats});LM.hs=LM.head.scale.clone();LM.lab=mkLabel('Gorilla');pg.add(LM.lab);placeLab(LM,pg);LM.blob=mkBlob();document.fonts&&document.fonts.ready.then(()=>LM.nk=null);
+ LM.leftTrianglesRemoved=RIGHT_ARM.strip(pl);
  chk()}
 let gl=[];
 const ACC_IDS=['c_hawaii','g_white','h_top','h_party','h_banana','h_penguin'];
@@ -257,7 +258,7 @@ function infTick(all,now){itId=null;
  if(!ic){INF[all[Math.random()*n|0].id]=1;cd=now+1500;return}
  if(ic>=n){iPh='over';iEnd=now+6000;return}
  if(now<cd)return;
- const cur=Object.assign({},INF),hs=id=>id===me.id?[tgt[0],tgt[1]]:(RM[id]&&RM[id].h?[V3(RM[id].h[0],RM[id].h[1],RM[id].h[2]),V3(RM[id].h[3],RM[id].h[4],RM[id].h[5])]:[]);
+ const cur=Object.assign({},INF),hs=id=>id===me.id?[tgt[1]]:(RM[id]&&RM[id].h?[V3(RM[id].h[0],RM[id].h[1],RM[id].h[2]),V3(RM[id].h[3],RM[id].h[4],RM[id].h[5])]:[]);
  for(const it of all){if(!cur[it.id])continue;const ih=hs(it.id);
   for(const o of all){if(cur[o.id]||INF[o.id])continue;const c=V3(o.x,o.y,o.z);
    let t=Math.hypot(it.x-o.x,it.z-o.z)<(o.id===me.id||it.id===me.id?.7:.55)&&Math.abs(it.y-o.y)<1.1;
@@ -284,11 +285,11 @@ function hostTick(dt,now){
   b.w=Math.atan2(-dir.x,-dir.z);const fw=V3(-Math.sin(b.w),0,-Math.cos(b.w)),rt=V3(-fw.z,0,fw.x),sw=Math.sin(now/130)*.3,sh=V3(b.x-fw.x*.12,b.y+1.1-.3,b.z-fw.z*.12);
   const hL=sh.clone().addScaledVector(rt,-.3).addScaledVector(fw,.25+sw).add(V3(0,-.7,0)),hR=sh.clone().addScaledVector(rt,.3).addScaledVector(fw,.25-sw).add(V3(0,-.7,0));
   RM[b.id]={i:b.id,x:b.x,y:b.y+1.1,z:b.z,w:b.w,p:0,h:[hL.x,hL.y,hL.z,hR.x,hR.y,hR.z],c:b.c,n:b.n,b:1,t:now}});
- if(itId&&now>cd){const it=all.find(e=>e.id===itId);if(it){const hs=id=>id===me.id?[tgt[0],tgt[1]]:(RM[id]&&RM[id].h?[V3(RM[id].h[0],RM[id].h[1],RM[id].h[2]),V3(RM[id].h[3],RM[id].h[4],RM[id].h[5])]:[]),ih=hs(it.id);
+ if(itId&&now>cd){const it=all.find(e=>e.id===itId);if(it){const hs=id=>id===me.id?[tgt[1]]:(RM[id]&&RM[id].h?[V3(RM[id].h[0],RM[id].h[1],RM[id].h[2]),V3(RM[id].h[3],RM[id].h[4],RM[id].h[5])]:[]),ih=hs(it.id);
   for(const o of all){if(o===it)continue;const c=V3(o.x,o.y,o.z);let t=Math.hypot(it.x-o.x,it.z-o.z)<(o.id===me.id||it.id===me.id?.7:.55)&&Math.abs(it.y-o.y)<1.1;if(!t)for(const h of ih)if(h.distanceTo(c)<.45){t=true;break}
    if(t){SCORE[it.id]=(SCORE[it.id]||0)+1;itId=o.id;cd=now+4000;break}}}}}
 let lastSend=0;
-function netSend(now){if(now-lastSend<80)return;lastSend=now;const r=n=>Math.round(n*100)/100,fw=V3(0,0,-1).applyQuaternion(cam.quaternion),w=Math.atan2(-fw.x,-fw.z),h=[r(tgt[0].x),r(tgt[0].y),r(tgt[0].z),r(tgt[1].x),r(tgt[1].y),r(tgt[1].z)];
+function netSend(now){if(now-lastSend<80)return;lastSend=now;const r=n=>Math.round(n*100)/100,fw=V3(0,0,-1).applyQuaternion(cam.quaternion),w=Math.atan2(-fw.x,-fw.z),h=[r(tgt[1].x),r(tgt[1].y),r(tgt[1].z),r(tgt[1].x),r(tgt[1].y),r(tgt[1].z)];
  const o=HO[0].d&&HO[1].d?[].concat(...HO.map(q=>[q.d.x,q.d.y,q.d.z,q.A.x,q.A.y,q.A.z,q.c[0],q.c[1],q.c[2]])).map(r):null;
  const self={i:me.id,x:r(P.x),y:r(P.y),z:r(P.z),w:r(w),p:r(Math.asin(Math.max(-1,Math.min(1,fw.y)))),h,c:color,n:me.nick,o,a:[myAcc.g,myAcc.h,myAcc.c,myAcc.y,myAcc.z,HOOK.style?HOOK.style():'']}; // a[5] = estilo MONKE (ignorado pelo original)
  if(NET.host){const e=[self];for(const k in RM){const q=RM[k];e.push({i:q.i,x:r(q.x),y:r(q.y),z:r(q.z),w:r(q.w),p:r(q.p||0),h:q.h.map(r),c:q.c,n:q.n,b:q.b,o:q.o,a:q.a})}
@@ -330,12 +331,12 @@ function renderPlay(){if(HOOK.render&&HOOK.render())return;if(!vrView||R.xr.isPr
 let last=0,lmark=null,fr=0,fa=.02,lastAdj=0;
 function frame(t){if(!R.xr.isPresenting&&!(HOOK.ownLoop&&HOOK.ownLoop()))requestAnimationFrame(frame);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(HOOK.pre)HOOK.pre(dt,t);
  if(state=='lobby'&&HOOK.lobbyVR&&HOOK.lobbyVR(dt))return;
- if(state=='lobby'&&pl){pg.scale.setScalar(1.6);pg.position.set(-.2,1.2,0);pg.rotation.y+=dt*.8;if(LM){const nv=$('nick').value.trim()||'Gorilla';if(LM.nk!==nv){setLabel(LM.lab,nv);LM.nk=nv}const f0=V3(0,0,-1).applyQuaternion(pg.quaternion);faceCam(LM);LM.blob.visible=false;pg.updateMatrixWorld(true);{const rt0=V3(1,0,0).applyQuaternion(pg.quaternion);['L','R'].forEach((k,ii)=>{const u=LM['u'+k];if(!u)return;const S0=u.getWorldPosition(V3()),T=S0.clone().addScaledVector(rt0,(ii?.03:-.03)*1.6).addScaledVector(V3(0,-1,0),.93*1.6).addScaledVector(f0,.04*1.6);arm2(LM,k,T,f0,rt0,1.6)})}if(LM.head.scale.x<.5)LM.head.scale.copy(LM.hs)}mapG&&(mapG.visible=false);dome.visible=false;S.background=null;S.fog=null;R.setClearColor(0,0);cam.position.set(0,.8,2.8);cam.lookAt(0,.65,0);R.render(S,cam);return}
+ if(state=='lobby'&&pl){pg.scale.setScalar(1.6);pg.position.set(-.2,1.2,0);pg.rotation.y+=dt*.8;if(LM){const nv=$('nick').value.trim()||'Gorilla';if(LM.nk!==nv){setLabel(LM.lab,nv);LM.nk=nv}const f0=V3(0,0,-1).applyQuaternion(pg.quaternion);faceCam(LM);LM.blob.visible=false;pg.updateMatrixWorld(true);{const rt0=V3(1,0,0).applyQuaternion(pg.quaternion);['R'].forEach((k)=>{const ii=1,u=LM['u'+k];if(!u)return;const S0=u.getWorldPosition(V3()),T=S0.clone().addScaledVector(rt0,(ii?.03:-.03)*1.6).addScaledVector(V3(0,-1,0),.93*1.6).addScaledVector(f0,.04*1.6);arm2(LM,k,T,f0,rt0,1.6)})}if(LM.head.scale.x<.5)LM.head.scale.copy(LM.hs)}mapG&&(mapG.visible=false);dome.visible=false;S.background=null;S.fog=null;R.setClearColor(0,0);cam.position.set(0,.8,2.8);cam.lookAt(0,.65,0);R.render(S,cam);return}
  if(state!='play')return;mapG&&(mapG.visible=true);dome.visible=true;S.fog=FOG;look();
  if((fr&7)==0){const lim=gfx==0?55:gfx==1?80:130;for(const m of mapMeshes)if(m.material.alphaTest){const b=m.geometry.boundingSphere;m.visible=Math.hypot(b.center.x-P.x,b.center.z-P.z)-b.radius<lim}}
- const d=V3(0,0,-1).applyQuaternion(cam.quaternion),fw=V3(d.x,0,d.z).normalize(),now=performance.now();if(HOOK.bodyFw)HOOK.bodyFw(fw,d,dt);const rt=V3(-fw.z,0,fw.x);const XRH=[null,null];if(R.xr.isPresenting&&!(HOOK.ctrlHands&&HOOK.ctrlHands())){xrRig.position.set(P.x,P.y-1.1,P.z);for(let i=0;i<2;i++){const c=R.xr.getController(i);if(c.visible)XRH[i]=c.getWorldPosition(V3())}}
+ const d=V3(0,0,-1).applyQuaternion(cam.quaternion),fw=V3(d.x,0,d.z).normalize(),now=performance.now();if(HOOK.bodyFw)HOOK.bodyFw(fw,d,dt);const rt=V3(-fw.z,0,fw.x);const XRH=[null,null];if(R.xr.isPresenting&&!(HOOK.ctrlHands&&HOOK.ctrlHands())){xrRig.position.set(P.x,P.y-1.1,P.z);const c=INPUT.activeSource;if(c&&VRP.xrCtrlPosition){const position=V3();if(VRP.xrCtrlPosition(c,position))XRH[1]=position}}
   const dsum=V3();let n=0,dnS=0;
- for(let i=0;i<2;i++){const lh=HOOK.hand?HOOK.hand(i,fw,rt,dt):null,s=slot[i],xh=XRH[i],on=!!lh||!!xh||(s.p&&now-s.t<350);if((xh||lh)&&!s.p)s.p={x:.5,y:0,s:.1,l:null};
+ for(let i=0;i<2;i++){if(HOOK.handEnabled&&!HOOK.handEnabled(i)){touch[i]=false;hv[i].set(0,0,0);slot[i].p=null;slot[i].t=0;HO[i].d=null;tgt[i].copy(P);continue;}const lh=HOOK.hand?HOOK.hand(i,fw,rt,dt):null,s=slot[i],xh=XRH[i],on=INPUT.context!=='menu'&&(!!lh||!!xh||(!VRP.vrActive()&&s.p&&now-s.t<350));if((xh||lh)&&!s.p)s.p={x:.5,y:0,s:.1,l:null};
   const goal=on?V3((s.p.x-.5)*1.8,(.5-s.p.y)*3.2-.15,Math.max(.4,Math.min(.9,.12/s.p.s))):V3(i?.22:-.22,-1.05,.02);
   const prev=hl[i].clone();hl[i].lerp(goal,1-Math.exp(-dt*20));if(xh){const dP=xh.clone().sub(P);hl[i].set(dP.dot(rt),dP.y,dP.dot(fw))}if(lh)hl[i].copy(lh);
   const sh=V3(P.x-fw.x*.12,P.y-.3,P.z-fw.z*.12),des=P.clone().addScaledVector(rt,hl[i].x).addScaledVector(V3(0,1,0),hl[i].y).addScaledVector(fw,hl[i].z),dd=des.sub(sh),w=sh.clone().add(dd.setLength(Math.min(dd.length(),ARM)));
@@ -349,12 +350,12 @@ function frame(t){if(!R.xr.isPresenting&&!(HOOK.ownLoop&&HOOK.ownLoop()))request
     nc=[cl(dist(l[4],l[0])/dist(l[2],l[0]),1.15,1.95),fcv(l[5],l[6],l[7],l[8],cl(dist(l[8],l[0])/dist(l[5],l[0]),1.0,1.85)),fcv(l[9],l[10],l[11],l[12],cl(dist(l[12],l[0])/dist(l[9],l[0]),1.0,1.85))];
     if(!ho.d){ho.d=d;ho.A=A}else{ho.d.lerp(d,k2).normalize();ho.A.lerp(A,k2).normalize()}for(let q=0;q<3;q++)ho.c[q]+=(nc[q]-ho.c[q])*(1-Math.exp(-dt*15))}
    else{for(let q=0;q<3;q++)ho.c[q]+=(.3-ho.c[q])*.1;if(ho.d&&!on)ho.d=null}}
-  if(on){hv[i].lerp(hl[i].clone().sub(prev).divideScalar(dt),1-Math.exp(-dt*12));if(!(HOOK.noPush&&HOOK.noPush(i)))dnS+=Math.max(0,-hv[i].y-.3)}else hv[i].set(0,0,0);
+  if(on){hv[i].lerp(hl[i].clone().sub(prev).divideScalar(dt),1-Math.exp(-dt*12)).clampLength(0,8);if(!(HOOK.noPush&&HOOK.noPush(i)))dnS+=Math.max(0,-hv[i].y-.3)}else hv[i].set(0,0,0);
   if(on&&tc&&tp&&!(HOOK.noPush&&HOOK.noPush(i))){const dn=Math.max(0,-hv[i].y-.25),bk=Math.max(0,-hv[i].z-.25),sp2=dn+bk;if(sp2>0){dsum.addScaledVector(fw,sp2*dt*1.15).addScaledVector(rt,-hv[i].x*dt*.3);dsum.y+=dn*dt;n++}}}
  const climbing=HOOK.climb?HOOK.climb(dt,fw,rt):false;
  jumpCool-=dt;if(dnS>.9&&gPrev&&jumpCool<=0){jumpReq=true;jumpCool=.4}
  if(n&&!climbing){const hx=dsum.x,hz=dsum.z,hsp=Math.hypot(hx,hz)/dt;if(hsp>.05){vel.x+=hx*22*TUNE.imp;vel.z+=hz*22*TUNE.imp}if(dsum.y/dt>.6)vel.y=Math.min(5.6*TUNE.jmp,Math.max(vel.y,0)+dsum.y*3.6*TUNE.imp)}
- if(!climbing)vel.y-=TUNE.grav*dt;{const ns=Math.min(8,Math.max(1,Math.ceil(vel.length()*dt/.1)));for(let s=0;s<ns;s++){const y0=P.y;P.addScaledVector(vel,dt/ns);wallFix();groundSweep(y0)}}
+ if(!climbing){vel.y-=TUNE.grav*dt;const ns=Math.min(8,Math.max(1,Math.ceil(vel.length()*dt/.1)));for(let s=0;s<ns;s++){const y0=P.y;P.addScaledVector(vel,dt/ns);wallFix();groundSweep(y0)}}
  const g=hit(V3(P.x,P.y+.3,P.z),DOWN,3);let grounded=false;if(g&&P.y-1.1<g.point.y+.05){grounded=true;if(P.y-1.1<g.point.y)P.y=g.point.y+1.1;if(vel.y<0)vel.y=0}gPrev=grounded;gCls=g?(g.cls|0):0;
   {let fx=0,fz=0;if(keys.KeyW||keys.ArrowUp)fz++;if(keys.KeyS||keys.ArrowDown)fz--;if(assist&&ptrs.size&&!dragMoved)fz++;if(keys.KeyD||keys.ArrowRight)fx++;if(keys.KeyA||keys.ArrowLeft)fx--;
 
@@ -366,7 +367,7 @@ function frame(t){if(!R.xr.isPresenting&&!(HOOK.ownLoop&&HOOK.ownLoop()))request
  if(P.y<floorMin){P.copy(spawnPos());vel.set(0,0,0);HOOK.respawned&&HOOK.respawned()}
  if(HOOK.rig&&HOOK.rig()){}else if(R.xr.isPresenting){xrRig.position.set(P.x,P.y-1.1,P.z)}else cam.position.copy(P);
  pg.quaternion.copy(faceQ(fw));pg.position.set(P.x-fw.x*.12,P.y-.3,P.z-fw.z*.12);pg.updateMatrixWorld(true);setBlob(LM.blob,P.x,P.y-1.1,P.z,g||hit(V3(P.x,P.y,P.z),DOWN,14));
- arm2(LM,'L',tgt[0],fw,rt);arm2(LM,'R',tgt[1],fw,rt);if((fr&1)==0){handPose(LM,'L',HO[0].d,HO[0].A,HO[0].c);handPose(LM,'R',HO[1].d,HO[1].A,HO[1].c)}
+ arm2(LM,'R',tgt[1],fw,rt);if((fr&1)==0)handPose(LM,'R',HO[1].d,HO[1].A,HO[1].c)
  fr++;if(gfx>0&&fr%3==0){const ld=V3(30,55,20).normalize(),lr=V3().crossVectors(_Y,ld).normalize(),lu=V3().crossVectors(ld,lr),tx0=40/sun.shadow.mapSize.x,a1=Math.round(P.dot(lr)/tx0)*tx0,a2=Math.round(P.dot(lu)/tx0)*tx0,a3=P.dot(ld),T=V3().addScaledVector(lr,a1).addScaledVector(lu,a2).addScaledVector(ld,a3);sun.target.position.copy(T);sun.position.set(T.x+30,T.y+55,T.z+20);sun.target.updateMatrixWorld();R.shadowMap.needsUpdate=true}
  fa=fa*.95+dt*.05;if(!R.xr.isPresenting&&!(HOOK.vrActive&&HOOK.vrActive())&&now-lastAdj>2500){if(fa>.032&&dpr>.5){dpr=Math.max(.5,dpr-.12);lastAdj=now;rs()}else if(fa>.05&&gfx>0&&dpr<=.55){gfx--;dpr=prCap();lastAdj=now;fa=.02;rs();if(gfx<2)mapMeshes.forEach(m=>m.castShadow=false);if(gfx==0){R.shadowMap.enabled=false;sun.castShadow=false}$('gfx').value=gfx}else if(fa<.021&&dpr<prCap()){dpr=Math.min(prCap(),dpr+.08);lastAdj=now;rs()}}
  if(NET.host)hostTick(dt,now);netSend(now);renderRemotes(dt);hudTick(now);

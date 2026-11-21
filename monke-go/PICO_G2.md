@@ -4,7 +4,7 @@ Consulte [README](README.md) para links, calibração, build e limitações.
 
 - **Site:** WebXR ou WebVR 1.1 conforme API efetivamente oferecida pelo navegador.
 - **APK:** jogo local em **tela/WebView** e botão para abrir o site no navegador externo. Não integra runtime PICO nativo.
-- **Controle:** orientação real fornecida pela API; posição estimada por modelo de braço. Não cria 6DoF.
+- **Controle:** somente o **braço direito**; braço esquerdo desativado no visual e na física. Orientação fornecida pela API, posição estimada pelo modelo de braço. Não cria 6DoF.
 - **Testes:** Node + Chromium/WebVR simulado; nenhum teste físico G2 ou Android.
 - **Sem API VR disponível:** continua em tela; não substitui o runtime por Cardboard no G2.
 

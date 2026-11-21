@@ -1,5 +1,17 @@
 # Changelog — porte para Pico G2
 
+## 1.1.0 — somente braço direito
+- Desativação visual e física do braço esquerdo; remoção de troca automática/espelhamento.
+- Migração de configurações antigas para braço direito fixo; menus sem opções de duas mãos.
+- Pose suavizada com limite de velocidade e proteção contra impulsos ao reconectar/recentrar.
+- Correção da integração duplicada de movimento ao escalar. Cancelar menu/pose não arremessa o jogador.
+- APK versionCode 2/versionName 1.1.0, scripts web versionados.
+- 24 testes Node e 17 verificações Chromium (WebVR simulado); headset físico não testado.
+
+---
+
+## Histórico que acompanhava o ZIP (estado anterior)
+
 ## js/platform.js
 - Novo `isPico` (UA contém "Pico", `?device=pico`, ou `displayName` do VRDisplay contém "pico").
 - `eyeNative` = resolução real por olho lida do `VRDisplay` (padrão 1920×2160 = G2 4K).

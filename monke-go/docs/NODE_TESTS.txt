@@ -1,98 +1,158 @@
 
-> monkego-pico-g2@1.0.0 test
+> monkego-pico-g2@1.1.0 test
 > node --test tests/*.test.cjs
 
 TAP version 13
-# Subtest: orientation rejects null, zero, NaN and infinity; normalizes
-ok 1 - orientation rejects null, zero, NaN and infinity; normalizes
+# Subtest: left arm never returns a target or pushes, even with legacy handIndex=0
+ok 1 - left arm never returns a target or pushes, even with legacy handIndex=0
   ---
-  duration_ms: 1.59802
+  duration_ms: 2.984439
+  type: 'test'
+  ...
+# Subtest: no alternating hand after repeated surface contact
+ok 2 - no alternating hand after repeated surface contact
+  ---
+  duration_ms: 4.613723
+  type: 'test'
+  ...
+# Subtest: disabled arm does not reset right-arm smoothing or startup grace
+ok 3 - disabled arm does not reset right-arm smoothing or startup grace
+  ---
+  duration_ms: 1.002577
+  type: 'test'
+  ...
+# Subtest: reconnect seeds pose without impulse and requires held trigger release
+ok 4 - reconnect seeds pose without impulse and requires held trigger release
+  ---
+  duration_ms: 1.090398
+  type: 'test'
+  ...
+# Subtest: disconnect/menu cancels grab without boosting old velocity
+ok 5 - disconnect/menu cancels grab without boosting old velocity
+  ---
+  duration_ms: 0.928301
+  type: 'test'
+  ...
+# Subtest: reset clears both old contact buffers and camera fallback points
+ok 6 - reset clears both old contact buffers and camera fallback points
+  ---
+  duration_ms: 1.530413
+  type: 'test'
+  ...
+# Subtest: large runtime recenter is not treated as an arm swing or throw
+ok 7 - large runtime recenter is not treated as an arm swing or throw
+  ---
+  duration_ms: 1.152258
+  type: 'test'
+  ...
+# Subtest: climbing correction is bounded and measured after collisions
+ok 8 - climbing correction is bounded and measured after collisions
+  ---
+  duration_ms: 1.322083
+  type: 'test'
+  ...
+# Subtest: right-only geometry removes left skin triangles without changing source geometry
+ok 9 - right-only geometry removes left skin triangles without changing source geometry
+  ---
+  duration_ms: 1.187753
+  type: 'test'
+  ...
+# Subtest: saved auto-swap/left settings cannot re-enable the second arm
+ok 10 - saved auto-swap/left settings cannot re-enable the second arm
+  ---
+  duration_ms: 2.206201
+  type: 'test'
+  ...
+# Subtest: orientation rejects null, zero, NaN and infinity; normalizes
+ok 11 - orientation rejects null, zero, NaN and infinity; normalizes
+  ---
+  duration_ms: 1.48196
   type: 'test'
   ...
 # Subtest: source chosen by identity and handedness, not inputSources index
-ok 2 - source chosen by identity and handedness, not inputSources index
+ok 12 - source chosen by identity and handedness, not inputSources index
   ---
-  duration_ms: 0.323976
+  duration_ms: 0.272942
   type: 'test'
   ...
 # Subtest: legacy mapping configurable and safe with missing axes
-ok 3 - legacy mapping configurable and safe with missing axes
+ok 13 - legacy mapping configurable and safe with missing axes
   ---
-  duration_ms: 0.399611
+  duration_ms: 0.310695
   type: 'test'
   ...
 # Subtest: xr-standard uses trigger zero and never treats stick click as menu
-ok 4 - xr-standard uses trigger zero and never treats stick click as menu
+ok 14 - xr-standard uses trigger zero and never treats stick click as menu
   ---
-  duration_ms: 0.25244
+  duration_ms: 0.208978
   type: 'test'
   ...
 # Subtest: touchpad zero axis is preserved, never mixed with stick
-ok 5 - touchpad zero axis is preserved, never mixed with stick
+ok 15 - touchpad zero axis is preserved, never mixed with stick
   ---
-  duration_ms: 0.211517
+  duration_ms: 0.156271
   type: 'test'
   ...
 # Subtest: axis swap and inversion are explicit calibration options
-ok 6 - axis swap and inversion are explicit calibration options
+ok 16 - axis swap and inversion are explicit calibration options
   ---
-  duration_ms: 0.153129
+  duration_ms: 0.136328
   type: 'test'
   ...
 # Subtest: select events tied to XRInputSource remain correct on reorder
-ok 7 - select events tied to XRInputSource remain correct on reorder
+ok 17 - select events tied to XRInputSource remain correct on reorder
   ---
-  duration_ms: 2.891157
+  duration_ms: 1.988673
   type: 'test'
   ...
 # Subtest: lost XR pose is not replaced with stale legacy gamepad
-ok 8 - lost XR pose is not replaced with stale legacy gamepad
+ok 18 - lost XR pose is not replaced with stale legacy gamepad
   ---
-  duration_ms: 1.30538
+  duration_ms: 0.8548
   type: 'test'
   ...
 # Subtest: disconnect does not synthesize jump from released touchpad
-ok 9 - disconnect does not synthesize jump from released touchpad
+ok 19 - disconnect does not synthesize jump from released touchpad
   ---
-  duration_ms: 1.642036
+  duration_ms: 1.195947
   type: 'test'
   ...
 # Subtest: legacy null pose discarded; reconnect valid orientation resumes
-ok 10 - legacy null pose discarded; reconnect valid orientation resumes
+ok 20 - legacy null pose discarded; reconnect valid orientation resumes
   ---
-  duration_ms: 1.825588
+  duration_ms: 1.399203
   type: 'test'
   ...
 # Subtest: App menu is edge-triggered, no repeated toggle
-ok 11 - App menu is edge-triggered, no repeated toggle
+ok 21 - App menu is edge-triggered, no repeated toggle
   ---
-  duration_ms: 1.50186
+  duration_ms: 1.120248
   type: 'test'
   ...
 # Subtest: WebXR frame resolves source targetRaySpace and rejects missing pose
-ok 12 - WebXR frame resolves source targetRaySpace and rejects missing pose
+ok 22 - WebXR frame resolves source targetRaySpace and rejects missing pose
   ---
-  duration_ms: 1.964228
+  duration_ms: 1.647538
   type: 'test'
   ...
 # Subtest: PICO detected by display with generic UA, low graphics and no Cardboard fallback
-ok 13 - PICO detected by display with generic UA, low graphics and no Cardboard fallback
+ok 23 - PICO detected by display with generic UA, low graphics and no Cardboard fallback
   ---
-  duration_ms: 2.171672
+  duration_ms: 1.8836
   type: 'test'
   ...
 # Subtest: all supplied game assets kept byte-for-byte
-ok 14 - all supplied game assets kept byte-for-byte
+ok 24 - all supplied game assets kept byte-for-byte
   ---
-  duration_ms: 21.154506
+  duration_ms: 19.110287
   type: 'test'
   ...
-1..14
-# tests 14
+1..24
+# tests 24
 # suites 0
-# pass 14
+# pass 24
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 136.377499
+# duration_ms 210.828173

@@ -14,7 +14,7 @@ const INPUT=(function(){
     trigDown:false,trigUp:false,
     xrSources:[],        // preenchido por vr.js (WebXR)
     xrSelect:new WeakMap(),
-    activeSource:null,trackingRevision:0,
+    activeSource:null,trackingRevision:0,handIndex:1,
   };
   const PRESS_LONG=.6;let pad0=null,padT=0,padLong=false,touchStart=null,lastTrig=false,lastBack=false,swipeLock=0;
   const isVRPad=g=>!!(g&&(g.pose||/Oculus|Gear VR|Daydream|OpenVR|Pacific|Pico|Goblin|Neo/i.test(g.id||'')||g.hand||g.mapping==='xr-standard'));
@@ -28,11 +28,11 @@ const INPUT=(function(){
   function readWebVR(){
     const gps=navigator.getGamepads?navigator.getGamepads():[];let candidates=[];
     for(let i=0;i<gps.length;i++){const p=gps[i];if(p&&p.connected&&p.pose&&TRACKING.orientation(p.pose.orientation))candidates.push(p)}
-    const desired=SETTINGS.handed;const g=candidates.find(p=>desired!=='auto'&&p.hand===desired)||candidates.find(p=>p.index===I.legacyIndex)||candidates[0];if(!g)return false;
+    const desired='right';const g=candidates.find(p=>desired!=='auto'&&p.hand===desired)||candidates.find(p=>p.index===I.legacyIndex)||candidates[0];if(!g)return false;
     const c=I.ctrl;c.present=true;c.source='webvr';c.id=g.id;c.hand=g.hand||'right';c.raw.fromArray(TRACKING.orientation(g.pose.orientation));I.legacyIndex=g.index;sourceKey='legacy:'+g.index+':'+g.id;I.currentGamepad=g;I.selected=false;return true;
   }
   function readWebXR(){
-    const s=TRACKING.choose(I.xrSources,SETTINGS.handed,I.activeSource);if(!s)return false;
+    const s=TRACKING.choose(I.xrSources,'right',I.activeSource);if(!s)return false;
     if(!VRP.xrCtrlQuat(s,I.ctrl.raw))return false;
     I.activeSource=s;sourceKey=s;const c=I.ctrl;c.present=true;c.source='webxr';c.id=(s.profiles&&s.profiles[0])||'xr';c.hand=s.handedness==='left'?'left':'right';I.currentGamepad=s.gamepad;I.selected=I.xrSelect.get(s);return true;
   }
@@ -54,7 +54,7 @@ const INPUT=(function(){
     I.actions.length=0;while(pend.length)I.actions.push(pend.shift());const c=I.ctrl,was=c.present;
     const oldSource=sourceKey;c.present=false;sourceKey=null;
     if(VRP.mode==='webxr')readWebXR();else readWebVR();
-    const hand=SETTINGS.handed==='auto'?c.hand:SETTINGS.handed;I.handIndex=hand==='left'?0:1;
+    I.handIndex=1; // A sole G2 controller always drives the RIGHT avatar arm, regardless of firmware label.
     if(oldSource!==sourceKey){pad0=null;padLong=false;touchStart=null;lastTrig=false;lastBack=false;I.trackingRevision++;if(typeof LOCO!=='undefined')LOCO.reset();}
     if(!c.present){c.trigger=c.click=c.touch=false;c.x=c.y=0;I.padRaw=[];I.activeSource=null;}
 
@@ -62,7 +62,7 @@ const INPUT=(function(){
     I.gaze=!c.present;
     if(c.present&&!was)toast('Controle conectado: '+(c.id||'controle 3DoF'),2500);
     // mão do controle
-    const h=SETTINGS.handed==='auto'?c.hand:SETTINGS.handed;I.handIndex=h==='left'?0:1;
+    I.handIndex=1;
     // orientação no mundo = giro (snap turn / yaw do rig) * orientação do controle
     VRP.toWorldQuat(c.raw,c.quat);
     // gatilho

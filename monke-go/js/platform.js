@@ -49,14 +49,19 @@ const PLATFORM=(function(){
 // ---------- configurações (persistentes em localStorage) ----------
 const SETTINGS=(function(){
   const D={impulse:2.2,maxSpeed:9,gravity:9.8,friction:5.5,sens:1.25,assist:.5,quality:0,
-    arm:1.32,simHand:3,style:'monke',color:'#5b3a24',smooth:.5,speedMode:'fast',music:.35,snap:1,names:1,handed:'auto',vrApi:'auto',map:'forest',mode:'solo',reach:1,padClick:0,padTrig:1,padApp:2,padSwap:false,padInvertY:false};
+    arm:1.32,simHand:0,style:'monke',color:'#5b3a24',smooth:.5,speedMode:'fast',music:.35,snap:1,names:1,handed:'right',vrApi:'auto',map:'forest',mode:'solo',reach:1,padClick:0,padTrig:1,padApp:2,padSwap:false,padInvertY:false};
   const S=Object.assign({},D);
   try{const j=JSON.parse(localStorage.getItem('monke_settings')||'{}');for(const k in D)if(k in j&&typeof j[k]===typeof D[k])S[k]=j[k]}catch(e){}
-  // migração: quem já tinha configurações salvas ganha as novas mãos estáveis e braços longos
-  try{if(localStorage.getItem('monke_settings_v')!=='2'){S.simHand=3;S.arm=Math.max(S.arm,1.32);localStorage.setItem('monke_settings_v','2')}}catch(e){}
+  // Migrate EVERY existing profile: old auto-swap/left-hand values must not return.
+  S.simHand=0;S.handed='right';
+  S.smooth=Math.max(0,Math.min(1,Number.isFinite(S.smooth)?S.smooth:.5));
+  S.sens=Math.max(.5,Math.min(2.5,Number.isFinite(S.sens)?S.sens:1.25));
+  S.arm=Math.max(1,Math.min(1.45,Number.isFinite(S.arm)?S.arm:1.32));
+  S.reach=1;
   S.defaults=D;
-  S.save=()=>{try{const o={};for(const k in D)o[k]=S[k];localStorage.setItem('monke_settings',JSON.stringify(o))}catch(e){}};
+  S.save=()=>{S.simHand=0;S.handed='right';try{const o={};for(const k in D)o[k]=S[k];localStorage.setItem('monke_settings',JSON.stringify(o))}catch(e){}};
   S.reset=()=>{for(const k in D)S[k]=D[k];S.save()};
+  S.save();
   return S})();
 
 // Faixas/rótulos usados pelo menu VR e pelo lobby 2D (um único lugar = sem divergência).
@@ -71,7 +76,6 @@ const SETTING_DEFS=[
   {k:'assist',l:'Assistência',min:0,max:1,step:.1,f:v=>Math.round(v*100)+'%'},
   {k:'arm',l:'Comprimento dos braços',min:1,max:1.45,step:.05,f:v=>v.toFixed(2)+'x'},
   {k:'quality',l:'Qualidade gráfica',opts:[[-1,'Auto'],[0,'Baixa (PICO G2)'],[1,'Média'],[2,'Alta']]},
-  {k:'simHand',l:'Duas mãos (1 controle)',opts:[[3,'Troca automática (estável)'],[1,'Alternada (atraso)'],[2,'Espelhada'],[0,'Só uma mão']]},
   {k:'smooth',l:'Estabilização do controle',min:0,max:1,step:.1,f:v=>v<=0?'Desligada':Math.round(v*100)+'%'},
   {k:'snap',l:'Giro no touchpad',opts:[[0,'Desligado'],[1,'Snap 30°'],[2,'Snap 45°']]},
   {k:'padClick',l:'Botão: clique do touchpad',opts:[[0,'Botão 0 (padrão)'],[1,'Botão 1'],[2,'Botão 2'],[3,'Botão 3'],[4,'Botão 4']]},
@@ -79,6 +83,5 @@ const SETTING_DEFS=[
   {k:'padApp',l:'Botão: Menu/App (abre menu)',opts:[[-1,'Nenhum'],[2,'Botão 2 (padrão)'],[3,'Botão 3'],[4,'Botão 4'],[0,'Botão 0'],[1,'Botão 1']]},
   {k:'padSwap',l:'Trocar eixos do touchpad',opts:[[false,'Não'],[true,'Sim']]},
   {k:'padInvertY',l:'Inverter eixo vertical',opts:[[false,'Não'],[true,'Sim']]},
-  {k:'handed',l:'Mão do controle',opts:[['auto','Auto'],['right','Direita'],['left','Esquerda']]},
   {k:'names',l:'Nomes dos jogadores',opts:[[1,'Mostrar'],[0,'Ocultar']]},
 ];
