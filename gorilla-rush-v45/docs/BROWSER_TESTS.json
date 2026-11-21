@@ -1,0 +1,52 @@
+{
+  "passed": [
+    "Both supplied maps and skinned avatar load with DecompressionStream unavailable; 68 payload hashes tested separately",
+    "Real frame loop requests legacy presentation, draws both eye projection/view matrices and submits frames",
+    "Right wrist matches collider target and measured orientation in actual miniature player scale",
+    "Left skin removed only from local rendering, supplied GLB preserved",
+    "Actual full v45 frame: three ground strokes move forward without trigger/joystick; lifting releases and stationary hand stops",
+    "Actual skinned hand rotates 360 degrees about all three axes",
+    "Immersive menu renders in scene and cancels locomotion without throwing player",
+    "Controller loss cancels contact and explicitly reports missing pose",
+    "WebXR reads selected source targetRaySpace; pose loss cannot fall back to stale legacy controller"
+  ],
+  "errors": [],
+  "neutral": {
+    "error": 6.806262153146359e-13,
+    "gap": 8.465988265462621e-8,
+    "wrist": [
+      69.9049999658699,
+      29.550176357762354,
+      -24.87750004508947
+    ],
+    "target": [
+      69.90499999999999,
+      29.550176420765315,
+      -24.8775
+    ],
+    "PS": 0.25,
+    "mesh": 2
+  },
+  "movement": {
+    "strokes": [
+      0.2572208421238535,
+      0.2509606492254984,
+      0.2509606492253337
+    ],
+    "forward": 0.7591421405746855,
+    "release": true,
+    "drift": 0.008521934919570096,
+    "trigger": false,
+    "keys": false,
+    "buttons": [],
+    "scale": 0.25
+  },
+  "rotation": {
+    "forwardError": 2.5399250796552452e-8,
+    "rollError": 5.607439269267811e-8
+  },
+  "limitations": [
+    "Mocked WebVR display/WebXR frame and controller, real v45 game/model/triangle collision/WebGL.",
+    "No physical G2, real immersive compositor, native SDK, Android installation, latency/FPS or multiplayer test."
+  ]
+}

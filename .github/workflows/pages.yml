@@ -12,7 +12,7 @@ jobs:
   build:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -64,9 +64,25 @@ jobs:
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
           PREVIEW_BASE_URL=http://127.0.0.1:5177/webxr/ npm run test:browser
+      - name: Build and test new Gorilla Rush v45 without replacing MonkeGo
+        run: |
+          set -euo pipefail
+          bash gorilla-rush-v45/tools/bootstrap_android.sh
+          cd gorilla-rush-v45
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test | tee docs/NODE_TESTS.txt
+          npm run build
+          python3 -m http.server 5180 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ npm run test:browser
+          npm run build
+          python3 tools/package_project.py
       - name: Preserve PicoVerso and add independent WebXR apps
         run: |
           set -euo pipefail
+          mkdir -p site/gorilla-rush-v45
+          cp -r gorilla-rush-v45/build/webxr/. site/gorilla-rush-v45/
           mkdir -p site/discord-vr-g2
           cp -r index.html js lib site/
           cp -r discord-vr-g2/build/webxr/. site/discord-vr-g2/
