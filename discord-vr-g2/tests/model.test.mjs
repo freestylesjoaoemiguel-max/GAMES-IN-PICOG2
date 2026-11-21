@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {DEFAULTS,preferences,keyPosition,editText,KEYS} from '../web/src/model.js';
+test('medium quality and VR curvature are defaults',()=>{assert.equal(DEFAULTS.quality,1);assert.equal(DEFAULTS.curve,2);});
+test('preferences clamp untrusted values',()=>{const p=preferences({quality:99,size:-3,keyboardSize:200,sensitivity:'bad'});assert.equal(p.quality,2);assert.equal(p.size,0);assert.equal(p.keyboardSize,1.6);assert.equal(p.sensitivity,1);});
+test('keys form a symmetric arc facing the user',()=>{const left=keyPosition(0,10,0,2),right=keyPosition(9,10,0,2);assert(Math.abs(left.x+right.x)<1e-10);assert.equal(left.z,right.z);assert(left.angle<0&&right.angle>0);assert(right.z>-1.65);});
+test('immersive curvature is stronger than soft',()=>{assert(keyPosition(9,10,0,3).z>keyPosition(9,10,0,1).z);});
+test('flat mode is nearly planar',()=>{assert(Math.abs(keyPosition(9,10,0,0).z+1.65)<.004);});
+test('required keys are present',()=>{const keys=KEYS.flat();for(const key of ['Q','P','Z','0','9','ESPAÇO','ENTER','⌫','SHIFT','@','.'])assert(keys.includes(key));});
+test('backspace preserves unicode code points',()=>{assert.equal(editText('Oi✨','⌫'),'Oi');assert.equal(editText('','⌫'),'');});
+test('shift and special keys',()=>{assert.equal(editText('','Q'),'q');assert.equal(editText('','Q',true),'Q');assert.equal(editText('oi','ESPAÇO'),'oi ');assert.equal(editText('oi','ENTER'),'oi');});
+test('message length is capped',()=>assert.equal(editText('x'.repeat(1800),'Q').length,1800));

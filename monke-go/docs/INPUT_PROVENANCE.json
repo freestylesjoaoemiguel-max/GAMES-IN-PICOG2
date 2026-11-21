@@ -1,0 +1,28 @@
+{
+  "input": "MonkeGo-PicoG2-projeto-completo.zip",
+  "bytes": 14264014,
+  "sha256": "cf882167eb0c80f41987885eda199ed48483a46d2749df153870d6a6bd2c302c",
+  "assetHashes": {
+    "assets/sounds/wood.mp3": "9c982aaa30c21d6a4c20335ede2ec32ae9334c01212ff1d154a8ae414248bc3b",
+    "assets/sounds/stone.mp3": "d73aadad9fc7736c588f797441044c17863083c8a71c7c8b1ae7a2de9a88ee3b",
+    "assets/sounds/metal.mp3": "022140213005898b6e2474f6e1eaaf228be77c0a2681563b527b31da3dfa2642",
+    "assets/sounds/grass.mp3": "e8a56d7b63d3b4c6d28710b8d3f5bb6517e8feefb2a62bfac1f41345309040a8",
+    "assets/models/player.glb": "49b02532368b75c9838f889beeadcab65ec73d0bcf8eda6e80c517afc50b6fe5",
+    "assets/models/acc/g_white.glb": "14c95c19837e1a0aa204f6d4efa1c735aba6d8630439543229eaabbf2d426e50",
+    "assets/models/acc/h_party.glb": "554f513497a874549b8dd007fa0000ae98a53484cbed6007772cb0ce16143187",
+    "assets/models/acc/c_hawaii.glb": "68019c16a9234f943fa26fbad93c605c91f921f05ef5214eae248964b78fe10c",
+    "assets/models/acc/h_penguin.glb": "4a3bda5e480f038ba44148f2cc2d56664f18c5b072ca6a33e950b1b588b2e401",
+    "assets/models/acc/h_top.glb": "0057a28589fc3b1d6d3fbb9e2cc683a58b335693ef54731e5caaf7a6c151035f",
+    "assets/models/acc/h_banana.glb": "a9dd08cd90a68e4e73406e9d65e75bdf9d94722131b5a377e505940900442854",
+    "assets/music/chill-lofi.mp3": "aa965081657816f742d629d6f0d49a2d831f133b850bd8260c7ce290af1ee721",
+    "assets/music/lofi-hip-hop.mp3": "046beea417262b9c97a553098fd2084137db9c5d2dac57523ea73207d989fd7a",
+    "assets/music/napping-on-a-cloud.mp3": "8c413304c7870c8504c565b4be01139bbd84ab593d3c7516a249a771211b20cf",
+    "assets/fonts/gt.otf": "f2d9e989667641bffae5e2cb7a5eee9051cab16b1d19e215809d4be375e0d0b5",
+    "assets/maps/park.bin.gz": "8256aa95fc1d523e6e59c604d08c0a6d20253a87b7931675e023a730075372e1",
+    "assets/maps/park.bin": "0d7d8a8d724fca57402fe1af6f56b7ef68d816700c160891ed4b83f2867e75dc",
+    "assets/textures/lobby-bg.jpg": "4e09cca1e8fb10f4e0778748d0cedf4d7a0da9c8bec932dbb267f5540aae58df",
+    "assets/textures/lava.jpg": "eab885d56e348d973a254163f007b0c0ec49b8e155a39ad594c33c6297b8e321",
+    "assets/textures/sky.jpg": "269daf21d7ff9fdf67fb1e76fa0c1b7ddd85a5c7b36acff2883611aac8b9fa24",
+    "assets/textures/logo-original.png": "0e8fc77089d2997a3d41aa950582d478cae2b518b627444e6d59285aac6de342"
+  }
+}

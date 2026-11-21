@@ -1,0 +1,236 @@
+
+> monkego-pico-g2@1.3.0 test
+> node --test tests/*.test.cjs
+
+TAP version 13
+# Subtest: open hand touches actual floor at radius, not half metre above it
+ok 1 - open hand touches actual floor at radius, not half metre above it
+  ---
+  duration_ms: 1.506586
+  type: 'test'
+  ...
+# Subtest: fast hand sweep cannot pass through a floor
+ok 2 - fast hand sweep cannot pass through a floor
+  ---
+  duration_ms: 0.489394
+  type: 'test'
+  ...
+# Subtest: hand pushing a wall slides tangentially instead of being glued
+ok 3 - hand pushing a wall slides tangentially instead of being glued
+  ---
+  duration_ms: 0.41563
+  type: 'test'
+  ...
+# Subtest: leaving a surface releases the hand with no phantom contact
+ok 4 - leaving a surface releases the hand with no phantom contact
+  ---
+  duration_ms: 0.256353
+  type: 'test'
+  ...
+# Subtest: no surface means no artificial propulsion
+ok 5 - no surface means no artificial propulsion
+  ---
+  duration_ms: 0.246226
+  type: 'test'
+  ...
+# Subtest: slightly overlapping offset ray cannot catch underside when lifting from ground
+ok 6 - slightly overlapping offset ray cannot catch underside when lifting from ground
+  ---
+  duration_ms: 0.18491
+  type: 'test'
+  ...
+# Subtest: left arm never returns a target or pushes, even with legacy handIndex=0
+ok 7 - left arm never returns a target or pushes, even with legacy handIndex=0
+  ---
+  duration_ms: 4.963443
+  type: 'test'
+  ...
+# Subtest: no alternating hand after repeated surface contact
+ok 8 - no alternating hand after repeated surface contact
+  ---
+  duration_ms: 5.310024
+  type: 'test'
+  ...
+# Subtest: disabled arm does not reset right-arm smoothing or startup grace
+ok 9 - disabled arm does not reset right-arm smoothing or startup grace
+  ---
+  duration_ms: 1.653596
+  type: 'test'
+  ...
+# Subtest: reconnect seeds pose and held trigger cannot silently re-anchor
+ok 10 - reconnect seeds pose and held trigger cannot silently re-anchor
+  ---
+  duration_ms: 2.225473
+  type: 'test'
+  ...
+# Subtest: disconnect/menu cancels grab without boosting old velocity
+ok 11 - disconnect/menu cancels grab without boosting old velocity
+  ---
+  duration_ms: 2.355988
+  type: 'test'
+  ...
+# Subtest: reset clears both old contact buffers and camera fallback points
+ok 12 - reset clears both old contact buffers and camera fallback points
+  ---
+  duration_ms: 2.317247
+  type: 'test'
+  ...
+# Subtest: large runtime recenter is not treated as an arm swing or throw
+ok 13 - large runtime recenter is not treated as an arm swing or throw
+  ---
+  duration_ms: 1.507534
+  type: 'test'
+  ...
+# Subtest: climbing correction is bounded and measured after collisions
+ok 14 - climbing correction is bounded and measured after collisions
+  ---
+  duration_ms: 1.54244
+  type: 'test'
+  ...
+# Subtest: right-only geometry removes left skin triangles without changing source geometry
+ok 15 - right-only geometry removes left skin triangles without changing source geometry
+  ---
+  duration_ms: 2.011527
+  type: 'test'
+  ...
+# Subtest: saved auto-swap/left settings cannot re-enable the second arm
+ok 16 - saved auto-swap/left settings cannot re-enable the second arm
+  ---
+  duration_ms: 3.039548
+  type: 'test'
+  ...
+# Subtest: ground pull without trigger creates horizontal forward displacement, not only lift
+ok 17 - ground pull without trigger creates horizontal forward displacement, not only lift
+  ---
+  duration_ms: 2.569356
+  type: 'test'
+  ...
+# Subtest: ground stroke sideways pushes body in opposite direction without joystick
+ok 18 - ground stroke sideways pushes body in opposite direction without joystick
+  ---
+  duration_ms: 1.610678
+  type: 'test'
+  ...
+# Subtest: lifting off the floor releases ground traction; airborne strokes cannot propel
+ok 19 - lifting off the floor releases ground traction; airborne strokes cannot propel
+  ---
+  duration_ms: 1.533886
+  type: 'test'
+  ...
+# Subtest: holding still on planted floor generates no automatic walking
+ok 20 - holding still on planted floor generates no automatic walking
+  ---
+  duration_ms: 2.966081
+  type: 'test'
+  ...
+# Subtest: full 360 wrist roll and quaternion sign wrap do not break support
+ok 21 - full 360 wrist roll and quaternion sign wrap do not break support
+  ---
+  duration_ms: 1.92283
+  type: 'test'
+  ...
+# Subtest: normal arm length reaches the floor with a roughly 45 degree downward aim
+ok 22 - normal arm length reaches the floor with a roughly 45 degree downward aim
+  ---
+  duration_ms: 3.275133
+  type: 'test'
+  ...
+# Subtest: orientation rejects null, zero, NaN and infinity; normalizes
+ok 23 - orientation rejects null, zero, NaN and infinity; normalizes
+  ---
+  duration_ms: 1.828706
+  type: 'test'
+  ...
+# Subtest: source chosen by identity and handedness, not inputSources index
+ok 24 - source chosen by identity and handedness, not inputSources index
+  ---
+  duration_ms: 0.334074
+  type: 'test'
+  ...
+# Subtest: legacy mapping configurable and safe with missing axes
+ok 25 - legacy mapping configurable and safe with missing axes
+  ---
+  duration_ms: 0.334937
+  type: 'test'
+  ...
+# Subtest: xr-standard uses trigger zero and never treats stick click as menu
+ok 26 - xr-standard uses trigger zero and never treats stick click as menu
+  ---
+  duration_ms: 0.233668
+  type: 'test'
+  ...
+# Subtest: touchpad zero axis is preserved, never mixed with stick
+ok 27 - touchpad zero axis is preserved, never mixed with stick
+  ---
+  duration_ms: 0.193379
+  type: 'test'
+  ...
+# Subtest: axis swap and inversion are explicit calibration options
+ok 28 - axis swap and inversion are explicit calibration options
+  ---
+  duration_ms: 0.143417
+  type: 'test'
+  ...
+# Subtest: select events tied to XRInputSource remain correct on reorder
+ok 29 - select events tied to XRInputSource remain correct on reorder
+  ---
+  duration_ms: 2.254088
+  type: 'test'
+  ...
+# Subtest: lost XR pose is not replaced with stale legacy gamepad
+ok 30 - lost XR pose is not replaced with stale legacy gamepad
+  ---
+  duration_ms: 0.986295
+  type: 'test'
+  ...
+# Subtest: disconnect does not synthesize jump from released touchpad
+ok 31 - disconnect does not synthesize jump from released touchpad
+  ---
+  duration_ms: 1.264682
+  type: 'test'
+  ...
+# Subtest: legacy null pose discarded; reconnect valid orientation resumes
+ok 32 - legacy null pose discarded; reconnect valid orientation resumes
+  ---
+  duration_ms: 1.472001
+  type: 'test'
+  ...
+# Subtest: App menu is edge-triggered, no repeated toggle
+ok 33 - App menu is edge-triggered, no repeated toggle
+  ---
+  duration_ms: 1.278554
+  type: 'test'
+  ...
+# Subtest: WebXR frame resolves source targetRaySpace and rejects missing pose
+ok 34 - WebXR frame resolves source targetRaySpace and rejects missing pose
+  ---
+  duration_ms: 1.661351
+  type: 'test'
+  ...
+# Subtest: PICO detected by display with generic UA, low graphics and no Cardboard fallback
+ok 35 - PICO detected by display with generic UA, low graphics and no Cardboard fallback
+  ---
+  duration_ms: 2.116112
+  type: 'test'
+  ...
+# Subtest: all supplied game assets kept byte-for-byte
+ok 36 - all supplied game assets kept byte-for-byte
+  ---
+  duration_ms: 20.51111
+  type: 'test'
+  ...
+# Subtest: generic-touchpad profile must never be mistaken for a 6DoF Touch controller
+ok 37 - generic-touchpad profile must never be mistaken for a 6DoF Touch controller
+  ---
+  duration_ms: 3.430964
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 388.810641

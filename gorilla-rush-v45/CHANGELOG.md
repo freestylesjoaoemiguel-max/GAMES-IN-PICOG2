@@ -1,0 +1,31 @@
+# Alterações — v45 / PICO G2 teste 1
+
+## Entrada nova, sem substituir a anterior
+- Importado `Gorilla_Rush5_v45 (1).txt` completo; não reutilizado o mapa antigo no lugar do novo.
+- 68 payloads distintos extraídos; ambos os mapas, avatar, cosméticos, sons, música, loja, teclado, portais e código de rede preservados.
+- `/monke-go/` e pacote `com.picog2.monkego` não alterados. Novo pacote/endereço permite voltar imediatamente.
+
+## Integração executável
+- WebXR local: viewer pose, fonte targetRaySpace, eventos select, ciclo de apresentação do Three.
+- WebVR 1.1: VRDisplay, getFrameData, projeções e views independentes, dimensionamento por olho, submitFrame e saída.
+- Sem Cardboard automático no caminho PICO. Mensagem explícita quando não existe API imersiva.
+- Controle único dirige braço direito; IK de dois segmentos, mão visível orientada pelo quaternion completo, dedos fechados pelo gatilho.
+- Suporte ao toque/empurrão do piso no caminho Solo e de rede, antes da integração de física antiga por landmarks. Distâncias/velocidades adaptadas ao PS real do v45.
+- Apoio tangencial, soltura ao levantar, ar sem propulsão, casts sem captura acidental da face inferior do chão. Medição do deslocamento após colisões; limites de alcance/velocidade.
+- Reentrada, mudança de fonte, perda de pose, menu, teleporte e troca de escala zeram contato/velocidade. Torcer o pulso não cancela apoio.
+- Menu 3D essencial: continuar, calibrar braço, ajuda opcional no touchpad, respawn, sair. Laser parte da mão; também seleção pelo touchpad.
+- Painel com API, pose ausente, contato no ar/apoiado, distância ao piso e deslocamento acumulado. Exportador JSON para diagnóstico no aparelho real.
+- Água recebe gesto estimado; tirolesa acessível pelo contato/gatilho; atrito menor na neve. A equivalência completa de mecânicas em todas as áreas não foi validada fisicamente.
+
+## Portabilidade e custo
+- Sem DecompressionStream: gzip resolvido na extração. Bibliotecas essenciais locais; câmera mobile opcional sob demanda.
+- Sem conexão de presença social automática no Solo; sem câmera/worker MediaPipe em VR.
+- Baixo por padrão; espelho menor/um passe por frame; áudio preload metadata.
+- Erro de mapa não substitui silenciosamente a área por um plano vazio.
+- Build reproduzível Java/DEX/APK de tela + navegador externo, verificação de assinatura/manifesto/assets; ZIP de fonte e exportação web.
+
+## Limites explícitos
+- Não é APK VR nativo nem física idêntica de Gorilla Tag; posição de mão estimada a partir de um controle 3DoF.
+- Não é ragdoll, não são duas mãos posicionais medidas, não há promessa sem bugs.
+- Perfil/amigos/microfone/configurações completas do original ainda são telas 2D, acessíveis fora da sessão.
+- Testes físicos, instalação, desempenho, voz/câmera e multiplayer na internet não realizados. Consulte relatórios por categoria no README.

@@ -1,0 +1,67 @@
+name: Pulse Saber G2 - APK and WebXR
+on:
+  push:
+    paths:
+      - 'pulse-saber-g2/**'
+      - 'discord-vr-g2/tools/**'
+      - '.github/workflows/build-pulse-saber-g2.yml'
+  pull_request:
+    paths:
+      - 'pulse-saber-g2/**'
+      - 'discord-vr-g2/tools/**'
+      - '.github/workflows/build-pulse-saber-g2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: pulse-saber-g2/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install and test scoring, charts and licensed assets
+        working-directory: pulse-saber-g2
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          for f in web/src/*.js tools/*.mjs; do node --check "$f"; done
+          npm test | tee docs/NODE_TESTS.txt
+      - name: Compile actual native Java/GLES2 APK, DEX and signatures
+        run: bash pulse-saber-g2/tools/bootstrap_android.sh
+      - name: Build static WebXR and run browser gameplay tests
+        working-directory: pulse-saber-g2
+        run: |
+          set -euo pipefail
+          npm run build
+          python3 -m http.server 5176 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5176/webxr/ npm run test:browser
+      - name: Upload native APK, checksum and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pulse-Saber-G2-APK
+          path: |
+            pulse-saber-g2/web/downloads/Pulse-Saber-G2.apk
+            pulse-saber-g2/web/downloads/Pulse-Saber-G2.apk.sha256
+            pulse-saber-g2/docs/ANDROID_BUILD.txt
+            pulse-saber-g2/docs/NODE_TESTS.txt
+            pulse-saber-g2/docs/BROWSER_TESTS.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload portable WebXR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pulse-Saber-G2-WebXR
+          path: pulse-saber-g2/build/webxr/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

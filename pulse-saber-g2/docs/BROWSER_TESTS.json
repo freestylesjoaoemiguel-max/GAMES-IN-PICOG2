@@ -1,0 +1,24 @@
+{
+  "passed": [
+    "Both licensed external 3D models loaded in real WebGL",
+    "Three tracks selectable",
+    "Settings persist and restore",
+    "Real audio clock and keyboard input score first chart note",
+    "Actual mouse ray sweep slices a note in the 3D scene",
+    "Pause freezes actual playback clock",
+    "Resume and return to library work",
+    "Misses deplete energy and produce a real results screen",
+    "Retry resets the game",
+    "Unsupported immersive WebXR is reported, not simulated",
+    "APK download matches the actual signed artifact",
+    "Mobile layout available and no uncaught JS errors"
+  ],
+  "errors": [],
+  "observedDesktopDrawCalls": 115,
+  "notTested": [
+    "Physical PICO G2, temperature, memory or frame rate",
+    "Android installation or runtime",
+    "Immersive WebXR session and original PICO controller",
+    "Headset audio latency and haptics"
+  ]
+}
