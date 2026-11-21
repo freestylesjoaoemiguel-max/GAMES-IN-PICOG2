@@ -1,0 +1,34 @@
+{
+  "passed": [
+    "Supplied player GLB and original map load in real Chromium WebGL; four areas",
+    "Solo starts and keyboard moves the player in original map",
+    "Menu opens and closes using routed input",
+    "Direct APK download equals the signed build checksum",
+    "Lava Run starts with supplied map and music",
+    "Android wrapper UA forces flat mode; no false Cardboard/VR rendering",
+    "Simulated PICO WebVR: stereo submit loop and low-resolution 1033×1162 per eye",
+    "Simulated PICO App button closes menu",
+    "Simulated head and controller orientations reach actual game",
+    "Simulated legacy trigger press/release reaches actual game",
+    "Simulated controller disconnect/reconnect recovers",
+    "Simulated VR exit resumes flat rendering"
+  ],
+  "errors": [],
+  "legacyRender": {
+    "eyeW": 1033,
+    "eyeH": 1162,
+    "layer": [
+      2066,
+      1162
+    ],
+    "q": 0,
+    "source": "webvr"
+  },
+  "notTested": [
+    "Physical PICO G2 controller/headset, frame rate, comfort and firmware support",
+    "Actual immersive WebXR session (XR frame/space mapping covered by unit mocks only)",
+    "Android installation and Android WebView runtime",
+    "Internet multiplayer and real PeerJS/TURN connectivity"
+  ],
+  "apkSHA256": "1323f5285591117fc82b6705612bb2b9ba8bcf354e7f5ccfe6a8ba48bbfcc229"
+}

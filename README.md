@@ -95,3 +95,13 @@ Um sabre, três músicas originais, nove mapas, modelos externos CC0, combos, bo
 **[Abrir WebXR](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/)** · **[Baixar APK](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/downloads/Discord-VR-G2.apk)** · **[Passo a passo fácil](discord-vr-g2/docs/COMO_USAR.md)**
 
 O PicoVerso VR continua preservado na raiz. Discord VR G2 está em uma subpasta: modo local no Pages, WebXR exige navegador compatível, APK experimental sem validação no G2/runtime PICO. [Código e limites](discord-vr-g2/README.md).
+
+## MonkeGo / Gorilla Rush — projeto enviado pelo usuário
+
+- [Jogar no navegador (WebXR/WebVR)](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2)
+- [Baixar APK compilado no GitHub](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/downloads/MonkeGo-PicoG2.apk)
+- [Código, controles, créditos e limites](monke-go/README.md)
+
+**APK = jogo em tela/WebView + botão para abrir o navegador VR, não porte VR nativo PICO.**
+O site mantém o mapa/modelos recebidos e corrige a associação de pose/fontes do controle, eixos e reconexão.
+Gráficos baixos por padrão. PICO G2 físico, instalação Android e FPS ainda não validados.
