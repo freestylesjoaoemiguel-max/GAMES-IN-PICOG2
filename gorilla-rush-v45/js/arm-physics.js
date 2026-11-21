@@ -2,9 +2,27 @@
 // visible hand envelope; this does not turn orientation into measured 6DoF.
 (function(root){'use strict';
  function create(THREE,solve){
-  const v=()=>new THREE.Vector3(),up=v().set(0,1,0),direction=v(),filtered=v(),previous=v();
+  const v=()=>new THREE.Vector3(),up=v().set(0,1,0),direction=v(),filtered=v(),previous=v(),local=v(),heading=v();
+  // Gorilla-style 3DoF arm: one long straight arm pivoting at the shoulder. The
+  // wrist tilt is amplified (GAIN) so the small tilt a G2 controller makes during a
+  // natural down-and-back stroke sweeps the whole arm: level = hand just above the
+  // floor, ~13 deg down = palm on the floor, ~30 deg down = hand under the shoulder,
+  // ~50 deg = hand behind. The path is flat near the floor so a stroke pushes you
+  // forward, not up. Yaw comes from the controller, so side swings work too.
+  // Tilting back up swings the hand forward through the air (RETURN lift), so the
+  // recovery does not drag on the floor and push you backwards.
+  const GAIN=2,OFFSET=.55,REACH=1.25,DROP=.58,RETURN=.38;let lastDown=null,downVel=0,lift=0,lastRaw=null,rawVel=0;
+  function downOf(dir,keepHeading){
+   const flat=Math.hypot(dir.x,dir.z);
+   if(keepHeading);else if(flat>.2)heading.set(dir.x/flat,0,dir.z/flat);
+   else if(heading.lengthSq()<.5)heading.set(0,0,-1);
+   return Math.max(-1,Math.min(2.3,OFFSET+GAIN*Math.atan2(-dir.y,Math.max(flat,1e-6))));
+  }
+  function reachOffset(down,scale,out){
+   return out.copy(heading).multiplyScalar(REACH*Math.cos(down)*scale).addScaledVector(up,(RETURN*lift-DROP*Math.sin(down))*scale);
+  }
   const A={target:v(),desired:v(),velocity:v(),plant:null,contact:false,normal:v(),ready:false,grace:0,last:null,held:false,travel:0,radius:0,cls:0};
-  A.reset=()=>{A.plant=null;A.last=null;A.lastBody=null;A.rawLocal=null;A.lifting=false;A.contact=false;A.held=false;A.ready=false;A.grace=.12;A.velocity.set(0,0,0)};
+  A.reset=()=>{lastDown=null;downVel=0;lift=0;lastRaw=null;rawVel=0;A.plant=null;A.last=null;A.lastBody=null;A.rawLocal=null;A.lifting=false;A.contact=false;A.held=false;A.ready=false;A.grace=.12;A.velocity.set(0,0,0)};
   // Gravity/body collisions occur after hand locomotion. Sweep that movement too;
   // never translate a rendered hand through the floor after solving contact.
   A.afterMove=function(shift){
@@ -23,14 +41,19 @@
    previous.copy(direction);
    if(!A.ready){filtered.copy(direction);A.ready=true}else filtered.lerp(direction,1-Math.exp(-dt*25)).normalize();
    A.grace=Math.max(0,A.grace-dt);
-   const down=Math.max(0,-filtered.y),reach=Math.min(1.32*.96,.55+.85*down)*scale;
    const shoulder=eye.clone().addScaledVector(right,.22*scale).addScaledVector(up,-.25*scale);
-   A.desired.copy(shoulder).addScaledVector(filtered,reach).addScaledVector(forward,.1*scale);
+   const down=downOf(filtered);
+   downVel=lastDown==null?0:downVel+((down-lastDown)/dt-downVel)*(1-Math.exp(-dt*14));lastDown=down;
+   // Unfiltered tilt rate: reacts within a frame or two when the stroke reverses.
+   const raw=downOf(direction,true);rawVel=lastRaw==null?0:rawVel+((raw-lastRaw)/dt-rawVel)*(1-Math.exp(-dt*30));lastRaw=raw;
+   if(downVel<-.8)lift=Math.min(1,lift+dt*8);else lift=Math.max(0,lift-dt*(downVel>.25?12:1));
+   A.desired.copy(shoulder).add(reachOffset(down,scale,local)).addScaledVector(forward,.1*scale);
    if(!A.active){const start=A.last||shoulder;A.reset();A.desired.copy(eye).addScaledVector(right,.22*scale).addScaledVector(up,-.32*scale).addScaledVector(forward,.6*scale);A.target.copy(solve(start,A.desired,A.radius).position);A.last=A.target.clone();return false}
    const before=A.contact,start=A.last||shoulder;
-   const rawLocal=direction.clone().multiplyScalar(Math.min(1.32*.96,.55+.85*Math.max(0,-direction.y))*scale).addScaledVector(right,.22*scale).addScaledVector(up,-.25*scale).addScaledVector(forward,.1*scale);
-   A.lifting=!A.held&&!!A.rawLocal&&rawLocal.clone().sub(A.rawLocal).dot(A.normal)>.03*scale*dt;
-   A.rawLocal=rawLocal;
+   // Tilting the controller back up is the 3DoF version of lifting your hand off
+   // the ground: release at once so the return swing never drags you backwards.
+   // Sweeping the arm further back keeps pushing. Jitter is filtered by downVel.
+   A.lifting=!A.held&&(downVel<-.5||rawVel<-1.5);
    if(A.held&&!o.trigger){A.held=false;A.plant=null}
    if(A.plant){
     const away=A.desired.clone().sub(A.plant).dot(A.normal)>.06*scale;

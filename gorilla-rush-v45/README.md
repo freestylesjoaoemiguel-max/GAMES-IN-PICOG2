@@ -1,8 +1,8 @@
-# Gorilla Rush v45 — adaptação de navegador para PICO G2 (âncora 1.0.2)
+# Gorilla Rush v45 — adaptação de navegador para PICO G2 (gorila 1.0.3)
 
 **Não é uma declaração de compatibilidade física certificada.** O usuário confirmou que a versão anterior acompanhava a cabeça/controle em Firefox Reality ou Wolvic, mas não permitia andar por gesto. Esta edição usa o **novo TXT v45**, em endereço e pacote separados. MonkeGo 1.3 permanece intacto.
 
-- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.2-anchor
+- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.3-gorila
 - APK: `downloads/Gorilla-Rush-v45-PicoG2.apk` — **tela offline + abrir navegador externo**, não VR nativo.
 - Projeto completo: `downloads/Gorilla-Rush-v45-projeto.zip`.
 - Versão anterior: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3
@@ -12,12 +12,18 @@
 1. No navegador VR que já acompanha seu controle, abra o endereço novo por HTTPS. Aguarde o carregamento dos mapas. Verifique o botão principal **INICIAR VR**.
 2. Toque em **INICIAR VR**. Não precisa selecionar um modo no topo: o próprio clique solicita WebXR e inicia o jogo após a autorização do navegador. Em navegadores antigos sem WebXR, usa WebVR quando disponível. O botão só é habilitado se a API oferecer sessão WebXR imersiva ou VRDisplay WebVR com apresentação. Não há fallback disfarçado para VR Box.
 3. Apenas a mão direita é controlada. A posição do braço é **estimada**; o quaternion medido controla o pulso em 360°. Não há duas mãos 6DoF nem rastreamento óptico dos dedos.
-4. **Andar sem botão:** aponte para baixo até o painel indicar **ANCORADA**. Gire mais para baixo/trás para empurrar o chão. Levante a ponta para soltar e repita. A mão não gera força no ar. **Mover o controle para trás sem girá-lo não fornece translação ao jogo**, pois o G2 é 3DoF.
+4. **Andar como no Gorilla Tag (sem botão):** segure o controle quase reto: a mão fica logo acima do chão. Incline uns **10–15° para baixo** e ela encosta (painel: **NO CHÃO**). Num gesto rápido, incline mais **para baixo e para trás** (até ~45°): a mão fica presa no chão e o corpo vai para a frente. **Volte o controle para cima**: a mão solta na hora, volta pelo ar sem te puxar para trás, e o impulso continua (como soltar a mão no Gorilla Tag). Com a mão no chão, gire o controle para os lados para ir de lado; empurrar forte para baixo te levanta. A mão não gera força no ar. Como o G2 é 3DoF, **mover o controle sem girá-lo não é medido**: o movimento vem da inclinação do pulso.
 5. Segure o clique do touchpad por 0,6 s para o menu. Aponte o laser ou use cima/baixo do touchpad para escolher; gatilho ou clique curto confirma. Em **CALIBRAR**, aponte para a frente antes de confirmar; isso corrige o eixo do braço estimado, não inventa posição rastreada.
 6. Gatilho segura contato real em chão/parede. Clique curto no centro do touchpad pula; bordas giram 30°. **Ajuda no touchpad** é opcional, identificada no menu e desligada por padrão; não é apresentada como locomoção física.
 7. Se continuar sem andar, veja se o painel mostra **NO AR**, **ANCORADA** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
 
 A interface 2D do jogo original permite selecionar salas, acessórios e modos antes da sessão. A entrada rápida online, o modo tela e os diagnósticos ficam em **Configurações → Controles**, não em um painel flutuante no topo. O botão VR inicia Solo se você ainda não entrou em um modo. Para um modo de rede, entre pela interface original primeiro e então entre em VR. As telas de perfil/amigos/microfone do original continuam 2D; não foram todas reescritas como UI imersiva. Rede PeerJS, voz, câmera opcional e conforto de VR não foram validados em hardware.
+
+## Locomoção estilo Gorilla — 1.0.3
+
+Antes, a mão só tocava o chão com o controle apontado ~40° para baixo e o gesto de volta arrastava o corpo para trás, então quase não dava para andar. Agora o braço é longo e reto, pivotando no ombro, e a inclinação do pulso é amplificada (2×): um gesto natural de 10° a 45° varre o braço inteiro, rente ao chão. Inclinar o controle de volta para cima solta a mão imediatamente (detector sem atraso) e a levanta durante o retorno. Ao soltar, o corpo mantém 1,25× a velocidade do empurrão (limite 6,5 × escala/s). A colisão da 1.0.2 (esfera contínua, âncora fixa) continua igual.
+
+Medido no jogo real em Chromium com sessão WebXR simulada e ruído de sensor: ~1,7–1,8 vezes o tamanho do jogador por empurrão (antes ~0,4); mão em repouso no chão sem deriva; braço inteiro (não só a mão) sempre acima do piso. **Não testado no G2 físico.**
 
 ## Correção de contato — 1.0.2
 

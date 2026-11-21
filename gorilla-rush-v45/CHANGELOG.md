@@ -1,5 +1,12 @@
 # Alterações — v45 / PICO G2
 
+## 1.0.3 — locomoção estilo Gorilla Tag
+- Braço 3DoF longo e reto pivotando no ombro; inclinação do pulso amplificada 2×, caminho achatado perto do chão. Controle reto = mão logo acima do chão; ~13° para baixo = mão no chão; ~45° = mão atrás do corpo.
+- Soltura imediata ao inclinar o controle de volta para cima (detector sem filtro + filtrado); o retorno passa pelo ar e não puxa o corpo para trás. Varrer o braço para trás continua empurrando.
+- Impulso de soltura 1,25× (limite 6,5 × escala/s). Desvio lateral girando o controle com a mão no chão.
+- Painel **GORILA 1.0.3** com instruções novas; cache `v45-gorila-4`; link WebXR `v=1.0.3-gorila` no README e no launcher do APK (1.0.3/code 4).
+- Testes: 23 Node (novos: passadas curtas com ruído, mão perto do chão com controle reto) e os 12 cenários de navegador com ângulos atualizados. Poses simuladas; sem headset físico.
+
 ## 1.0.2 — âncora e colisão da mão
 - Substituídos os sete raios do pulso por colisão contínua esfera/triângulo, cobrindo faces, arestas e vértices com consulta à grade real dos mapas.
 - Raio conservador calculado para envolver mão e dedos; o raio antigo de 0,075 × escala não cobria a malha (~0,335 × escala até os dedos).
