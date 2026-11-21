@@ -25,6 +25,10 @@ const SND = (() => {
     throw() { noise(0.25, 500, 1.5, 0.25, 'bandpass', 0, 2200); },
     step() { noise(0.07, 500 + Math.random() * 300, 1, 0.12, 'lowpass'); },
     punch() { tone(90, 0.2, 'sine', 0.8, 0.5); noise(0.1, 800, 1, 0.4); },
+    hitPunch(v) { tone(70 + Math.random() * 30, 0.16, 'sine', 0.9 * (v || 1), 0.45); noise(0.07, 1500, 0.8, 0.5 * (v || 1)); noise(0.12, 300, 0.7, 0.4 * (v || 1), 'lowpass'); },
+    flesh(v) { tone(110, 0.1, 'sine', 0.5 * (v || 1), 0.5); noise(0.09, 900, 0.7, 0.35 * (v || 1), 'bandpass', 0, 300); },
+    swing() { noise(0.14, 900, 1.2, 0.12, 'bandpass', 0, 2600); },
+    grunt(p) { tone(150 * (p || 1), 0.18, 'sawtooth', 0.06, 0.7); noise(0.15, 500 * (p || 1), 2, 0.08); },
     click() { tone(800, 0.05, 'triangle', 0.2, 1.4); }, ui() { tone(1300, 0.03, 'sine', 0.06); },
     spawn() { tone(500, 0.2, 'sine', 0.2, 2); tone(900, 0.2, 'sine', 0.1, 1.5, 0.08); }
   };
@@ -37,10 +41,12 @@ const SND = (() => {
 
 /* ---------- Efeitos (pools com poucos draw calls) ---------- */
 const FX = (() => {
-  let scene; const decals = { n: 140, i: 0 }, sparks = { n: 160, i: 0 }, chunks = { n: 160, i: 0 }, casings = { n: 30, i: 0, list: [] }, tracers = [];
+  let scene; const blood = { n: 90, i: 0, pools: [] }; const decals = { n: 140, i: 0 }, sparks = { n: 160, i: 0 }, chunks = { n: 160, i: 0 }, casings = { n: 30, i: 0, list: [] }, tracers = [];
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), s3 = new THREE.Vector3(), Z = new THREE.Vector3(0, 0, 1);
   function init(sc) {
     scene = sc;
+    blood.mesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshLambertMaterial({ map: TEX.blood(), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3 }), blood.n); blood.mesh.frustumCulled = false;
+    m4.makeScale(0, 0, 0); for (let i = 0; i < blood.n; i++) blood.mesh.setMatrixAt(i, m4); scene.add(blood.mesh);
     decals.mesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: TEX.hole(), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }), decals.n); decals.mesh.frustumCulled = false;
     m4.makeScale(0, 0, 0); for (let i = 0; i < decals.n; i++) decals.mesh.setMatrixAt(i, m4); scene.add(decals.mesh);
     const pts = (P, n, size, color, add) => { P.pos = new Float32Array(n * 3).fill(-999); P.vel = new Float32Array(n * 3); P.life = new Float32Array(n); const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P.pos, 3)); if (!add) { P.col = new Float32Array(n * 3); g.setAttribute('color', new THREE.BufferAttribute(P.col, 3)); } P.mesh = new THREE.Points(g, new THREE.PointsMaterial({ size, map: TEX.dot(), color, transparent: true, depthWrite: false, blending: add ? THREE.AdditiveBlending : THREE.NormalBlending, vertexColors: !add })); P.mesh.frustumCulled = false; scene.add(P.mesh); };
@@ -54,14 +60,24 @@ const FX = (() => {
   const C = h => new THREE.Color(h);
   const dustAt = (p, kind) => burst(chunks, p, 8, 1.6, 0.6, kind === 'wood' ? [C(0x8a5a2b), C(0xb98a55)] : kind === 'ground' ? [C(0x6b5a3a), C(0x4f7a34)] : kind === 'dummy' ? [C(0xf2c31b), C(0x222222)] : [C(0xb5b0a8), C(0x8c8a84)], 0.7);
   const splat = p => burst(chunks, p, 50, 5, 1.2, [C(0xd61f2b), C(0xff4757), C(0x2e7d32), C(0x1b5e20), C(0xf5e6c8)], 0.9);
+  const BLOODC = [C(0x8a0a10), C(0xb3121b), C(0x5c0508), C(0xcc1f26)];
+  function bloodDecal(p, n, size, rot) { q.setFromUnitVectors(Z, n); q.multiply(new THREE.Quaternion().setFromAxisAngle(Z, rot === undefined ? Math.random() * 6.28 : rot)); m4.compose(s3.copy(p).addScaledVector(n, 0.006), q, new THREE.Vector3(size, size, size)); const i = blood.i; blood.mesh.setMatrixAt(i, m4); blood.mesh.instanceMatrix.needsUpdate = true; blood.i = (blood.i + 1) % blood.n; blood.pools = blood.pools.filter(pl => pl.i !== i); return i; }
+  function bleed(p, dir, amount) { // respingo: partículas + mancha na parede atrás + mancha no chão
+    burst(chunks, p, Math.round(26 * amount), 3.2, 0.9, BLOODC, 0.5);
+    for (let k = 0; k < 6 * amount; k++) { const i = chunks.i - 1 - k; if (i >= 0) { chunks.vel[i * 3] += dir.x * 3; chunks.vel[i * 3 + 1] += dir.y * 2; chunks.vel[i * 3 + 2] += dir.z * 3; } }
+    const back = World.raycast(p.clone().addScaledVector(dir, 0.05), dir, 3.5); if (back && back.t < 3.5) bloodDecal(p.clone().addScaledVector(dir, 0.05 + back.t), back.n, 0.35 + Math.random() * 0.4 * amount);
+    const fl = World.floorAt(p.x, p.z, p.y); bloodDecal(new THREE.Vector3(p.x + dir.x * 0.6 + (Math.random() - 0.5) * 0.4, fl, p.z + dir.z * 0.6 + (Math.random() - 0.5) * 0.4), new THREE.Vector3(0, 1, 0), 0.25 + Math.random() * 0.35 * amount);
+  }
+  function pool(p) { const fl = World.floorAt(p.x, p.z, p.y + 0.3); const pp = new THREE.Vector3(p.x, fl, p.z); const i = bloodDecal(pp, new THREE.Vector3(0, 1, 0), 0.05); blood.pools.push({ i, p: pp, s: 0.05, max: 1.0 + Math.random() * 0.4, rot: Math.random() * 6.28 }); }
   function casing(p, v) { const c = casings.list[casings.i]; casings.i = (casings.i + 1) % casings.n; c.p.copy(p); c.v.copy(v); c.life = 4; }
   function tracer(a, b) { const t = tracers.find(x => x.life <= 0) || tracers[0]; const d = s3.subVectors(b, a), L = d.length(); t.m.position.copy(a).addScaledVector(d, 0.5); t.m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); t.m.scale.set(0.006, L, 0.006); t.m.visible = true; t.life = 0.05; }
   function update(dt) {
+    if (blood.pools.length) { blood.pools.forEach(pl => { if (pl.s < pl.max) { pl.s += dt * 0.28; q.setFromUnitVectors(Z, new THREE.Vector3(0, 1, 0)); q.multiply(new THREE.Quaternion().setFromAxisAngle(Z, pl.rot)); s3.copy(pl.p); s3.y += 0.007; m4.compose(s3, q, new THREE.Vector3(pl.s, pl.s, pl.s)); blood.mesh.setMatrixAt(pl.i, m4); } }); blood.mesh.instanceMatrix.needsUpdate = true; blood.pools = blood.pools.filter(pl => pl.s < pl.max); }
     for (const P of [sparks, chunks]) { for (let i = 0; i < P.n; i++) { if (P.life[i] <= 0) continue; P.life[i] -= dt; P.vel[i * 3 + 1] -= 9.8 * dt; P.pos[i * 3] += P.vel[i * 3] * dt; P.pos[i * 3 + 1] += P.vel[i * 3 + 1] * dt; P.pos[i * 3 + 2] += P.vel[i * 3 + 2] * dt; if (P.pos[i * 3 + 1] < 0.02) { P.pos[i * 3 + 1] = 0.02; P.vel[i * 3] *= 0.5; P.vel[i * 3 + 2] *= 0.5; P.vel[i * 3 + 1] = 0; } if (P.life[i] <= 0) P.pos[i * 3 + 1] = -999; } P.mesh.geometry.attributes.position.needsUpdate = true; }
     casings.list.forEach((c, i) => { if (c.life > 0) { c.life -= dt; c.v.y -= 9.8 * dt; c.p.addScaledVector(c.v, dt); if (c.p.y < 0.006) { c.p.y = 0.006; c.v.y = Math.abs(c.v.y) * 0.4; c.v.x *= 0.6; c.v.z *= 0.6; if (Math.abs(c.v.y) > 0.4) SND.play('metal'); } c.w *= 0.98; q.setFromAxisAngle(new THREE.Vector3(1, 0, 0.3).normalize(), c.life * c.w); } m4.compose(c.life > 0 ? c.p : s3.set(0, -99, 0), q, new THREE.Vector3(1, 1, 1)); casings.mesh.setMatrixAt(i, m4); }); casings.mesh.instanceMatrix.needsUpdate = true;
     tracers.forEach(t => { if (t.life > 0) { t.life -= dt; if (t.life <= 0) t.m.visible = false; } });
   }
-  return { init, decal, sparkAt, dustAt, splat, casing, tracer, update };
+  return { init, decal, sparkAt, dustAt, splat, casing, tracer, update, bleed, pool };
 })();
 
 /* ---------- Modelos de armas (peça por peça) ---------- */

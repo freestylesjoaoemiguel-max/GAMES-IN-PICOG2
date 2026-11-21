@@ -24,7 +24,7 @@ const stereo = new THREE.StereoCamera();
 const items = [], dummies = [];
 function spawnItem(type, x, y, z) { const it = new Item(scene, type, x, y, z); items.push(it); return it; }
 function removeItem(it) { const i = items.indexOf(it); if (i >= 0) items.splice(i, 1); scene.remove(it.mesh); it.alive = false; if (hold.item === it) hold.item = null; }
-function spawnDummy(x, z, yaw) { const d = new DUMMY.Dummy(scene, x, z, yaw === undefined ? Math.random() * 6 : yaw, dummies.length); dummies.push(d); return d; }
+function spawnDummy(x, z, yaw, kind) { const d = new DUMMY.Dummy(scene, x, z, yaw === undefined ? Math.random() * 6 : yaw, dummies.length, kind || 'dummy'); dummies.push(d); return d; }
 function populate() {
   [['pistol', -0.7, 0.97, 4], ['rifle', 0, 0.97, 4], ['shotgun', 0.75, 0.97, 4]].forEach(a => { const it = spawnItem(a[0], a[1], a[2], a[3]); it.quat.setFromEuler(new THREE.Euler(0, PI / 2 + 0.1, PI / 2)); });
   for (let i = 0; i < 3; i++) for (let k = 0; k < 3 - i; k++) spawnItem('crate', -1 + k * 0.52 + i * 0.26, 0.25 + i * 0.5, 30.0); // pirâmide de caixas
@@ -32,7 +32,8 @@ function populate() {
   [[2, 12], [-6, 9]].forEach(p => spawnItem('ball', p[0], 0.2, p[1]));
   [[-16.5, 1.12, 4], [-16.5, 1.12, 8.5], [-16.5, 1.12, 13]].forEach(p => spawnItem('melon', p[0], p[1], p[2]));
   for (let i = 0; i < 6; i++) spawnItem('cone', -4 + i * 1.6, 0.25, -21);
-  [[-6, -6, 0.5], [6, -5, -0.4], [0, -12, 3], [-9, 2, 1.6], [10, 6, -1.5]].forEach(p => spawnDummy(p[0], p[1], p[2]));
+  [[-6, -6, 0.5], [6, -5, -0.4], [0, -12, 3], [-9, 2, 1.6], [10, 6, -1.5], [-12, 14, 2], [8, 16, -2]].forEach(p => spawnDummy(p[0], p[1], p[2], 'human'));
+  [[4, 26, 3]].forEach(p => spawnDummy(p[0], p[1], p[2], 'dummy'));
   [[-35, 8], [-45, 15], [-30, 14]].forEach(p => spawnDummy(p[0], p[1], PI / 2));
 }
 
@@ -67,15 +68,22 @@ function haptic(v, ms) { try { if (!xrSession) return; for (const s of xrSession
 
 /* ---------- jogador, braço e mão ---------- */
 const player = { vel: new V3(), hp: 100, hurtT: 0, stepAcc: 0, bodyYaw: 0, knock: new V3() };
-const hand = { pos: new V3(), prev: new V3(), vel: new V3(), q: new Q4(), F: new V3(0, 0, -1), side: 1, six: false };
-const skin = new THREE.MeshPhongMaterial({ color: 0x2b2d31, shininess: 20 }), sleeveM = new THREE.MeshLambertMaterial({ color: 0x3c4a5c }), padM = new THREE.MeshPhongMaterial({ color: 0x55595f, shininess: 10 });
-function gloveMesh(fist) {
-  const g = new THREE.Group(), B = new THREE.BoxGeometry(1, 1, 1), C = new THREE.CylinderGeometry(1, 1, 1, 7);
-  const add = (geo, m, x, y, z, sx, sy, sz, rx, rz) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.scale.set(sx, sy, sz); o.rotation.set(rx || 0, 0, rz || 0); g.add(o); };
-  add(B, skin, 0, 0, 0.02, 0.085, 0.03, 0.095); add(B, padM, 0, 0.017, 0.02, 0.07, 0.006, 0.07);
-  for (let i = 0; i < 4; i++) { const x = -0.03 + i * 0.02, L = [0.075, 0.085, 0.08, 0.065][i]; if (fist) { add(C, skin, x, -0.02, -0.03, 0.009, 0.05, 0.009, 0, 0); add(B, skin, x, -0.03, 0.0, 0.017, 0.02, 0.03); } else add(C, skin, x, 0, -0.03 - L / 2, 0.009, L, 0.009, PI / 2, 0); }
-  if (fist) add(C, skin, -0.05, -0.012, -0.012, 0.011, 0.05, 0.011, PI / 2, 0.5); else add(C, skin, -0.055, -0.01, -0.005, 0.011, 0.06, 0.011, PI / 2, 0.9);
-  add(C, sleeveM, 0, 0, 0.09, 0.045, 0.05, 0.045, PI / 2, 0); mergeGroup(g); scene.add(g); return g;
+const hand = { pos: new V3(), prev: new V3(), vel: new V3(), q: new Q4(), F: new V3(0, 0, -1), side: 1, six: false, aimDist: 8, pmin: new V3(9, 9, 9), pmax: new V3(-9, -9, -9), jab: 0 };
+const handSkin = new THREE.MeshPhongMaterial({ color: 0xd9a27c, shininess: 12, specular: 0x2a1a10 }), sleeveM = new THREE.MeshLambertMaterial({ color: 0x2f3a48 });
+function gloveMesh(fist) { // mão direita: dedos para -z, palma para -x, polegar para cima
+  const g = new THREE.Group(), C = new THREE.CylinderGeometry(1, 1, 1, 8), S = new THREE.SphereGeometry(1, 8, 6), skinM = handSkin;
+  const lim = (a, b, r, m) => { const A = new V3(...a), B = new V3(...b), d = B.clone().sub(A), L = d.length(); const o = new THREE.Mesh(C, m || skinM); o.position.copy(A).addScaledVector(d, 0.5); o.quaternion.setFromUnitVectors(UP, d.normalize()); o.scale.set(r, L, r); g.add(o); const j = new THREE.Mesh(S, m || skinM); j.position.copy(B); j.scale.setScalar(r * 1.02); g.add(j); };
+  const palm = new THREE.Mesh(S, skinM); palm.scale.set(0.022, 0.046, 0.052); palm.position.set(0, 0, 0.005); g.add(palm);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), skinM); back.scale.set(0.03, 0.075, 0.07); back.position.set(0.004, 0, 0.01); g.add(back);
+  const fy = [0.026, 0.009, -0.008, -0.024], len = [1, 1.1, 1.0, 0.82];
+  fy.forEach((y, i) => { const k = len[i], r = i === 3 ? 0.0075 : 0.0088;
+    if (fist) { lim([0.002, y, -0.03], [-0.004, y, -0.062 * k], r); lim([-0.004, y, -0.062 * k], [-0.03, y, -0.058 * k], r * 0.95); lim([-0.03, y, -0.058 * k], [-0.034, y, -0.032], r * 0.9); }
+    else { lim([0.002, y, -0.03], [0, y, -0.068 * k], r); lim([0, y, -0.068 * k], [-0.008, y, -0.094 * k], r * 0.95); lim([-0.008, y, -0.094 * k], [-0.016, y, -0.112 * k], r * 0.88); } });
+  if (fist) { lim([-0.008, 0.036, 0.005], [-0.026, 0.04, -0.03], 0.0105); lim([-0.026, 0.04, -0.03], [-0.036, 0.022, -0.05], 0.0095); }
+  else { lim([-0.008, 0.036, 0.005], [-0.024, 0.052, -0.03], 0.0105); lim([-0.024, 0.052, -0.03], [-0.03, 0.06, -0.058], 0.0095); }
+  const cuff = new THREE.Mesh(C, sleeveM); cuff.rotation.x = PI / 2; cuff.scale.set(0.044, 0.12, 0.044); cuff.position.set(0.002, 0, 0.1); g.add(cuff);
+  const wrist = new THREE.Mesh(C, skinM); wrist.rotation.x = PI / 2; wrist.scale.set(0.028, 0.05, 0.026); wrist.position.set(0.002, 0, 0.045); g.add(wrist);
+  mergeGroup(g); scene.add(g); return g;
 }
 const gloveOpen = gloveMesh(false), gloveFist = gloveMesh(true); gloveFist.visible = false;
 const armU = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 8), sleeveM), armF = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 8), sleeveM); scene.add(armU, armF);
@@ -84,34 +92,35 @@ const laser = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 5, 1, true), ne
 const dotM = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: false })); dotM.renderOrder = 40; scene.add(dotM);
 const ring = new THREE.Mesh(new THREE.RingGeometry(0.85, 1, 32), new THREE.MeshBasicMaterial({ color: 0x7dffb0, transparent: true, opacity: 0.8, depthTest: false, side: THREE.DoubleSide })); ring.renderOrder = 41; scene.add(ring);
 const hurtM = new THREE.Mesh(new THREE.PlaneGeometry(4, 4), new THREE.MeshBasicMaterial({ color: 0xb00000, transparent: true, opacity: 0, depthTest: false })); hurtM.position.z = -0.2; hurtM.renderOrder = 99; camera.add(hurtM);
-let poseYaw = null;
+let poseYaw = null, nearFoe = false;
 const gazeAim = () => mode === 'flat' || (mode !== 'xr' && !Input.pose) || (mode === 'xr' && !activeCtrl()); // sem controle rastreado: mira pelo olhar
 function headYaw() { const d = new V3(); camera.getWorldDirection(d); return Math.atan2(-d.x, -d.z); }
 function updateHand(dt) {
   const hp = new V3(); camera.getWorldPosition(hp); const hy = headYaw(); let dy = hy - player.bodyYaw; while (dy > PI) dy -= 2 * PI; while (dy < -PI) dy += 2 * PI; player.bodyYaw += dy * Math.min(1, dt * (Math.abs(dy) > 0.8 ? 8 : 2.5));
   const c = mode === 'xr' ? activeCtrl() : null, q = new Q4();
-  if (c) { c.getWorldQuaternion(q); hand.side = c.userData.hand === 'left' ? -1 : 1; if (c.position.lengthSq() > 0.0009) hand.six = true; }
+  if (c) { c.getWorldQuaternion(q); hand.side = c.userData.hand === 'left' ? -1 : 1; hand.pmin.min(c.position); hand.pmax.max(c.position); if (hand.pmax.clone().sub(hand.pmin).length() > 0.25 && c.position.lengthSq() > 0.0009) hand.six = true; }
   else if (Input.pose && mode !== 'xr') { q.fromArray(Input.pose); const f = new V3(0, 0, -1).applyQuaternion(q); if (poseYaw === null) poseYaw = hy - Math.atan2(-f.x, -f.z); q.premultiply(new Q4().setFromAxisAngle(UP, poseYaw)); }
   else { camera.getWorldQuaternion(q); }
   if (gazeAim()) { // sem controle rastreado: mão/arma convergem para o ponto no centro da mira
     const co = new V3(), cd = new V3(); camera.getWorldPosition(co); camera.getWorldDirection(cd); const w = World.raycast(co, cd, 40); let dist = w ? Math.max(1.2, w.t) : 25;
     for (const dm of dummies) { const h = dm.rayHit(co, cd, dist); if (h) dist = Math.max(1.2, h.t); }
     for (const it of items) { if (it.held) continue; const oc = it.pos.clone().sub(co), t = oc.dot(cd); if (t > 0 && t < dist && oc.lengthSq() - t * t < it.def.r * it.def.r) dist = Math.max(1.2, t); }
-    const hpos = co.clone().add(new V3(0.2, -0.22, -0.45).applyQuaternion(camera.getWorldQuaternion(new Q4()))), aimP = co.addScaledVector(cd, dist), f = aimP.sub(hpos).normalize();
+    hand.aimDist += (dist - hand.aimDist) * Math.min(1, dt * (dist < hand.aimDist ? 14 : 5)); const hpos = co.clone().add(new V3(0.2, -0.22, -0.45).applyQuaternion(camera.getWorldQuaternion(new Q4()))), aimP = co.addScaledVector(cd, hand.aimDist), f = aimP.sub(hpos).normalize();
     const m = new THREE.Matrix4().lookAt(new V3(), f, UP); q.setFromRotationMatrix(m);
   }
-  hand.q.slerp(q, mode === 'xr' ? 1 : Math.min(1, dt * 25)); hand.F.set(0, 0, -1).applyQuaternion(hand.q);
+  hand.q.slerp(q, mode === 'xr' ? 1 : Math.min(1, dt * 18)); hand.F.set(0, 0, -1).applyQuaternion(hand.q);
   const y = player.bodyYaw, sh = new V3(hp.x + Math.cos(y) * 0.2 * hand.side, hp.y - 0.28, hp.z - Math.sin(y) * 0.2 * hand.side);
   hand.prev.copy(hand.pos);
   if (c && hand.six) c.getWorldPosition(hand.pos);
   else if (gazeAim()) hand.pos.copy(hp).add(new V3(0.2, -0.22, -0.45).applyQuaternion(camera.getWorldQuaternion(new Q4())));
   else hand.pos.copy(sh).addScaledVector(hand.F, 0.52);
+  if (hand.jab > 0) { hand.jab -= dt; const k = Math.sin((1 - hand.jab / 0.24) * PI); hand.pos.addScaledVector(hand.F, k * 0.32); }
   const inst = hand.pos.clone().sub(hand.prev).multiplyScalar(1 / Math.max(dt, 1e-3)); if (inst.length() > 20) inst.setLength(20); hand.vel.lerp(inst, 0.5);
   // braço (IK 2 ossos)
   const S = sh, H = hand.pos.clone().addScaledVector(new V3(0, 0, 0.08).applyQuaternion(hand.q), 1), d = Math.min(S.distanceTo(H), 0.6), L = 0.3, hh = Math.sqrt(Math.max(0, L * L - d * d / 4)), dir = H.clone().sub(S).normalize();
   const bend = new V3(0, -1, 0).addScaledVector(new V3(Math.cos(y), 0, -Math.sin(y)), 0.6 * hand.side); bend.addScaledVector(dir, -bend.dot(dir)).normalize(); const E = S.clone().addScaledVector(dir, d / 2).addScaledVector(bend, hh);
   const vis = !gazeAim(); armU.visible = armF.visible = vis; if (vis) { seg(armU, S, E, 0.042); seg(armF, E, H, 0.036); }
-  const fist = !!hold.item || !!hold.dummy || Input.trig; gloveOpen.visible = !fist; gloveFist.visible = fist; const gl = fist ? gloveFist : gloveOpen; gl.position.copy(hand.pos); gl.quaternion.copy(hand.q);
+  const fist = !!hold.item || !!hold.dummy || Input.trig || hand.jab > 0 || nearFoe; gloveOpen.visible = !fist; gloveFist.visible = fist; const gl = fist ? gloveFist : gloveOpen; gl.position.copy(hand.pos); gl.quaternion.copy(hand.q);
 }
 
 /* ---------- pegar / arremessar ---------- */
@@ -148,6 +157,31 @@ function updateHold(dt) {
   if (hold.dummy) { const tp = hand.pos.clone().addScaledVector(hand.F, 0.15), kk = hold.pull > 0 ? 1 - hold.pull / 0.3 : 1; hold.grabPoint.lerpVectors(hold.from, tp, Math.min(1, kk)); }
 }
 
+/* ---------- soco ---------- */
+const punch = { cool: 0 };
+function punchHit(dm, j, speed, dir) {
+  const dmg = 10 + Math.min(25, speed * 5), r = dm.hit(j, dir.clone().multiplyScalar(0.018 + speed * 0.006), dmg, 'player');
+  SND.play('hitPunch', Math.min(1.2, 0.5 + speed * 0.15)); SND.play('grunt', dm.kind === 'human' ? 1 : 0.7); haptic(Math.min(1, 0.4 + speed * 0.12), 70);
+  const p = dm.p[j].clone(); if (dm.kind === 'human') FX.bleed(p, dir, 0.45); else FX.dustAt(p, 'dummy');
+  punch.cool = 0.35; if (r === 'kill') onKill(dm); else toast(dm.angry ? (dm.kind === 'human' ? '😡 Ele vai revidar!' : 'O boneco vai revidar!') : '👊 Soco!', 1.2);
+}
+function nearestJoint(pt, maxD) { let best = null; for (const dm of dummies) { for (let j = 0; j < 16; j++) { const d = dm.p[j].distanceTo(pt); if (d < maxD && (!best || d < best.d)) best = { dm, j, d }; } } return best; }
+function updatePunch(dt) {
+  punch.cool -= dt; nearFoe = false;
+  if (hold.item || hold.dummy || menu.open) return;
+  const fist = hand.pos.clone().addScaledVector(hand.F, 0.07), foe = nearestJoint(fist, 1.6); nearFoe = !!foe;
+  // VR: soco balançando o controle
+  const sp = hand.vel.length();
+  if (punch.cool <= 0 && sp > 1.6) { const h = nearestJoint(fist, 0.3); if (h) { punchHit(h.dm, h.j, sp, hand.vel.clone().normalize()); return; } }
+  // R2 com pessoa por perto (ou PC/giroscópio): jab
+  if (Input.trigDown && punch.cool <= 0 && target && target.dummy && target.t < 1.9) {
+    hand.jab = 0.24; SND.play('swing'); punch.cool = 0.4; const tg = target;
+    setTimeout(() => { if (tg.dummy.p[tg.j]) punchHit(tg.dummy, tg.j, 4.5, hand.F.clone()); }, 110);
+    return 'punched';
+  }
+}
+function onKill(dm) { stats.kos++; toast(dm.kind === 'human' ? '💀 Pessoa nocauteada!' : '💥 Boneco derrubado!'); if (dm.kind === 'human') setTimeout(() => FX.pool(dm.p[3]), 900); }
+
 /* ---------- tiro ---------- */
 const _o = new V3(), _d = new V3();
 function fire(it) {
@@ -169,8 +203,9 @@ function fire(it) {
       const x = what; if (x.def.splat) { FX.splat(x.pos); SND.play('splat'); removeItem(x); stats.melons++; continue; }
       x.vel.addScaledVector(_d, G.force * 3 / x.def.mass); x.vel.y += 1.2 / x.def.mass; x.ang.add(new V3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(8 / x.def.mass)); SND.play(x.def.snd); if (x.def.snd === 'metal') FX.sparkAt(end, 8); else FX.dustAt(end, 'wood');
     } else {
-      const r = what.hit(best.j, _d.clone().multiplyScalar(0.035 * G.force), G.dmg); FX.dustAt(end, 'dummy'); SND.play(r === 'head' || best.j === 0 ? 'head' : 'dummy');
-      if (r === 'kill') { stats.kos++; toast('💥 Boneco derrubado!'); }
+      const r = what.hit(best.j, _d.clone().multiplyScalar(0.035 * G.force), G.dmg, 'player');
+      if (what.kind === 'human') { FX.bleed(end, _d, best.j === 0 ? 1.4 : 1); SND.play('flesh'); if (Math.random() < 0.5) SND.play('grunt', 1.1); } else { FX.dustAt(end, 'dummy'); SND.play(r === 'head' || best.j === 0 ? 'head' : 'dummy'); }
+      if (r === 'kill') onKill(what);
     }
   }
   FX.casing(it.mesh.localToWorld(it.eject.clone()), new V3(1.6, 1.4, 0.2).applyQuaternion(it.quat).add(new V3((Math.random() - 0.5) * 0.4, 0, 0)));
@@ -200,7 +235,7 @@ function drawHud() {
   c.fillStyle = '#333a48'; rr(c, 24, 22, 260, 18, 9); c.fill(); c.fillStyle = player.hp > 40 ? '#4be08a' : '#ff5252'; rr(c, 24, 22, 260 * Math.max(0, player.hp) / 100, 18, 9); c.fill();
   c.font = '700 24px sans-serif'; c.fillStyle = '#fff'; c.textBaseline = 'middle'; c.fillText('VIDA', 300, 31);
   c.font = '600 22px sans-serif'; c.fillStyle = '#ffd23f'; c.fillText('💥 ' + stats.kos + '   🎯 ' + stats.targets + '   🍉 ' + stats.melons + (SET.slow ? '   ⏱ LENTO' : ''), 24, 70);
-  c.fillStyle = '#a9c7ff'; c.font = '500 21px sans-serif'; c.fillText(toastT > 0 ? toastMsg : (hold.item ? (hold.item.gun ? 'R2 atira · clique do meio solta' : 'Solte o R2 / clique p/ arremessar') : target ? 'Clique do meio ou R2 para pegar' : 'Touch: andar · segure o clique: menu'), 24, 110);
+  c.fillStyle = '#a9c7ff'; c.font = '500 21px sans-serif'; c.fillText(toastT > 0 ? toastMsg : (hold.item ? (hold.item.gun ? 'R2 atira · clique do meio solta' : 'Solte o R2 / clique p/ arremessar') : target && target.dummy && target.t < 1.9 ? 'R2: soco! (ou balance o controle)' : target ? 'Clique do meio ou R2 para pegar' : 'Touch: andar · segure o clique: menu'), 24, 110);
   hud.t.needsUpdate = true;
 }
 const menu = makePanel(1.5, 1.05, 1100, 770); menu.m.visible = false; scene.add(menu.m); menu.open = false; menu.btns = []; menu.hover = null;
@@ -213,7 +248,7 @@ function drawMenu() {
   const sp = t => () => spawnInFront(t);
   row(118, 'ARMAS'); [['pistol', '🔫 Pistola'], ['rifle', '🔫 Fuzil'], ['shotgun', '🔫 Escopeta']].forEach((b, i) => btn('w' + i, 40 + i * 340, 135, 320, 70, b[1], sp(b[0])));
   row(240, 'OBJETOS'); [['crate', '📦 Caixa'], ['barrel', '🛢 Barril'], ['ball', '⚽ Bola'], ['melon', '🍉 Melancia'], ['cone', '🔺 Cone']].forEach((b, i) => btn('p' + i, 40 + i * 205, 257, 190, 70, b[1], sp(b[0])));
-  row(362, 'BONECOS'); btn('d0', 40, 379, 320, 70, '🧍 Novo boneco', () => spawnInFront('dummy')); btn('d1', 380, 379, 320, 70, '♻ Reviver todos', () => dummies.forEach(d => d.revive())); btn('d2', 720, 379, 340, 70, SET.combat ? '⚔ Combate: LIGADO' : '⚔ Combate: desligado', () => { SET.combat = !SET.combat; saveSet(); toast(SET.combat ? 'Bonecos vêm te atacar!' : 'Bonecos pacíficos'); }, SET.combat);
+  row(362, 'PESSOAS E BONECOS'); btn('d0', 40, 379, 155, 70, '🧍 Pessoa', () => spawnInFront('human')); btn('d3', 205, 379, 155, 70, '🤖 Boneco', () => spawnInFront('dummy')); btn('d1', 380, 379, 320, 70, '♻ Reviver todos', () => dummies.forEach(d => d.revive())); btn('d2', 720, 379, 340, 70, SET.combat ? '⚔ Combate: LIGADO' : '⚔ Combate: desligado', () => { SET.combat = !SET.combat; saveSet(); toast(SET.combat ? 'Bonecos vêm te atacar!' : 'Bonecos pacíficos'); }, SET.combat);
   row(484, 'MUNDO'); btn('m0', 40, 501, 250, 70, SET.slow ? '⏱ Lento: SIM' : '⏱ Câmera lenta', () => { SET.slow = !SET.slow; saveSet(); }, SET.slow); btn('m1', 305, 501, 250, 70, '🧹 Limpar', () => { items.slice().forEach(i => { if (!i.gun && !i.held) removeItem(i); }); }); btn('m2', 570, 501, 230, 70, '🏠 Início', () => { rig.position.set(0, SET.height, 8); }); btn('m3', 815, 501, 245, 70, SET.sound ? '🔊 Som' : '🔇 Mudo', () => { SET.sound = !SET.sound; SND.set(SET.sound); saveSet(); });
   btn('s0', 40, 600, 330, 64, SET.laser ? '🔴 Mira laser: SIM' : 'Mira laser: não', () => { SET.laser = !SET.laser; saveSet(); }, SET.laser); btn('s1', 385, 600, 330, 64, SET.swap ? '⇄ Botões trocados' : '⇄ Trocar botões', () => { SET.swap = !SET.swap; saveSet(); }, SET.swap); btn('s2', 730, 600, 330, 64, '✕ Fechar menu', () => closeMenu());
   c.fillStyle = '#7f8aa8'; c.font = '400 20px sans-serif'; c.fillText('R2 (gatilho de trás): atirar / segurar objeto · Clique do meio: pegar e soltar · Touch: andar', 40, 712); c.fillText('Controle: ' + (Input.raw || 'nenhum detectado').slice(0, 60), 40, 742);
@@ -223,7 +258,7 @@ function openMenu() { menu.open = true; menu.m.visible = true; hud.m.visible = f
 function closeMenu() { menu.open = false; menu.m.visible = false; hud.m.visible = true; SND.play('click'); }
 function spawnInFront(t) {
   const f = new V3(); camera.getWorldDirection(f); f.y = 0; f.normalize(); const p = rig.position.clone().addScaledVector(f, 1.8);
-  if (t === 'dummy') spawnDummy(p.x, p.z, Math.atan2(-f.x, -f.z)); else { const it = spawnItem(t, p.x, 1.4, p.z); it.vel.set(0, 0.5, 0); }
+  if (t === 'dummy' || t === 'human') spawnDummy(p.x, p.z, Math.atan2(-f.x, -f.z) + PI, t); else { const it = spawnItem(t, p.x, 1.4, p.z); it.vel.set(0, 0.5, 0); }
   SND.play('spawn'); FX.sparkAt(new V3(p.x, 1.2, p.z), 12);
 }
 function menuPointer() {
@@ -237,7 +272,7 @@ function menuPointer() {
 
 /* ---------- loop ---------- */
 const ctxD = { player: rig.position, playerHead: new V3(), combat: false, autoRevive: true, grabPoint: null, onPunch, onThud: (d, v) => { if (v > 0.03) SND.play('dummy', Math.min(1, v * 8)); } };
-function onPunch(d) { player.hp -= 14; player.hurtT = 0.35; SND.play('punch'); haptic(1, 120); const away = rig.position.clone().sub(d.root); away.y = 0; away.normalize(); player.knock.addScaledVector(away, 3.5); if (player.hp <= 0) { toast('Você foi nocauteado! Voltando ao início…', 3); player.hp = 100; rig.position.set(0, SET.height, 8); } }
+function onPunch(d) { player.hp -= d.kind === 'human' ? 11 : 9; player.hurtT = 0.35; SND.play('hitPunch', 1); SND.play('grunt', 0.8); haptic(1, 120); const away = rig.position.clone().sub(d.root); away.y = 0; away.normalize(); player.knock.addScaledVector(away, 3.5); if (player.hp <= 0) { toast('Você foi nocauteado! Voltando ao início…', 3); player.hp = 100; rig.position.set(0, SET.height, 8); dummies.forEach(x => { x.angry = false; if (x.state === 'combat') x.state = 'idle'; }); } }
 let time = 0, last = 0, footT = 0;
 function update(rdt) {
   const dt = rdt * (SET.slow ? 0.35 : 1); time += dt; poll(rdt);
@@ -257,7 +292,8 @@ function update(rdt) {
   else {
     dotM.visible = false; target = hold.item || hold.dummy ? null : findTarget();
     if (Input.grabDown) { if (hold.item || hold.dummy) release(false); else if (target) grabTarget(target, 'toggle'); }
-    if (Input.trigDown && !hold.item && !hold.dummy && target) grabTarget(target, 'trigger');
+    const pr = updatePunch(rdt);
+    if (Input.trigDown && pr !== 'punched' && !hold.item && !hold.dummy && target && !(target.dummy && target.t < 1.9)) grabTarget(target, 'trigger');
     else if (Input.trigUp && hold.mode === 'trigger' && (hold.dummy || (hold.item && !hold.item.gun))) release(true);
     ring.visible = !!target; if (target) { ring.position.copy(target.p); ring.lookAt(ctxD.playerHead); ring.scale.setScalar(target.r + 0.08 + Math.sin(time * 8) * 0.01); }
   }
@@ -274,10 +310,10 @@ function update(rdt) {
   for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) { const a = items[i], b = items[j]; if (a.held || b.held) continue; const d = b.pos.clone().sub(a.pos), L = d.length(), rr2 = (a.def.shape === 'gun' ? 0.08 : a.def.r * 0.8) + (b.def.shape === 'gun' ? 0.08 : b.def.r * 0.8); if (L < rr2 && L > 1e-4) { d.multiplyScalar(1 / L); const push = (rr2 - L) / 2; a.pos.addScaledVector(d, -push); b.pos.addScaledVector(d, push); const rv = b.vel.clone().sub(a.vel).dot(d); if (rv < 0) { const ma = a.def.mass, mb = b.def.mass, imp = -1.3 * rv / (1 / ma + 1 / mb); a.vel.addScaledVector(d, -imp / ma); b.vel.addScaledVector(d, imp / mb); } } }
   dummies.forEach(dm => dm.step(dt, ctxD));
   // objetos arremessados atingem bonecos
-  items.forEach(it => { if (it.held || it.vel.lengthSq() < 9) return; dummies.forEach(dm => { const j = dm.nearestJoint(it.pos); if (dm.p[j].distanceTo(it.pos) < it.def.r + 0.15) { dm.hit(j, it.vel.clone().multiplyScalar(0.004 * it.def.mass), it.vel.length() * it.def.mass * 0.8); it.vel.multiplyScalar(-0.3); SND.play('dummy'); FX.dustAt(it.pos.clone(), 'dummy'); } }); });
+  items.forEach(it => { if (it.held || it.vel.lengthSq() < 9) return; dummies.forEach(dm => { const j = dm.nearestJoint(it.pos); if (dm.p[j].distanceTo(it.pos) < it.def.r + 0.15) { const r = dm.hit(j, it.vel.clone().multiplyScalar(0.004 * it.def.mass), it.vel.length() * it.def.mass * 0.8, 'player'); if (dm.kind === 'human') FX.bleed(it.pos.clone(), it.vel.clone().normalize(), 0.5); else FX.dustAt(it.pos.clone(), 'dummy'); it.vel.multiplyScalar(-0.3); SND.play('dummy'); if (r === 'kill') onKill(dm); } }); });
   FX.update(dt); updateShadows();
   // vida e dano
-  if (player.hurtT > 0) player.hurtT -= rdt; hurtM.material.opacity = Math.max(0, player.hurtT) * 1.3; player.hp = Math.min(100, player.hp + rdt * (player.hurtT > -2 ? 0 : 5)); if (player.hurtT <= 0) player.hurtT = Math.max(-3, player.hurtT - 0);
+  if (player.hurtT > 0) player.hurtT -= rdt; hurtM.material.opacity = Math.max(0, player.hurtT) * 1.3; player.hurtT = Math.max(-4, player.hurtT); if (player.hurtT <= 0) player.hurtT -= rdt * 0; player.regen = (player.regen || 0) + rdt; if (player.hurtT > 0) player.regen = 0; if (player.regen > 4) player.hp = Math.min(100, player.hp + rdt * 6);
   if (toastT > 0) toastT -= rdt;
   if (Math.floor(time * 6) !== Math.floor((time - dt) * 6)) drawHud();
   skyM.position.set(rig.position.x, 0, rig.position.z);

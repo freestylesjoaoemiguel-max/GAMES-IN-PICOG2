@@ -9,7 +9,7 @@ const World = (() => {
     wood: { tex: 'wood', scale: 1.5 }, crate: { tex: 'crate', own: true }, target: { tex: 'target', own: true }, dirt: { tex: 'dirt', scale: 6 },
     bark: { tex: 'bark', scale: 1.5 }, leaves: { tex: 'leaves', scale: 2.5 }, rock: { tex: 'rock', scale: 5 }, paint: { tex: null }, light: { tex: null, unlit: true }
   };
-  const buckets = {}, colliders = [], plates = [];
+  const buckets = {}, colliders = [], plates = [], slabs = [];
   const G = { box: new THREE.BoxGeometry(1, 1, 1), cyl: {}, ico: new THREE.IcosahedronGeometry(1, 1), ico0: new THREE.IcosahedronGeometry(1, 0), cone: {}, sph: new THREE.SphereGeometry(1, 12, 8) };
   const cylG = (s, t) => { const k = s + '_' + (t || 1); return G.cyl[k] || (G.cyl[k] = new THREE.CylinderGeometry(t || 1, 1, 1, s, 1)); };
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), vs = new THREE.Vector3(), vp = new THREE.Vector3(), col = new THREE.Color();
@@ -34,7 +34,7 @@ const World = (() => {
     }
     g.dispose();
   }
-  const box = (mat, x, y, z, sx, sy, sz, o) => { add(mat, G.box, x, y, z, sx, sy, sz, o); if (o && o.col) colliders.push({ x0: x - sx / 2, x1: x + sx / 2, y0: y - sy / 2, y1: y + sy / 2, z0: z - sz / 2, z1: z + sz / 2, kind: o.kind || mat }); };
+  const box = (mat, x, y, z, sx, sy, sz, o) => { add(mat, G.box, x, y, z, sx, sy, sz, o); if (!(o && (o.ry || o.rx || o.rz)) && sy <= 0.25 && y - sy / 2 <= 0.02 && y + sy / 2 < 0.3 && sx * sz > 4 && mat !== 'light') slabs.push({ x0: x - sx / 2, x1: x + sx / 2, z0: z - sz / 2, z1: z + sz / 2, top: y + sy / 2 }); if (o && o.col) colliders.push({ x0: x - sx / 2, x1: x + sx / 2, y0: y - sy / 2, y1: y + sy / 2, z0: z - sz / 2, z1: z + sz / 2, kind: o.kind || mat }); };
   const cyl = (mat, x, y, z, r, h, o) => { o = o || {}; add(mat, cylG(o.seg || 10, o.top), x, y, z, r, h, r, o); if (o.col) colliders.push({ x0: x - r, x1: x + r, y0: y - h / 2, y1: y + h / 2, z0: z - r, z1: z + r, kind: mat }); };
   const blob = (mat, x, y, z, sx, sy, sz, o) => add(mat, (o && o.d0) ? G.ico0 : G.ico, x, y, z, sx, sy, sz, Object.assign({ smooth: false }, o));
 
@@ -168,6 +168,6 @@ const World = (() => {
     }
     const d = Math.hypot(pos.x, pos.z); if (d > 92) { pos.x *= 92 / d; pos.z *= 92 / d; }
   }
-  function floorAt(x, z, y) { let f = 0; for (const b of colliders) if (x > b.x0 && x < b.x1 && z > b.z0 && z < b.z1 && b.y1 <= y + 0.05 && b.y1 > f) f = b.y1; return f; }
+  function floorAt(x, z, y) { let f = 0; for (const b of slabs) if (x > b.x0 && x < b.x1 && z > b.z0 && z < b.z1 && b.top > f) f = b.top; for (const b of colliders) if (x > b.x0 && x < b.x1 && z > b.z0 && z < b.z1 && b.y1 <= y + 0.05 && b.y1 > f) f = b.y1; return f; }
   return { build, sky, raycast, collide, floorAt, colliders, plates, TAU };
 })();
