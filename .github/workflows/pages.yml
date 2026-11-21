@@ -2,15 +2,16 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    paths: ['.github/workflows/pages.yml', '.github/scripts/check-browser.sh']
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: github-pages
+  group: github-pages-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   build:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     steps:
@@ -37,7 +38,7 @@ jobs:
           python3 -m http.server 5176 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
-          PREVIEW_BASE_URL=http://127.0.0.1:5176/webxr/ npm run test:browser
+          PREVIEW_BASE_URL=http://127.0.0.1:5176/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
       - name: Install and test Discord VR G2
         working-directory: discord-vr-g2
         run: |
@@ -51,7 +52,7 @@ jobs:
           python3 -m http.server 5174 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
-          PREVIEW_BASE_URL=http://127.0.0.1:5174/webxr/ node tools/check_browser.mjs
+          PREVIEW_BASE_URL=http://127.0.0.1:5174/webxr/ bash ../.github/scripts/check-browser.sh node tools/check_browser.mjs
       - name: Build and test MonkeGo (screen APK + browser VR)
         run: |
           set -euo pipefail
@@ -63,7 +64,7 @@ jobs:
           python3 -m http.server 5177 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
-          PREVIEW_BASE_URL=http://127.0.0.1:5177/webxr/ npm run test:browser
+          PREVIEW_BASE_URL=http://127.0.0.1:5177/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
       - name: Build and test new Gorilla Rush v45 without replacing MonkeGo
         run: |
           set -euo pipefail
@@ -75,7 +76,7 @@ jobs:
           python3 -m http.server 5180 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
-          PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ npm run test:browser
+          PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
           npm run build
           python3 tools/package_project.py
       - name: Preserve PicoVerso and add independent WebXR apps
@@ -103,6 +104,7 @@ jobs:
         with:
           path: site
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     permissions:

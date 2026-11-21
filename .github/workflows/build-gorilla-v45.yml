@@ -48,4 +48,5 @@ jobs:
             gorilla-rush-v45/docs/ANDROID_BUILD.txt
             gorilla-rush-v45/docs/NODE_TESTS.txt
             gorilla-rush-v45/docs/BROWSER_TESTS.json
+            gorilla-rush-v45/docs/ENTRY_TESTS.json
           if-no-files-found: error

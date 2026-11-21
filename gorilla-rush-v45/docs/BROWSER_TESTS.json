@@ -12,12 +12,12 @@
   ],
   "errors": [],
   "neutral": {
-    "error": 6.806262153146359e-13,
-    "gap": 8.465988265462621e-8,
+    "error": 3.044343063917371e-13,
+    "gap": 8.458131884911719e-8,
     "wrist": [
-      69.9049999658699,
-      29.550176357762354,
-      -24.87750004508947
+      69.9049999659086,
+      29.55017635781855,
+      -24.87750004504977
     ],
     "target": [
       69.90499999999999,
@@ -42,8 +42,8 @@
     "scale": 0.25
   },
   "rotation": {
-    "forwardError": 2.5399250796552452e-8,
-    "rollError": 5.607439269267811e-8
+    "forwardError": 2.2341847455734854e-8,
+    "rollError": 5.545377887482426e-8
   },
   "limitations": [
     "Mocked WebVR display/WebXR frame and controller, real v45 game/model/triangle collision/WebGL.",
