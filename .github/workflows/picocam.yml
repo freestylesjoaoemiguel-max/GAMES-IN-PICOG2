@@ -1,0 +1,30 @@
+name: PicoCam APKs
+on:
+  workflow_dispatch:
+  push:
+    paths: ['picocam/**', '.github/workflows/picocam.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: '8.7' }
+      - name: App do celular
+        working-directory: picocam/phone
+        run: gradle assembleDebug --no-daemon
+      - name: App do Pico
+        working-directory: picocam/headset
+        run: gradle assembleDebug --no-daemon
+      - name: Publica numa Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp picocam/phone/app/build/outputs/apk/debug/app-debug.apk PicoCam-Celular.apk
+          cp picocam/headset/app/build/outputs/apk/debug/app-debug.apk PicoCam-Pico.apk
+          gh release delete picocam-latest --cleanup-tag -y || true
+          gh release create picocam-latest PicoCam-Celular.apk PicoCam-Pico.apk --target "$GITHUB_SHA" --title "PicoCam (câmera do celular no Pico)" --notes "PicoCam-Celular.apk no celular, PicoCam-Pico.apk no Pico G2. Mesma rede Wi-Fi."

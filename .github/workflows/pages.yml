@@ -81,6 +81,8 @@ jobs:
       - name: Preserve PicoVerso and add independent WebXR apps
         run: |
           set -euo pipefail
+          mkdir -p site/pingpong
+          cp -r pingpong/index.html pingpong/js pingpong/lib site/pingpong/
           mkdir -p site/gorilla-rush-v45
           cp -r gorilla-rush-v45/build/webxr/. site/gorilla-rush-v45/
           mkdir -p site/discord-vr-g2
