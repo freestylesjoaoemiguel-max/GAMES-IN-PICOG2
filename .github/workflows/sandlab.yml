@@ -1,0 +1,33 @@
+name: SandLab VR APK
+on:
+  workflow_dispatch:
+  push:
+    paths: ['sandlab/**', '.github/workflows/sandlab.yml']
+concurrency:
+  group: sandlab-release
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: '8.7' }
+      - name: Copia o jogo para os assets do app
+        run: |
+          mkdir -p sandlab/android/app/src/main/assets
+          cp -r sandlab/index.html sandlab/js sandlab/lib sandlab/android/app/src/main/assets/
+      - name: Compila o APK
+        working-directory: sandlab/android
+        run: gradle assembleDebug --no-daemon
+      - name: Publica numa Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp sandlab/android/app/build/outputs/apk/debug/app-debug.apk SandLab-VR.apk
+          gh release delete sandlab-latest --cleanup-tag -y || true
+          gh release create sandlab-latest SandLab-VR.apk --target "$GITHUB_SHA" --title "SandLab VR (Pico G2)" --notes "APK do SandLab VR. Instale com: adb install SandLab-VR.apk. Para WebXR use o link do GitHub Pages /sandlab/."
