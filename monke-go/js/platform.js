@@ -49,7 +49,7 @@ const PLATFORM=(function(){
 // ---------- configurações (persistentes em localStorage) ----------
 const SETTINGS=(function(){
   const D={impulse:2.2,maxSpeed:9,gravity:9.8,friction:5.5,sens:1.25,assist:.5,quality:0,
-    arm:1.32,simHand:0,style:'monke',color:'#5b3a24',smooth:.5,speedMode:'fast',music:.35,snap:1,names:1,handed:'right',vrApi:'auto',map:'forest',mode:'solo',reach:1,padClick:0,padTrig:1,padApp:2,padSwap:false,padInvertY:false};
+    arm:1.32,simHand:0,style:'monke',color:'#5b3a24',smooth:.5,speedMode:'fast',music:.35,snap:1,names:1,handed:'right',trackingMode:'3dof',vrApi:'auto',map:'forest',mode:'solo',reach:1,padClick:0,padTrig:1,padApp:2,padSwap:false,padInvertY:false};
   const S=Object.assign({},D);
   try{const j=JSON.parse(localStorage.getItem('monke_settings')||'{}');for(const k in D)if(k in j&&typeof j[k]===typeof D[k])S[k]=j[k]}catch(e){}
   // Migrate EVERY existing profile: old auto-swap/left-hand values must not return.
@@ -68,14 +68,14 @@ const SETTINGS=(function(){
 const SETTING_DEFS=[
   {k:'speedMode',l:'Velocidade do movimento',opts:[['fast','Rápido (atual)'],['medium','Médio'],['slow','Lento']]},
   {k:'music',l:'Volume da música',min:0,max:1,step:.05,f:v=>v<=0?'Desligada':Math.round(v*100)+'%'},
-  {k:'impulse',l:'Força do impulso',min:1,max:4,step:.1,f:v=>v.toFixed(1)+'x'},
+  {k:'impulse',l:'Força do pulo assistido',min:1,max:4,step:.1,f:v=>v.toFixed(1)+'x'},
   {k:'maxSpeed',l:'Velocidade máxima',min:4,max:16,step:.5,f:v=>v.toFixed(1)+' m/s'},
   {k:'gravity',l:'Gravidade',min:4,max:14,step:.2,f:v=>v.toFixed(1)},
   {k:'friction',l:'Atrito',min:1,max:10,step:.25,f:v=>v.toFixed(2)},
-  {k:'sens',l:'Sensibilidade',min:.5,max:2.5,step:.05,f:v=>v.toFixed(2)+'x'},
   {k:'assist',l:'Assistência',min:0,max:1,step:.1,f:v=>Math.round(v*100)+'%'},
   {k:'arm',l:'Comprimento dos braços',min:1,max:1.45,step:.05,f:v=>v.toFixed(2)+'x'},
   {k:'quality',l:'Qualidade gráfica',opts:[[-1,'Auto'],[0,'Baixa (PICO G2)'],[1,'Média'],[2,'Alta']]},
+  {k:'trackingMode',l:'Controle: tipo de rastreamento',opts:[['3dof','PICO G2 · orientação 3DoF'],['auto','Automático (outros headsets)']]},
   {k:'smooth',l:'Estabilização do controle',min:0,max:1,step:.1,f:v=>v<=0?'Desligada':Math.round(v*100)+'%'},
   {k:'snap',l:'Giro no touchpad',opts:[[0,'Desligado'],[1,'Snap 30°'],[2,'Snap 45°']]},
   {k:'padClick',l:'Botão: clique do touchpad',opts:[[0,'Botão 0 (padrão)'],[1,'Botão 1'],[2,'Botão 2'],[3,'Botão 3'],[4,'Botão 4']]},

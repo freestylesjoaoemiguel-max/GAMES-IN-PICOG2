@@ -7,7 +7,7 @@ for(const f of fs.readdirSync(path.join(root,'js')))if(f.endsWith('.js'))execFil
 const out=path.join(root,'build/webxr');fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out,{recursive:true});
 for(const f of ['index.html','css','js','lib','assets','README.md','PICO_G2.md','CREDITS.md'])fs.cpSync(path.join(root,f),path.join(out,f),{recursive:true});
 fs.mkdirSync(path.join(out,'docs'),{recursive:true});
-for(const f of ['README_ORIGINAL.md','PICO_G2_ORIGINAL.md','INPUT_PROVENANCE.json'])fs.copyFileSync(path.join(root,'docs',f),path.join(out,'docs',f));
+for(const f of ['README_ORIGINAL.md','PICO_G2_ORIGINAL.md','INPUT_PROVENANCE.json','preview-hand-first-person.png','preview-hand-menu.png'])fs.copyFileSync(path.join(root,'docs',f),path.join(out,'docs',f));
 fs.writeFileSync(path.join(out,'.nojekyll'),'');fs.mkdirSync(path.join(out,'downloads'),{recursive:true});
 for(const f of ['MonkeGo-PicoG2.apk','MonkeGo-PicoG2.apk.sha256'])fs.copyFileSync(path.join(root,'downloads',f),path.join(out,'downloads',f));
 console.log('Portable WebXR/WebVR + APK exported to',out);

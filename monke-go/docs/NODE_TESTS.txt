@@ -1,158 +1,194 @@
 
-> monkego-pico-g2@1.1.0 test
+> monkego-pico-g2@1.2.0 test
 > node --test tests/*.test.cjs
 
 TAP version 13
-# Subtest: left arm never returns a target or pushes, even with legacy handIndex=0
-ok 1 - left arm never returns a target or pushes, even with legacy handIndex=0
+# Subtest: open hand touches actual floor at radius, not half metre above it
+ok 1 - open hand touches actual floor at radius, not half metre above it
   ---
-  duration_ms: 2.984439
+  duration_ms: 1.596828
+  type: 'test'
+  ...
+# Subtest: fast hand sweep cannot pass through a floor
+ok 2 - fast hand sweep cannot pass through a floor
+  ---
+  duration_ms: 0.502809
+  type: 'test'
+  ...
+# Subtest: hand pushing a wall slides tangentially instead of being glued
+ok 3 - hand pushing a wall slides tangentially instead of being glued
+  ---
+  duration_ms: 0.372516
+  type: 'test'
+  ...
+# Subtest: leaving a surface releases the hand with no phantom contact
+ok 4 - leaving a surface releases the hand with no phantom contact
+  ---
+  duration_ms: 0.212747
+  type: 'test'
+  ...
+# Subtest: no surface means no artificial propulsion
+ok 5 - no surface means no artificial propulsion
+  ---
+  duration_ms: 0.307491
+  type: 'test'
+  ...
+# Subtest: left arm never returns a target or pushes, even with legacy handIndex=0
+ok 6 - left arm never returns a target or pushes, even with legacy handIndex=0
+  ---
+  duration_ms: 3.368777
   type: 'test'
   ...
 # Subtest: no alternating hand after repeated surface contact
-ok 2 - no alternating hand after repeated surface contact
+ok 7 - no alternating hand after repeated surface contact
   ---
-  duration_ms: 4.613723
+  duration_ms: 3.114073
   type: 'test'
   ...
 # Subtest: disabled arm does not reset right-arm smoothing or startup grace
-ok 3 - disabled arm does not reset right-arm smoothing or startup grace
+ok 8 - disabled arm does not reset right-arm smoothing or startup grace
   ---
-  duration_ms: 1.002577
+  duration_ms: 1.02555
   type: 'test'
   ...
-# Subtest: reconnect seeds pose without impulse and requires held trigger release
-ok 4 - reconnect seeds pose without impulse and requires held trigger release
+# Subtest: reconnect seeds pose and held trigger cannot silently re-anchor
+ok 9 - reconnect seeds pose and held trigger cannot silently re-anchor
   ---
-  duration_ms: 1.090398
+  duration_ms: 1.358071
   type: 'test'
   ...
 # Subtest: disconnect/menu cancels grab without boosting old velocity
-ok 5 - disconnect/menu cancels grab without boosting old velocity
+ok 10 - disconnect/menu cancels grab without boosting old velocity
   ---
-  duration_ms: 0.928301
+  duration_ms: 0.908862
   type: 'test'
   ...
 # Subtest: reset clears both old contact buffers and camera fallback points
-ok 6 - reset clears both old contact buffers and camera fallback points
+ok 11 - reset clears both old contact buffers and camera fallback points
   ---
-  duration_ms: 1.530413
+  duration_ms: 1.699284
   type: 'test'
   ...
 # Subtest: large runtime recenter is not treated as an arm swing or throw
-ok 7 - large runtime recenter is not treated as an arm swing or throw
+ok 12 - large runtime recenter is not treated as an arm swing or throw
   ---
-  duration_ms: 1.152258
+  duration_ms: 1.126632
   type: 'test'
   ...
 # Subtest: climbing correction is bounded and measured after collisions
-ok 8 - climbing correction is bounded and measured after collisions
+ok 13 - climbing correction is bounded and measured after collisions
   ---
-  duration_ms: 1.322083
+  duration_ms: 1.878005
   type: 'test'
   ...
 # Subtest: right-only geometry removes left skin triangles without changing source geometry
-ok 9 - right-only geometry removes left skin triangles without changing source geometry
+ok 14 - right-only geometry removes left skin triangles without changing source geometry
   ---
-  duration_ms: 1.187753
+  duration_ms: 1.30045
   type: 'test'
   ...
 # Subtest: saved auto-swap/left settings cannot re-enable the second arm
-ok 10 - saved auto-swap/left settings cannot re-enable the second arm
+ok 15 - saved auto-swap/left settings cannot re-enable the second arm
   ---
-  duration_ms: 2.206201
+  duration_ms: 2.095151
   type: 'test'
   ...
 # Subtest: orientation rejects null, zero, NaN and infinity; normalizes
-ok 11 - orientation rejects null, zero, NaN and infinity; normalizes
+ok 16 - orientation rejects null, zero, NaN and infinity; normalizes
   ---
-  duration_ms: 1.48196
+  duration_ms: 1.566054
   type: 'test'
   ...
 # Subtest: source chosen by identity and handedness, not inputSources index
-ok 12 - source chosen by identity and handedness, not inputSources index
+ok 17 - source chosen by identity and handedness, not inputSources index
   ---
-  duration_ms: 0.272942
+  duration_ms: 0.3033
   type: 'test'
   ...
 # Subtest: legacy mapping configurable and safe with missing axes
-ok 13 - legacy mapping configurable and safe with missing axes
+ok 18 - legacy mapping configurable and safe with missing axes
   ---
-  duration_ms: 0.310695
+  duration_ms: 0.31526
   type: 'test'
   ...
 # Subtest: xr-standard uses trigger zero and never treats stick click as menu
-ok 14 - xr-standard uses trigger zero and never treats stick click as menu
+ok 19 - xr-standard uses trigger zero and never treats stick click as menu
   ---
-  duration_ms: 0.208978
+  duration_ms: 0.173216
   type: 'test'
   ...
 # Subtest: touchpad zero axis is preserved, never mixed with stick
-ok 15 - touchpad zero axis is preserved, never mixed with stick
+ok 20 - touchpad zero axis is preserved, never mixed with stick
   ---
-  duration_ms: 0.156271
+  duration_ms: 0.159715
   type: 'test'
   ...
 # Subtest: axis swap and inversion are explicit calibration options
-ok 16 - axis swap and inversion are explicit calibration options
+ok 21 - axis swap and inversion are explicit calibration options
   ---
-  duration_ms: 0.136328
+  duration_ms: 0.151442
   type: 'test'
   ...
 # Subtest: select events tied to XRInputSource remain correct on reorder
-ok 17 - select events tied to XRInputSource remain correct on reorder
+ok 22 - select events tied to XRInputSource remain correct on reorder
   ---
-  duration_ms: 1.988673
+  duration_ms: 1.977176
   type: 'test'
   ...
 # Subtest: lost XR pose is not replaced with stale legacy gamepad
-ok 18 - lost XR pose is not replaced with stale legacy gamepad
+ok 23 - lost XR pose is not replaced with stale legacy gamepad
   ---
-  duration_ms: 0.8548
+  duration_ms: 0.913944
   type: 'test'
   ...
 # Subtest: disconnect does not synthesize jump from released touchpad
-ok 19 - disconnect does not synthesize jump from released touchpad
+ok 24 - disconnect does not synthesize jump from released touchpad
   ---
-  duration_ms: 1.195947
+  duration_ms: 1.244282
   type: 'test'
   ...
 # Subtest: legacy null pose discarded; reconnect valid orientation resumes
-ok 20 - legacy null pose discarded; reconnect valid orientation resumes
+ok 25 - legacy null pose discarded; reconnect valid orientation resumes
   ---
-  duration_ms: 1.399203
+  duration_ms: 1.44333
   type: 'test'
   ...
 # Subtest: App menu is edge-triggered, no repeated toggle
-ok 21 - App menu is edge-triggered, no repeated toggle
+ok 26 - App menu is edge-triggered, no repeated toggle
   ---
-  duration_ms: 1.120248
+  duration_ms: 1.155679
   type: 'test'
   ...
 # Subtest: WebXR frame resolves source targetRaySpace and rejects missing pose
-ok 22 - WebXR frame resolves source targetRaySpace and rejects missing pose
+ok 27 - WebXR frame resolves source targetRaySpace and rejects missing pose
   ---
-  duration_ms: 1.647538
+  duration_ms: 1.601205
   type: 'test'
   ...
 # Subtest: PICO detected by display with generic UA, low graphics and no Cardboard fallback
-ok 23 - PICO detected by display with generic UA, low graphics and no Cardboard fallback
+ok 28 - PICO detected by display with generic UA, low graphics and no Cardboard fallback
   ---
-  duration_ms: 1.8836
+  duration_ms: 1.885864
   type: 'test'
   ...
 # Subtest: all supplied game assets kept byte-for-byte
-ok 24 - all supplied game assets kept byte-for-byte
+ok 29 - all supplied game assets kept byte-for-byte
   ---
-  duration_ms: 19.110287
+  duration_ms: 19.384796
   type: 'test'
   ...
-1..24
-# tests 24
+# Subtest: generic-touchpad profile must never be mistaken for a 6DoF Touch controller
+ok 30 - generic-touchpad profile must never be mistaken for a 6DoF Touch controller
+  ---
+  duration_ms: 2.623757
+  type: 'test'
+  ...
+1..30
+# tests 30
 # suites 0
-# pass 24
+# pass 30
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 210.828173
+# duration_ms 302.857696

@@ -15,7 +15,7 @@ const HUD3D=(function(){
   H.toast=(t,ms)=>{H.set('toast',t);H.toastEnd=performance.now()+(ms||3500)};
   H.update=()=>{if(H.ch.toast&&performance.now()>H.toastEnd)H.set('toast','');
     const show=VRP.vrActive()||(vrView&&state=='play');
-    const txt=H.ch.toast||H.ch.mode||H.ch.net;p.m.visible=show&&!!txt;if(!H.dirty||!p.m.visible)return;H.dirty=false;
+    const txt=H.ch.toast||H.ch.tracking||H.ch.mode||H.ch.net;p.m.visible=show&&!!txt;if(!H.dirty||!p.m.visible)return;H.dirty=false;
     const x=p.x;x.clearRect(0,0,512,160);x.fillStyle='rgba(0,0,0,.55)';x.fillRect(0,0,512,160);x.textAlign='center';x.textBaseline='middle';
     const [a,b]=String(txt).split('<small>');x.fillStyle='#fff';x.font=FONT(30);wrap(x,a.replace(/<[^>]+>/g,'').toUpperCase(),256,b?55:80,490,34);
     if(b){x.font=FONT(21);x.fillStyle='#bff5d2';x.fillText(b.replace(/<[^>]+>/g,'').toUpperCase(),256,125)}p.t.needsUpdate=true};
@@ -96,8 +96,8 @@ const VRMENU=(function(){
   function activate(i,u){const it=cache&&cache.items[i];if(!it)return;if(it.adj&&!it.a){it.adj(u!=null&&u<.5?-1:1)}else if(it.a)it.a();M.dirty=true}
   // ponteiro: controle (laser), olhar, ou mouse
   function pointer(){
-    if(INPUT.ctrl.present){const hp=cam.getWorldPosition(_o);VRP.headWorldQuat(_q);const rt=new THREE.Vector3(1,0,0).applyQuaternion(_q);rt.y=0;rt.normalize();
-      _o.addScaledVector(rt,INPUT.handIndex?.18:-.18);_o.y-=.35;_d.set(0,0,-1).applyQuaternion(INPUT.ctrl.quat);ray.set(_o,_d);return 'ctrl'}
+    if(INPUT.ctrl.present){if(LM&&LM.hR)LM.hR.getWorldPosition(_o);else _o.copy(tgt[1]);
+      _d.set(0,0,-1).applyQuaternion(INPUT.ctrl.quat);ray.set(_o,_d);M.pointerOrigin=_o.clone();return 'ctrl'}
     if(!VRP.vrActive()&&!vrView&&M.mouse){ray.setFromCamera(M.mouse,cam);return 'mouse'}
     cam.getWorldPosition(_o);VRP.headWorldQuat(_q);_d.set(0,0,-1).applyQuaternion(_q);ray.set(_o,_d);return 'gaze'}
   addEventListener('mousemove',e=>{M.mouse={x:e.clientX/innerWidth*2-1,y:-(e.clientY/innerHeight)*2+1}});

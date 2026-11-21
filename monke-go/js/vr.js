@@ -38,7 +38,7 @@ const VRP=(function(){
   // Resolve each input source's own space in the CURRENT XRFrame, not its array index.
   V.xrCtrlQuat=(source,out)=>{if(!V.xrFrame||!source||!source.targetRaySpace)return false;
     try{const ref=R.xr.getReferenceSpace();if(!ref)return false;const pose=V.xrFrame.getPose(source.targetRaySpace,ref);
-      const q=pose&&TRACKING.orientation(pose.transform.orientation);if(!q)return false;out.fromArray(q);return true}catch(e){return false}};
+      const q=pose&&TRACKING.orientation(pose.transform.orientation);if(!q)return false;out.fromArray(q);V.controllerEmulated=pose.emulatedPosition===true;return true}catch(e){return false}};
   // Other headsets may supply real position; still route only the selected source to the right arm.
   V.xrCtrlPosition=(source,out)=>{if(!V.xrFrame||!source)return false;try{
     const pose=V.xrFrame.getPose(source.gripSpace||source.targetRaySpace,R.xr.getReferenceSpace()),p=pose&&pose.transform.position;
@@ -93,7 +93,7 @@ const VRP=(function(){
   V.rig=()=>{if(V.mode==='webxr'&&R.xr.isPresenting){xrRig.rotation.set(0,V.yaw,0);_v.copy(cam.position).applyAxisAngle(_Yax,V.yaw);xrRig.position.copy(P).sub(_v);return true}
     xrRig.position.set(0,0,0);xrRig.rotation.set(0,0,0);cam.position.copy(P);return true};
   // 3DoF? (Go/Gear VR) — então a locomoção usa o modelo de braço próprio; em 6DoF (Quest) mantém o caminho WebXR original
-  V.threeDoF=()=>V.mode==='webvr'||(V.mode==='webxr'&&(PLATFORM.threeDoFHeadset()||(!PLATFORM.sixDoF()&&!/quest|touch|index|vive|wmr|valve|neo|pico ?4/i.test(INPUT.ctrl.id))));
+  V.threeDoF=()=>V.mode==='webvr'||(V.mode==='webxr'&&(SETTINGS.trackingMode==='3dof'||PLATFORM.threeDoFHeadset()||V.controllerEmulated===true||(!PLATFORM.sixDoF()&&!/oculus-touch|quest|index|vive|wmr|valve|pico-neo|pico-4/i.test(INPUT.ctrl.id))));
   V.headWorldQuat=out=>{if(V.mode==='webxr'&&V.xrFrame){try{const pose=V.xrFrame.getViewerPose(R.xr.getReferenceSpace()),q=pose&&TRACKING.orientation(pose.transform.orientation);if(q)return out.copy(yawQ).multiply(_q.fromArray(q))}catch(e){}}return cam.getWorldQuaternion(out)};
   // ---------- ganchos no núcleo ----------
   HOOK.rs=()=>V.mode==='webvr'&&V.presenting;

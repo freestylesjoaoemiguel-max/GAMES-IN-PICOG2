@@ -51,7 +51,8 @@ addEventListener('vrdisplayactivate',()=>{if(state=='lobby'&&pl&&mapDone&&PLATFO
 HOOK.playerBuilt=()=>{LOCO.applyArms();MONKE.onPlayer()};
 $('style').value=SETTINGS.style;$('style').onchange=e=>MONKE.setStyle(e.target.value);
 HOOK.pre=dt=>{INPUT.poll(dt);VRMENU.pre(dt)};
-HOOK.post=(dt,now)=>{MODES.update(dt,now);MONKE.update(dt);VRMENU.update(dt);HUD3D.update(dt)};
+let noPoseSince=null;
+HOOK.post=(dt,now)=>{if(INPUT.ctrl.present)noPoseSince=null;else if(noPoseSince===null)noPoseSince=now;HUD3D.set('tracking',state==='play'&&VRP.vrActive()&&noPoseSince!==null&&now-noPoseSince>1000?'SEM POSE DO CONTROLE · mão em repouso':'');MODES.update(dt,now);MONKE.update(dt);VRMENU.update(dt);HUD3D.update(dt)};
 
 // ---------- boot ----------
 LOCO.applyTune();gfx=VRP.effQuality();dpr=prCap();rs();syncLobbySettings();
