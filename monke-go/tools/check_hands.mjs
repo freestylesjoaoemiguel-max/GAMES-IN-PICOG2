@@ -26,6 +26,15 @@ try{
   await page.evaluate(a=>{__xr.q=new THREE.Quaternion().setFromEuler(new THREE.Euler(...a,'YXZ')).toArray()},angles);await settle();const p=await getPose();assert(p.forwardError<.02);assert(p.rollError<.03);assert(Math.hypot(...p.wrist.map((v,i)=>v-p.target[i]))<.03);
  }
  passed.push('Actual skinned gorilla hand follows controller pitch, yaw AND roll, not just a moving pointer');
+ const rotation360=await page.evaluate(()=>{const saved=INPUT.ctrl.quat.clone();let maxForwardError=0,maxRollError=0;
+  for(const axis of [V3(1,0,0),V3(0,1,0),V3(0,0,1)])for(let step=0;step<=24;step++){
+   INPUT.ctrl.quat.setFromAxisAngle(axis,step*Math.PI*2/24);HOOK.wristPose();
+   const wrist=LM.hR.getWorldPosition(V3()),d=LM.pmR.getWorldPosition(V3()).sub(wrist).normalize(),a=LM.ixR.getWorldPosition(V3()).sub(LM.mdR.getWorldPosition(V3()));a.addScaledVector(d,-a.dot(d)).normalize();
+   maxForwardError=Math.max(maxForwardError,d.distanceTo(V3(0,0,-1).applyQuaternion(INPUT.ctrl.quat)));maxRollError=Math.max(maxRollError,a.distanceTo(V3(1,0,0).applyQuaternion(INPUT.ctrl.quat)));
+  }
+  INPUT.ctrl.quat.copy(saved);HOOK.wristPose();return {maxForwardError,maxRollError};
+ });assert(rotation360.maxForwardError<.03&&rotation360.maxRollError<.03);passed.push('Actual gorilla wrist completes 360 degrees on all three axes without an Euler-angle clamp or flipped hand');
+
  await page.evaluate(()=>{__xr.q=[0,0,0,1];VRMENU.open_()});await settle();await page.waitForFunction('VRMENU.open&&!!VRMENU.pointerOrigin',{},{timeout:10000});const menu=await getPose();assert(Math.abs(menu.projection[0])<1&&Math.abs(menu.projection[1])<1);assert(menu.forwardError<.02);assert(await page.evaluate('VRMENU.pointerOrigin.distanceTo(LM.hR.getWorldPosition(V3()))<.03'));passed.push('Opening VR menu keeps tracked hand visible; laser originates at gorilla wrist');
  await page.screenshot({path:path.join(root,'docs/preview-hand-menu.png')});
  await page.evaluate('VRMENU.close()');await settle();
@@ -46,6 +55,19 @@ try{
  const anchored=await page.evaluate('LOCO.anchor.toArray()');await page.evaluate(()=>{__xr.q=new THREE.Quaternion().setFromEuler(new THREE.Euler(-1.35,.25,0,'YXZ')).toArray()});await page.waitForTimeout(250);
  assert(await page.evaluate(a=>tgt[1].distanceTo(new THREE.Vector3().fromArray(a))<.02,anchored));passed.push('Trigger holds only a genuinely contacting hand; articulated arm stays attached to anchor');
  await page.evaluate('__xr.pressed=false;__xr.q=[0,0,0,1]');await page.waitForFunction('!LOCO.anchor');assert(await page.evaluate('vel.length()<=TUNE.max+.01'));passed.push('Release detaches hand and keeps bounded measured launch velocity');
+ // Regression: 1.2 passed vertical-push tests but produced no walking on a flat floor.
+ await page.evaluate(()=>{P.set(0,1.1,0);vel.set(0,0,0);TUNE.grav=9.8;SETTINGS.assist=0;assist=0;ptrs.clear();for(const k in keys)keys[k]=0;__xr.pressed=false;__xr.q=[0,0,0,1];LOCO.reset()});await settle();
+ const walkStart=await page.evaluate('P.toArray()'),strokes=[];
+ const aim=async angle=>{await page.evaluate(a=>{__xr.q=[Math.sin(a/2),0,0,Math.cos(a/2)]},angle);await settle()};
+ for(let stroke=0;stroke<3;stroke++){
+  await page.waitForFunction('P.y<1.16&&!LOCO.pushing',{},{timeout:10000});const before=await page.evaluate('P.toArray()');
+  for(let step=1;step<=8;step++)await aim(-.85*step/8);
+  await page.waitForFunction('!!LOCO.groundPlant',{},{timeout:5000});
+  for(let step=1;step<=12;step++)await aim(-.85-.75*step/12);
+  for(let step=1;step<=8;step++)await aim(-1.6+1.3*step/8);
+  await aim(0);const after=await page.evaluate('P.toArray()');strokes.push({before,after,forward:before[2]-after[2]});
+ }
+ const walkEnd=await page.evaluate('P.toArray()'),walkDistance=walkStart[2]-walkEnd[2];assert(walkDistance>.6);assert(strokes.every(s=>s.forward>.1));assert(await page.evaluate('!INPUT.ctrl.trigger&&INPUT.ctrl.x===0&&INPUT.ctrl.y===0'));passed.push('Three open-hand floor strokes advance the real player horizontally with gravity enabled and no buttons/joystick/keyboard');
  await page.evaluate('__xr.lost=true');await page.waitForFunction('!INPUT.ctrl.present');await page.waitForFunction("HUD3D.ch.tracking.includes('SEM POSE')",{},{timeout:5000});const rest=await getPose();assert(Math.abs(rest.projection[0])<1&&Math.abs(rest.projection[1])<1);assert(await page.evaluate("HUD3D.ch.tracking.includes('SEM POSE')"));passed.push('Pose loss shows resting hand and explicit warning rather than claiming live tracking');
- assert.deepEqual(errors,[]);const report={passed,errors,pixelProof,neutral,menu,limitations:'Real Chromium/WebGL and supplied skinned model; XR pose/session is a fixture, no physical PICO G2 or actual immersive session validation.'};fs.writeFileSync(path.join(root,'docs/HAND_TESTS.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+ assert.deepEqual(errors,[]);const report={passed,errors,pixelProof,neutral,menu,rotation360,walkDistance,strokes,limitations:'Real Chromium/WebGL and supplied skinned model; XR pose/session is a fixture, no physical PICO G2 or actual immersive session validation.'};fs.writeFileSync(path.join(root,'docs/HAND_TESTS.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 }finally{await browser.close()}
