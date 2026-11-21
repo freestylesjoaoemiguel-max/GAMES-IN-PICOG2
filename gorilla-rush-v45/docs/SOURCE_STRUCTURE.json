@@ -1,0 +1,162 @@
+{
+  "format": "Single HTML application inside .txt; not ZIP, APK, Unity or Unreal",
+  "lines": 1263,
+  "embeddedPayloads": 68,
+  "inlineScripts": [
+    "js/source-00.js",
+    "js/source-01.js",
+    "js/source-02.js",
+    "js/source-03.js",
+    "js/source-04.js",
+    "js/source-05.js",
+    "js/source-06.js",
+    "js/source-07.js"
+  ],
+  "sourceRuntime": "JavaScript / Three.js r128 / WebGL / manual side-by-side Cardboard + DeviceOrientation + MediaPipe camera landmarks",
+  "sourceVRSessionAPIs": {
+    "requestSession": false,
+    "requestPresent": false
+  },
+  "sourceExternalURLs": [
+    "http://www.w3.org/2000/svg",
+    "https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/",
+    "https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js",
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/",
+    "https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js",
+    "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js",
+    "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js",
+    "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/objects/Reflector.js",
+    "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js",
+    "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
+  ],
+  "binaryStructure": [
+    {
+      "path": "assets/51b81d70ce2b86689cbb.bin",
+      "type": "custom quantized map",
+      "materials": 31,
+      "geometryBlocks": 32,
+      "vertices": 297399,
+      "indices": 655917
+    },
+    {
+      "path": "assets/49b02532368b75c9838f.glb",
+      "type": "glTF binary 2",
+      "nodes": 50,
+      "meshes": 3,
+      "skins": 1,
+      "extensions": []
+    },
+    {
+      "path": "assets/58aacc462c7f9edb223f.bin",
+      "type": "custom quantized map",
+      "materials": 91,
+      "geometryBlocks": 135,
+      "vertices": 895215,
+      "indices": 1505448
+    },
+    {
+      "path": "assets/baab06e10ca615be6c62.glb",
+      "type": "glTF binary 2",
+      "nodes": 5,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/4faca106347231d43ae1.glb",
+      "type": "glTF binary 2",
+      "nodes": 5,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/68e27e666da5d46358b4.glb",
+      "type": "glTF binary 2",
+      "nodes": 5,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/a06d15d7b37d47401088.glb",
+      "type": "glTF binary 2",
+      "nodes": 5,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/0dcc9364239fec5311a2.glb",
+      "type": "glTF binary 2",
+      "nodes": 1,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/68019c16a9234f943fa2.glb",
+      "type": "glTF binary 2",
+      "nodes": 1,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/14c95c19837e1a0aa204.glb",
+      "type": "glTF binary 2",
+      "nodes": 1,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/0057a28589fc3b1d6d3f.glb",
+      "type": "glTF binary 2",
+      "nodes": 1,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/554f513497a874549b8d.glb",
+      "type": "glTF binary 2",
+      "nodes": 1,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/a9dd08cd90a68e4e7340.glb",
+      "type": "glTF binary 2",
+      "nodes": 1,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/4a3bda5e480f038ba441.glb",
+      "type": "glTF binary 2",
+      "nodes": 1,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/cc846d24a241fddeeebd.glb",
+      "type": "glTF binary 2",
+      "nodes": 5,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    },
+    {
+      "path": "assets/8c1299328b783233eeb0.glb",
+      "type": "glTF binary 2",
+      "nodes": 18,
+      "meshes": 1,
+      "skins": 0,
+      "extensions": []
+    }
+  ]
+}

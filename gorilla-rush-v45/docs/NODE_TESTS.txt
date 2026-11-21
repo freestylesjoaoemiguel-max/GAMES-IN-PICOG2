@@ -1,0 +1,86 @@
+
+> gorilla-rush-v45-pico-g2@1.0.0 test
+> node --test tests/*.test.cjs
+
+TAP version 13
+# Subtest: all 68 decoded source payloads match recorded hashes
+ok 1 - all 68 decoded source payloads match recorded hashes
+  ---
+  duration_ms: 52.026611
+  type: 'test'
+  ...
+# Subtest: contact strokes transfer horizontal displacement at both miniature and metre scale
+ok 2 - contact strokes transfer horizontal displacement at both miniature and metre scale
+  ---
+  duration_ms: 11.384556
+  type: 'test'
+  ...
+# Subtest: open-hand lift releases; free air cannot move the body
+ok 3 - open-hand lift releases; free air cannot move the body
+  ---
+  duration_ms: 2.961453
+  type: 'test'
+  ...
+# Subtest: 360 degree roll leaves estimated position unchanged and support active
+ok 4 - 360 degree roll leaves estimated position unchanged and support active
+  ---
+  duration_ms: 2.753945
+  type: 'test'
+  ...
+# Subtest: pose loss and menu cancel support without an old throw
+ok 5 - pose loss and menu cancel support without an old throw
+  ---
+  duration_ms: 2.463641
+  type: 'test'
+  ...
+# Subtest: collision-clamped body movement determines launch velocity
+ok 6 - collision-clamped body movement determines launch velocity
+  ---
+  duration_ms: 0.925619
+  type: 'test'
+  ...
+# Subtest: no floor means no motion or phantom downward magnet
+ok 7 - no floor means no motion or phantom downward magnet
+  ---
+  duration_ms: 0.841319
+  type: 'test'
+  ...
+# Subtest: large pointing jump is not a real stroke
+ok 8 - large pointing jump is not a real stroke
+  ---
+  duration_ms: 1.384802
+  type: 'test'
+  ...
+# Subtest: normalized orientation rejects invalid and zero values
+ok 9 - normalized orientation rejects invalid and zero values
+  ---
+  duration_ms: 1.06724
+  type: 'test'
+  ...
+# Subtest: WebXR controller routing uses source identity and right hand
+ok 10 - WebXR controller routing uses source identity and right hand
+  ---
+  duration_ms: 0.495389
+  type: 'test'
+  ...
+# Subtest: XR standard and configurable legacy buttons are not interchangeable
+ok 11 - XR standard and configurable legacy buttons are not interchangeable
+  ---
+  duration_ms: 0.368031
+  type: 'test'
+  ...
+# Subtest: lifting an overlapping sphere cannot stick under double-sided floor
+ok 12 - lifting an overlapping sphere cannot stick under double-sided floor
+  ---
+  duration_ms: 0.160497
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 170.580375

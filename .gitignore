@@ -57,3 +57,8 @@ __pycache__/
 /monke-go/build/
 /monke-go/dist/
 /monke-go/downloads/
+
+# Separate supplied Gorilla Rush v45 edition; preserve the previous MonkeGo.
+/gorilla-rush-v45/node_modules/
+/gorilla-rush-v45/build/
+/gorilla-rush-v45/downloads/
