@@ -1,0 +1,13 @@
+{
+  "passed": [
+    "Single primary INICIAR VR button; no floating top mode selector, no session requested before the click",
+    "Click directly requests immersive-vr with user activation; denial leaves lobby intact and permits retry",
+    "One main click starts game in WebXR after acceptance, never flat or VR Box, and hides launch overlay",
+    "Exiting restores INICIAR VR; repeated clicks during permission prompt cannot create duplicate sessions",
+    "Unsupported browsers show clear status and cannot silently start fake VR",
+    "Screen play, online rooms and controller diagnostics remain in Settings > Controls, not a top overlay",
+    "Primary launch control stays inside mobile viewport"
+  ],
+  "errors": [],
+  "limitations": "Chromium with mocked WebXR session/manager boundary; real UI, boot and game start. No physical headset or real compositor test."
+}

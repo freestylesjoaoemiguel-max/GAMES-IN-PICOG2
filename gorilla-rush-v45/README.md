@@ -9,21 +9,21 @@
 
 ## Usar no headset
 
-1. No navegador VR que já acompanha seu controle, abra o endereço novo por HTTPS. Aguarde o carregamento dos mapas. Verifique **V45 · PICO G2 · TESTE 1**.
-2. Toque em **ENTRAR EM VR**. O botão só é habilitado se a API oferecer sessão WebXR imersiva ou VRDisplay WebVR com apresentação. Não há fallback disfarçado para VR Box.
+1. No navegador VR que já acompanha seu controle, abra o endereço novo por HTTPS. Aguarde o carregamento dos mapas. Verifique o botão principal **INICIAR VR**.
+2. Toque em **INICIAR VR**. Não precisa selecionar um modo no topo: o próprio clique solicita WebXR e inicia o jogo após a autorização do navegador. Em navegadores antigos sem WebXR, usa WebVR quando disponível. O botão só é habilitado se a API oferecer sessão WebXR imersiva ou VRDisplay WebVR com apresentação. Não há fallback disfarçado para VR Box.
 3. Apenas a mão direita é controlada. A posição do braço é **estimada**; o quaternion medido controla o pulso em 360°. Não há duas mãos 6DoF nem rastreamento óptico dos dedos.
 4. **Andar sem botão:** aponte para baixo até o painel indicar **APOIADA**. Gire mais para baixo/trás para empurrar o chão. Levante a ponta para soltar e repita. A mão não gera força no ar. **Mover o controle para trás sem girá-lo não fornece translação ao jogo**, pois o G2 é 3DoF.
 5. Segure o clique do touchpad por 0,6 s para o menu. Aponte o laser ou use cima/baixo do touchpad para escolher; gatilho ou clique curto confirma. Em **CALIBRAR**, aponte para a frente antes de confirmar; isso corrige o eixo do braço estimado, não inventa posição rastreada.
 6. Gatilho segura contato real em chão/parede. Clique curto no centro do touchpad pula; bordas giram 30°. **Ajuda no touchpad** é opcional, identificada no menu e desligada por padrão; não é apresentada como locomoção física.
-7. Se continuar sem andar, veja se o painel mostra **NO AR**, **APOIADA** ou **SEM POSE**. Saia do VR e use **SALVAR DIAGNÓSTICO**; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
+7. Se continuar sem andar, veja se o painel mostra **NO AR**, **APOIADA** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
 
-A interface 2D do jogo original permite selecionar salas, acessórios e modos antes da sessão. O botão VR inicia Solo se você ainda não entrou em um modo. Para um modo de rede, entre pela interface original primeiro e então entre em VR. As telas de perfil/amigos/microfone do original continuam 2D; não foram todas reescritas como UI imersiva. Rede PeerJS, voz, câmera opcional e conforto de VR não foram validados em hardware.
+A interface 2D do jogo original permite selecionar salas, acessórios e modos antes da sessão. A entrada rápida online, o modo tela e os diagnósticos ficam em **Configurações → Controles**, não em um painel flutuante no topo. O botão VR inicia Solo se você ainda não entrou em um modo. Para um modo de rede, entre pela interface original primeiro e então entre em VR. As telas de perfil/amigos/microfone do original continuam 2D; não foram todas reescritas como UI imersiva. Rede PeerJS, voz, câmera opcional e conforto de VR não foram validados em hardware.
 
 ## APK / instalação
 
 O arquivo recebido é HTML/JS/Three.js, não Unity/Unreal. **O APK gerado não contém o compositor PICO ou integração nativa do controle.** Android WebView não adquire WebXR por trocar manifesto ou nome do dispositivo. O modo VR é o site no navegador externo já instalado.
 
-- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.0/code 1; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
+- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.1/code 2; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
 - Abra o APK no instalador do G2 ou use `adb install Gorilla-Rush-v45-PicoG2.apk` com depuração USB autorizada. **Instalação não testada aqui.** Não desinstale o MonkeGo anterior.
 - O botão **ABRIR EM VR** abre o site externo (internet necessária). No APK, o jogo fica em tela/WebView. Não confundir duas imagens no modo VR Box original com uma sessão imersiva.
 - APK assinado para desenvolvimento. Configure `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE`, `SIGNING_ALIAS` para atualizações com certificado estável. Um certificado novo pode impedir atualização; não desinstale sem backup dos dados.
@@ -55,7 +55,7 @@ O bootstrap baixa ferramentas Java/Android fixadas por versão e verifica seus h
 
 - **Compilação:** relatório real em `docs/ANDROID_BUILD.txt`; sintaxe JS verificada pelo build.
 - **Código/análise estática:** inventário integral dos 68 payloads, hashes, dependências e pontos de integração; `docs/COMPATIBILITY_AUDIT.md`, `INPUT_PROVENANCE.json`, `SOURCE_STRUCTURE.json`.
-- **Testes automatizados:** `docs/NODE_TESTS.txt` e `BROWSER_TESTS.json`. Chromium executa o modelo, mapas, colisões e frame loop reais, mas as poses/sessões são simuladas. Inclui movimento horizontal em três ciclos com gravidade, sem botões, giro 360°, soltura, perda de pose e as duas projeções WebVR. Isso não prova o comportamento do navegador do G2.
+- **Testes automatizados:** `docs/NODE_TESTS.txt`, `BROWSER_TESTS.json` e `ENTRY_TESTS.json`. Chromium executa o modelo, mapas, colisões e frame loop reais, mas as poses/sessões são simuladas. Inclui movimento horizontal em três ciclos com gravidade, sem botões, giro 360°, soltura, perda de pose e as duas projeções WebVR. Isso não prova o comportamento do navegador do G2.
 - **NÃO testado no hardware físico PICO G2:** instalação Android, compositor real, firmware/browser do usuário, FPS, latência, temperatura, conforto, câmera, voz, multiplayer e transições completas entre todos os modos.
 - Sem promessa de "perfeito/sem bugs", nem de física idêntica ao Gorilla Tag original: um controle 3DoF não fornece as posições independentes de duas mãos usadas por esse tipo de jogo. Braço articulado por IK, não ragdoll.
 

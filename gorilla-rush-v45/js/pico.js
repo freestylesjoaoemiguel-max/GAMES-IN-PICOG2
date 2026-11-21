@@ -3,7 +3,7 @@
  */
 'use strict';
 const PICO=(()=>{
- const p={mode:'flat',presenting:false,frame:null,session:null,display:null,head:new THREE.Quaternion(),rawHead:new THREE.Quaternion(),headPosition:V3(),yaw:0,source:null,menu:false,choice:0,assist:false,nearFloor:null,buttonMap:{padClick:0,padTrig:1,padApp:2},ctrl:{present:false,quat:new THREE.Quaternion(),raw:new THREE.Quaternion(),trigger:false},select:new WeakMap(),needsRelease:true,reason:'Entre em VR para ler o controle',stats:{frames:0,eyes:0},calibration:null};
+ const p={starting:false,mode:'flat',presenting:false,frame:null,session:null,display:null,head:new THREE.Quaternion(),rawHead:new THREE.Quaternion(),headPosition:V3(),yaw:0,source:null,menu:false,choice:0,assist:false,nearFloor:null,buttonMap:{padClick:0,padTrig:1,padApp:2},ctrl:{present:false,quat:new THREE.Quaternion(),raw:new THREE.Quaternion(),trigger:false},select:new WeakMap(),needsRelease:true,reason:'Entre em VR para ler o controle',stats:{frames:0,eyes:0},calibration:null};
  const arm=ARM_PHYSICS.create(THREE,HAND_SURFACE.solve);p.arm=arm;
  const yawQ=new THREE.Quaternion(),lastPosition=V3(),eye=V3(),forward=V3(0,0,-1),right=V3(1,0,0);
  const rig=new THREE.Group();S.add(rig);rig.add(cam);const ecam=new THREE.PerspectiveCamera();ecam.matrixAutoUpdate=false;
@@ -97,7 +97,7 @@ const PICO=(()=>{
    const rc=new THREE.Raycaster(ray.position,V3(0,0,-1).applyQuaternion(p.ctrl.quat));panel.updateMatrixWorld();const h=rc.intersectObject(panel)[0];if(h&&h.uv){const y=(1-h.uv.y)*448,i=Math.round((y-80)/45);if(i>=0&&i<rows.length&&p.choice!==i){p.choice=i;lastText=''}}
   }
  };
- function exit(){p.presenting=false;p.mode='flat';p.frame=null;p.session=null;p.display=null;p.source=null;p.ctrl.present=false;p.menu=false;p.reset();panel.visible=ray.visible=false;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);R.xr.enabled=false;vrView=false;rs();R.setAnimationLoop(frame);document.getElementById('pico-status').textContent='VR encerrado. Clique em ENTRAR EM VR para voltar.'}
+ function exit(){p.presenting=false;p.mode='flat';p.frame=null;p.session=null;p.display=null;p.source=null;p.ctrl.present=false;p.menu=false;p.reset();panel.visible=ray.visible=false;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);R.xr.enabled=false;vrView=false;rs();R.setAnimationLoop(frame);document.body.classList.remove('vr-presenting');p.refreshStart();document.getElementById('pico-status').textContent='VR encerrado. Clique em INICIAR VR para voltar.'}
  p.stop=()=>{if(p.session)p.session.end();else if(p.display)p.display.exitPresent()};
  p.render=()=>{
   if(!p.presenting)return false;
@@ -113,9 +113,11 @@ const PICO=(()=>{
    ecam.matrix.compose(pos,q,V3(1,1,1));ecam.matrixWorldNeedsUpdate=true;ecam.projectionMatrix.fromArray(i?fd.rightProjectionMatrix:fd.leftProjectionMatrix);ecam.projectionMatrixInverse.copy(ecam.projectionMatrix).invert();R.setViewport(i*p.eyeW,0,p.eyeW,p.eyeH);R.setScissor(i*p.eyeW,0,p.eyeW,p.eyeH);R.render(S,ecam);p.stats.eyes++;
   }R.setScissorTest(false);p.display.submitFrame();return true;
  };
+ p.refreshStart=()=>{const button=document.getElementById('pico-vr');button.disabled=!(p.api&&pl&&mapDone)||p.starting||p.presenting;button.setAttribute('aria-busy',String(p.starting))};
  p.start=async()=>{
-  if(!pl||!mapDone||p.presenting)return;
-  const label=document.getElementById('pico-status');
+  if(!pl||!mapDone||p.presenting||p.starting)return;
+  p.starting=true;p.refreshStart();
+  const label=document.getElementById('pico-status');label.textContent='Solicitando entrada em VR…';
   try{
    if(p.api==='webxr'){
     // requestSession remains directly in the user gesture; no unrelated async work first.
@@ -131,10 +133,10 @@ const PICO=(()=>{
     const loop=t=>{if(!p.presenting||!p.display||!p.display.isPresenting)return;p.display.requestAnimationFrame(loop);frame(t)};p.display.requestAnimationFrame(loop);
    }else throw Error('Este navegador nao expoe WebXR nem WebVR imersivo. Nao sera usado VR Box como substituto.');
    if(state!=='play'){solo=true;NET.mode='cas';NET.code='SOLO';NET.host=true;startGame();initAudio()}
-   vrView=false;vrOn=false;p.yaw=yw;p.reset();p.menu=false;label.textContent='VR ativo: '+p.mode+' | somente mao direita';
+   vrView=false;vrOn=false;p.yaw=yw;p.reset();p.menu=false;document.body.classList.add('vr-presenting');label.textContent='VR ativo: '+p.mode+' | somente mao direita';
    ['joy','fup','fdn','selb','xh'].forEach(id=>$(id).style.display='none');
    if(!ready){RIGHT_ARM.strip(pl);LM.uR.scale.multiplyScalar(1.32);ready=true}
-  }catch(e){label.textContent='Nao foi possivel entrar: '+(e.message||e);console.warn('VR entry',e);if(!p.presenting){p.display=null;R.xr.enabled=false;rs()}}
+  }catch(e){label.textContent='Nao foi possivel entrar: '+(e.message||e);console.warn('VR entry',e);if(!p.presenting){p.display=null;R.xr.enabled=false;rs()}}finally{p.starting=false;p.refreshStart()}
  };
  addEventListener('vrdisplaypresentchange',()=>{if(p.mode==='webvr'&&p.display&&!p.display.isPresenting)exit()});
  addEventListener('keydown',e=>{if(state==='play'&&(e.code==='KeyM'||e.code==='Escape'))p.toggleMenu();if(p.menu){if(e.code==='ArrowDown')p.choice=(p.choice+1)%rows.length;if(e.code==='ArrowUp')p.choice=(p.choice+rows.length-1)%rows.length;if(e.code==='Enter')p.runChoice()}});
@@ -147,10 +149,10 @@ const PICO=(()=>{
    if(!p.api)try{if(navigator.getVRDisplays&&typeof VRFrameData!=='undefined'){const displays=await navigator.getVRDisplays();p.availableDisplay=displays.find(d=>d.capabilities&&d.capabilities.canPresent);if(p.availableDisplay)p.api='webvr'}}catch(e){}
   }
   document.getElementById('pico-status').textContent=p.api?'API disponivel: '+p.api+' - teste no headset necessario.':'Sem API VR imersiva. Modo tela apenas; nao e VR nativo.';
-  document.getElementById('pico-vr').disabled=!(p.api&&pl&&mapDone);
+  p.refreshStart();
  };
  document.getElementById('pico-vr').onclick=p.start;document.getElementById('pico-solo').onclick=()=>enter('solo');
- document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-pico-1',userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+ document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-start-vr-2',userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
  try{Object.assign(p.buttonMap,JSON.parse(localStorage.getItem('v45-buttons')||'{}'))}catch(e){}
  for(const k of ['padClick','padTrig','padApp']){const s=document.getElementById(k);s.value=p.buttonMap[k];s.onchange=p.configureButtons}
  p.detect();return p;
