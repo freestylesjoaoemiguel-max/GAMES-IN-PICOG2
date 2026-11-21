@@ -4,13 +4,18 @@ Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo 
 
 ## 🧪 SandLab VR — sandbox de mundo aberto (WebXR + APK)
 
-Cidade aberta com armas, objetos com física e bonecos ragdoll que caem, podem ser agarrados e arremessados.
+### ▶ Jogar agora
+* **WebXR (abra no navegador do Pico → “🥽 Entrar em VR”):** **https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/sandlab/**
+* **APK para instalar no Pico:** **[SandLab-VR.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/releases/download/sandlab-latest/SandLab-VR.apk)** (`adb install SandLab-VR.apk` · abre em tela cheia com giroscópio)
 
-![SandLab VR](sandlab/docs/02-tiroteio.jpg)
+Cidade aberta com **pessoas 3D** e manequins com ragdoll, armas (pistola, fuzil, escopeta), objetos com física, **soco com a mão vazia** (quem apanha revida — mesmo se você pegar uma arma) e **sangue** com poças.
 
-* **WebXR (navegador do Pico → “Entrar em VR”):** **https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/sandlab/**
-* **APK:** [SandLab-VR.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/releases/download/sandlab-latest/SandLab-VR.apk)
-* Controles, fotos e detalhes: [`sandlab/README.md`](sandlab/README.md)
+| | |
+|---|---|
+| ![Tiroteio](sandlab/docs/02-tiroteio.jpg) | ![Sangue e ragdoll](sandlab/docs/06-sangue.jpg) |
+| ![Briga: a pessoa revida](sandlab/docs/07-briga.jpg) | ![Cidade](sandlab/docs/01-cidade.jpg) |
+
+**Controles (Pico G2):** R2 = atirar / soco / segurar e arremessar · clique do meio = pegar e soltar · touch = andar · segurar o clique do meio = menu. Detalhes: [`sandlab/README.md`](sandlab/README.md)
 
 ## 🏓 Ping-Pong VR (WebXR) — jogar agora
 
