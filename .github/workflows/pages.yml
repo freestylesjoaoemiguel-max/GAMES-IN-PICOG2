@@ -82,6 +82,8 @@ jobs:
       - name: Preserve PicoVerso and add independent WebXR apps
         run: |
           set -euo pipefail
+          mkdir -p site/sandlab
+          cp -r sandlab/index.html sandlab/js sandlab/lib site/sandlab/
           mkdir -p site/pingpong
           cp -r pingpong/index.html pingpong/js pingpong/lib site/pingpong/
           mkdir -p site/gorilla-rush-v45

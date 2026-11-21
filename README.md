@@ -2,6 +2,16 @@
 
 Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo Meta Quest): mundos em 360°, personagens 3D que andam e conversam com IA, casas com interior, braços que seguem o controle, sons e música. Tudo roda no navegador, sem instalar nada.
 
+## 🧪 SandLab VR — sandbox de mundo aberto (WebXR + APK)
+
+Cidade aberta com armas, objetos com física e bonecos ragdoll que caem, podem ser agarrados e arremessados.
+
+![SandLab VR](sandlab/docs/02-tiroteio.jpg)
+
+* **WebXR (navegador do Pico → “Entrar em VR”):** **https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/sandlab/**
+* **APK:** [SandLab-VR.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/releases/download/sandlab-latest/SandLab-VR.apk)
+* Controles, fotos e detalhes: [`sandlab/README.md`](sandlab/README.md)
+
 ## 🏓 Ping-Pong VR (WebXR) — jogar agora
 
 Campeonato de ping-pong em VR para o Pico G2: estádio com torcida, adversário 3D animado, física realista e raquete rastreada pelo controle.
