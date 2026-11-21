@@ -13,12 +13,12 @@
   document.querySelectorAll('.pane:not([data-t=play])').forEach(p=>{const b=document.createElement('button');b.className='pclose';b.textContent='VOLTAR';b.onclick=()=>document.querySelector('.tab[data-t=play]').click();p.prepend(b)});
   const r=await fetch('docs/INPUT_PROVENANCE.json');if(!r.ok)throw Error('Manifesto HTTP '+r.status);const manifest=await r.json();let done=0,next=0;
   await Promise.all(Array.from({length:4},async()=>{while(next<manifest.rawAssets.length){const path=manifest.rawAssets[next++],r=await fetch(path);if(!r.ok)throw Error(path+' HTTP '+r.status);buffers.set(path,new Uint8Array(await r.arrayBuffer()));LOADSCR.set(++done/manifest.rawAssets.length*65)}}));
-  for(const s of ['lib/three.min.js','lib/GLTFLoader.js','lib/SkeletonUtils.js','lib/Reflector.js','lib/peerjs-1.5.4.min.js','js/tracking.js','js/hand-surface.js','js/right-arm.js','js/arm-physics.js','js/source-01.js','js/source-02.js','js/source-04.js','js/source-05.js','js/source-06.js','js/pico.js','js/source-07.js'])await V45.load(s+'?v=v45-pico-1');
+  for(const s of ['lib/three.min.js','lib/GLTFLoader.js','lib/SkeletonUtils.js','lib/Reflector.js','lib/peerjs-1.5.4.min.js','js/tracking.js','js/hand-surface.js','js/right-arm.js','js/arm-physics.js','js/source-01.js','js/source-02.js','js/source-04.js','js/source-05.js','js/source-06.js','js/pico.js','js/source-07.js'])await V45.load(s+'?v=v45-start-vr-2');
   R.setAnimationLoop((t,f)=>{PICO.frame=f||null;try{frame(t)}finally{PICO.frame=null}});
   $('lobby').classList.add('in');document.body.classList.add('in','inlobby');
   new MutationObserver(()=>document.body.classList.toggle('inlobby',$('lobby').style.display!=='none')).observe($('lobby'),{attributes:true,attributeFilter:['style']});
   const until=Date.now()+90000;while(!pl||!mapDone){if(Date.now()>until)throw Error('Modelo/mapas nao ficaram prontos. Consulte o erro exibido.');await new Promise(r=>setTimeout(r,100))}
-  $('pico-solo').disabled=false;$('pico-vr').disabled=!PICO.api;LOADSCR.set(100);LOADSCR.hide();window.V45.ready=true;
+  $('pico-solo').disabled=false;PICO.refreshStart();LOADSCR.set(100);LOADSCR.hide();window.V45.ready=true;
  }
  boot().catch(e=>{LOADSCR.hide();$('pico-status').textContent='FALHA: '+e.message;$('pico-status').style.color='#ffaaaa';console.error(e)});
 })();

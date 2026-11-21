@@ -1,5 +1,12 @@
 # Alterações — v45 / PICO G2 teste 1
 
+## 1.0.1 — iniciar diretamente em VR
+- Botão principal **INICIAR VR** no lugar do atalho principal de entrada rápida; o clique solicita a sessão imersiva no próprio gesto do usuário, sem abrir câmera, microfone ou rede antes.
+- Removidos o painel flutuante superior e o seletor de VR Box. Ferramentas avançadas, modo tela e entrada rápida online continuam em Configurações → Controles.
+- WebXR tem preferência; WebVR permanece disponível para navegadores legados G2. Sem API imersiva, o botão é desabilitado com aviso, não há VR simulado.
+- Proteção contra entrada duplicada; permissão negada permite nova tentativa; sair restaura o botão de início.
+- URLs de scripts e CSS versionadas; APK 1.0.1/code 2. Novos testes de interface, clique, negação, reentrada, ausência de API e viewport móvel, com fronteira XR simulada.
+
 ## Entrada nova, sem substituir a anterior
 - Importado `Gorilla_Rush5_v45 (1).txt` completo; não reutilizado o mapa antigo no lugar do novo.
 - 68 payloads distintos extraídos; ambos os mapas, avatar, cosméticos, sons, música, loja, teclado, portais e código de rede preservados.
