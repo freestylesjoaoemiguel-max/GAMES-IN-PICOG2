@@ -112,13 +112,8 @@ O PicoVerso VR continua preservado na raiz. Discord VR G2 está em uma subpasta:
 
 - **[Jogar no navegador (WebXR/WebVR) — versão v45](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1)**
 - [Baixar APK v45 compilado no GitHub](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/downloads/Gorilla-Rush-v45-PicoG2.apk)
-- [Baixar projeto completo v45](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/downloads/Gorilla-Rush-v45-projeto.zip)
-- [Código, controles, instalação, créditos e limites](gorilla-rush-v45/README.md)
-- [Registro de alterações](gorilla-rush-v45/CHANGELOG.md)
 
 A versão atual usa o novo arquivo **Gorilla Rush v45** enviado pelo usuário, preservando os dois mapas e os recursos recebidos. Inclui mão direita com rotação de 360°, braço articulado com posição estimada 3DoF, locomoção por contato e painel de diagnóstico no VR.
 
 **APK = jogo em tela/WebView + botão para abrir o navegador VR, não porte VR nativo PICO.**
 Gráficos baixos por padrão. Os testes automatizados usam poses simuladas; PICO G2 físico, instalação Android e FPS ainda não validados.
-
-[Versão anterior — MonkeGo 1.3 (mantida para retorno)](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3)
