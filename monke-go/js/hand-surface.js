@@ -12,7 +12,9 @@
    const offsets=[[0,0,0],[radius,0,0],[-radius,0,0],[0,radius,0],[0,-radius,0],[0,0,radius],[0,0,-radius]];
    for(let i=0;i<offsets.length;i++){
     const offset=pos.clone().fromArray(offsets[i]),h=cast(pos.clone().add(offset),dir,len+(i===0?radius:0)+.003);
-    if(!h)continue;
+    // An offset ray can start slightly inside a triangle while the hand centre is
+    // outside. Never let its back-face hit pull a departing hand under the floor.
+    if(!h||pos.clone().sub(h.point).dot(h.n)<-1e-5)continue;
     const padding=i===0?radius/Math.max(.05,-h.n.dot(dir)):0,t=Math.max(0,h.distance-padding-.002);
     if(t<distance){distance=t;found=h;}
    }

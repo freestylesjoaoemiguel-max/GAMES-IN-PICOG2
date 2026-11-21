@@ -1,6 +1,6 @@
-# PICO G2 — guia atual (1.2)
+# PICO G2 — guia atual (1.3)
 
-**Mão visível também no menu; pulso orientado pela mesma pose do laser.** Em Ajustes, use **PICO G2 · orientação 3DoF**. Empurre superfícies com a mão aberta para locomover; gatilho mantém contato. Não é a física exata de Gorilla Tag nem rastreamento posicional 6DoF.
+**Tração horizontal no chão, somente mão direita, pulso livre em 360°.** Em Ajustes, use **PICO G2 · orientação 3DoF**. Aponte 45–55° para baixo até tocar o chão; gire mais para baixo/trás para avançar. Levante para soltar e repita, sem gatilho. O gatilho é opcional para agarrar. Não é a física exata de Gorilla Tag nem rastreamento posicional 6DoF.
 
 Consulte [README](README.md) para links, calibração, build e limitações.
 

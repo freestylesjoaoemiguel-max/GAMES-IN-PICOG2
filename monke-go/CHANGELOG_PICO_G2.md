@@ -1,5 +1,13 @@
 # Changelog — porte para Pico G2
 
+## 1.3.0 — tração no chão e pulso livre em 360°
+- Corrige falta de movimento horizontal: apoio com atrito no chão transmite o gesto ao corpo sem gatilho. Levantar solta o apoio; paredes mantêm deslizamento e agarrar opcional.
+- Alcance estimado para baixo ampliado dentro do comprimento do braço, sem fingir posição medida 6DoF.
+- Giro do pulso não cancela apoio como se fosse recentralização; orientação por quaternion sem limite de Euler.
+- Evita que raios deslocados prendam a mão na face inferior do chão durante a soltura.
+- 37 testes Node, 17 verificações gerais Chromium e 12 de mão/física. Teste de três ciclos sem gatilho/joystick: aproximadamente 2,34 m de avanço; giro de 360° nos três eixos do esqueleto real. Poses simuladas, sem teste físico.
+- APK 1.3.0/versionCode 4: continua modo tela + link VR, sem SDK nativo.
+
 ## 1.2.0 — mão visível, pose do controle e contato de superfície
 - Menu não recolhe mais o braço; rotação do pulso (incluindo roll) aplicada à malha da mão. Laser sai do pulso.
 - Neutro à frente do jogador; braço articulado via IK, sem trocar de mão.
