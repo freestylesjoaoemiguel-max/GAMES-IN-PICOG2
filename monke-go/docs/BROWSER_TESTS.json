@@ -1,6 +1,7 @@
 {
   "passed": [
     "Supplied player GLB and original map load in real Chromium WebGL; four areas",
+    "Left arm skin triangles removed from real supplied model; no two-arm/left-hand settings",
     "Solo starts and keyboard moves the player in original map",
     "Menu opens and closes using routed input",
     "Direct APK download equals the signed build checksum",
@@ -11,6 +12,10 @@
     "Simulated head and controller orientations reach actual game",
     "Simulated legacy trigger press/release reaches actual game",
     "Simulated controller disconnect/reconnect recovers",
+    "Disabled left arm cannot collide or push even with stale camera/tracking buffers",
+    "Simulated controller rotation moves only the right arm",
+    "Opening menu cancels an anchored grab without throwing player",
+    "Actual game frame applies climbing displacement once, not twice",
     "Simulated VR exit resumes flat rendering"
   ],
   "errors": [],
@@ -30,5 +35,5 @@
     "Android installation and Android WebView runtime",
     "Internet multiplayer and real PeerJS/TURN connectivity"
   ],
-  "apkSHA256": "1323f5285591117fc82b6705612bb2b9ba8bcf354e7f5ccfe6a8ba48bbfcc229"
+  "apkSHA256": "c8f55b98b1c285174686bde3bdfe1da5358db3c1d91486ed4606e61f19c74c38"
 }

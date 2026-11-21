@@ -16,7 +16,7 @@ const MODES=(function(){
   HOOK.enter=(mode,vr)=>{Mo.cur=mode=='quick'?'tag':mode=='join'?(vr=='inf'?'inf':'cas'):mode;SETTINGS.mode=Mo.cur;SETTINGS.save()};
   // host saiu: todos tentam a MESMA sala de novo com atraso aleatório -> o primeiro vira o novo host (migração)
   HOOK.roomClosed=()=>{if(Mo.migrating)return;Mo.migrating=true;setTimeout(()=>Mo.migrating=false,4000);const m=Mo.cur,c=NET.code;leaveNet();toast('O host saiu — reconectando…',3000);setTimeout(()=>{if(state=='play')Mo.start(m,c)},400+Math.random()*1800)};
-  HOOK.startGame=()=>{lava.reset();HUD3D.set('mode','');aloneT=0;if(Mo.cur=='lava')lava.begin();
+  HOOK.startGame=()=>{LOCO.reset();lava.reset();HUD3D.set('mode','');aloneT=0;if(Mo.cur=='lava')lava.begin();
     if(Mo.cur=='tag'||Mo.cur=='inf'||Mo.cur=='cas'){if(NET.peer)toast('Online · sala '+NET.code+(NET.host?' (você é o host)':''),3500);else toast('Sem conexão com o servidor multiplayer — jogando offline. Verifique a internet.',6000)}};
   let aloneT=0,netT=0;
   function netUpdate(dt){if(!NET.peer)return;const n=1+Object.keys(RM).length;

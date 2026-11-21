@@ -90,8 +90,8 @@ const VRMENU=(function(){
   function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
   function place(){const hp=cam.getWorldPosition(_o);VRP.headWorldQuat(_q);_d.set(0,0,-1).applyQuaternion(_q);_d.y=0;if(_d.lengthSq()<1e-4)_d.set(0,0,-1);_d.normalize();
     p.m.position.copy(hp).addScaledVector(_d,1.15);p.m.position.y=hp.y-.12;p.m.lookAt(hp.x,p.m.position.y,hp.z);M.anchor.copy(P)}
-  function open(){if(state!='play')return;M.open=true;INPUT.context='menu';go('main');place();p.m.visible=true;LOCO.anchor&&LOCO.release()}
-  function close(){M.open=false;INPUT.context='game';p.m.visible=false;laser.visible=false;dot.visible=false}
+  function open(){if(state!='play')return;M.open=true;INPUT.context='menu';go('main');place();p.m.visible=true;LOCO.reset()}
+  function close(){LOCO.reset();M.open=false;INPUT.context='game';p.m.visible=false;laser.visible=false;dot.visible=false}
   M.open_=open;M.close=close;M.toggle=()=>M.open?close():open();
   function activate(i,u){const it=cache&&cache.items[i];if(!it)return;if(it.adj&&!it.a){it.adj(u!=null&&u<.5?-1:1)}else if(it.a)it.a();M.dirty=true}
   // ponteiro: controle (laser), olhar, ou mouse

@@ -15,6 +15,6 @@
   submitFrame(){st.submits++}};
  Object.defineProperty(navigator,'xr',{value:undefined,configurable:true});navigator.getVRDisplays=()=>Promise.resolve([d]);
  const pad={id:'Pico G2 Controller (3DoF)',index:0,get connected(){return st.connected},hand:'right',pose:{hasOrientation:true,orientation:st.q},get buttons(){return st.buttons},get axes(){return st.axes},mapping:''};
- Object.defineProperty(pad.pose,'orientation',{get(){return st.q}});
+ Object.defineProperty(pad.pose,'orientation',{get(){return st.controllerQ||st.q}});
  navigator.getGamepads=()=>[pad];
 })();

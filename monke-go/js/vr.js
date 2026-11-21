@@ -39,6 +39,12 @@ const VRP=(function(){
   V.xrCtrlQuat=(source,out)=>{if(!V.xrFrame||!source||!source.targetRaySpace)return false;
     try{const ref=R.xr.getReferenceSpace();if(!ref)return false;const pose=V.xrFrame.getPose(source.targetRaySpace,ref);
       const q=pose&&TRACKING.orientation(pose.transform.orientation);if(!q)return false;out.fromArray(q);return true}catch(e){return false}};
+  // Other headsets may supply real position; still route only the selected source to the right arm.
+  V.xrCtrlPosition=(source,out)=>{if(!V.xrFrame||!source)return false;try{
+    const pose=V.xrFrame.getPose(source.gripSpace||source.targetRaySpace,R.xr.getReferenceSpace()),p=pose&&pose.transform.position;
+    if(!p||![p.x,p.y,p.z].every(Number.isFinite))return false;
+    out.set(p.x,p.y,p.z);xrRig.updateWorldMatrix(true,false);xrRig.localToWorld(out);return true;
+  }catch(e){return false}};
   // ---------- WebVR 1.1 ----------
   function vrLoop(t){if(!V.display||!V.display.isPresenting)return;V.display.requestAnimationFrame(vrLoop);frame(t)}
   function sizeWebVR(){const d=V.display,l=d.getEyeParameters('left'),r=d.getEyeParameters('right'),s=scaleFor();
@@ -53,7 +59,7 @@ const VRP=(function(){
     V.display=d;V.fd=new VRFrameData();V.mode='webvr';V.presenting=true;sizeWebVR();
     d.requestAnimationFrame(vrLoop)}
   addEventListener('vrdisplaypresentchange',()=>{if(V.mode==='webvr'&&V.display&&!V.display.isPresenting){V.display=null;onExit();requestAnimationFrame(frame)}});
-  function onExit(){V.presenting=false;V.mode=V.fallback||'flat';vrView=V.mode==='cardboard';rs();
+  function onExit(){LOCO.reset();V.presenting=false;V.mode=V.fallback||'flat';vrView=V.mode==='cardboard';rs();
     if(state=='play'){MENU2D.show(true,'VR pausado. Toque em VOLTAR AO VR para continuar.')}}
   // pose da cabeça (WebVR): orientação 3DoF + modelo de pescoço do próprio navegador
   V.look=()=>{if(V.mode!=='webvr'||!V.display)return false;V.display.getFrameData(V.fd);const o=V.fd.pose&&V.fd.pose.orientation;

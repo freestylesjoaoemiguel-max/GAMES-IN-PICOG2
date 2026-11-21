@@ -11,7 +11,7 @@ Adaptação do **projeto fornecido pelo usuário**, não um jogo substituto. Pre
 O arquivo de entrada é HTML/JavaScript/Three.js, **não Unity nem um projeto nativo PICO**.
 O APK Android compilado neste repositório contém o jogo completo localmente para **modo tela, em WebView**, e um botão **ABRIR EM VR**, que abre o site HTTPS no navegador externo.
 
-**O APK não é um porte VR nativo e não inclui o SDK/compositor PICO.** A WebView não fornece WebXR/WebVR imersivo. Não foi testada a instalação nem a execução no Android/G2 físico. O modo tela depende de Android System WebView com WebGL/JavaScript compatíveis. O pacote é `com.picog2.monkego`, versão 1.0.0, Android mínimo 6/API 23.
+**O APK não é um porte VR nativo e não inclui o SDK/compositor PICO.** A WebView não fornece WebXR/WebVR imersivo. Não foi testada a instalação nem a execução no Android/G2 físico. O modo tela depende de Android System WebView com WebGL/JavaScript compatíveis. O pacote é `com.picog2.monkego`, versão 1.1.0, Android mínimo 6/API 23.
 
 O modo VR do **site** utiliza WebXR, ou WebVR 1.1 quando exposto pelo navegador. Se o firmware/navegador do G2 não oferecer nenhuma dessas APIs, o site não pode fabricar acesso ao runtime. Não afirmamos compatibilidade de um navegador alternativo específico com o G2.
 
@@ -25,11 +25,24 @@ O modo VR do **site** utiliza WebXR, ou WebVR 1.1 quando exposto pelo navegador.
 6. No layout legado, ajuste índices de gatilho/touchpad/App em **Ajustes**. Também é possível trocar eixos e inverter vertical. No layout `xr-standard`, o padrão WebXR tem precedência.
 7. Para recentrar fisicamente, use a função de recentralização do próprio sistema PICO. Home pode ser reservado pelo sistema.
 
-O G2 possui orientação **3DoF**, não posição medida da mão. A posição das mãos é estimada pelo modelo de braço do jogo; a segunda mão é simulada. Não é rastreamento 6DoF nem duas mãos físicas independentes. Gráficos **Baixos** são o padrão; isso não é promessa de FPS.
+O G2 possui orientação **3DoF**, não posição medida da mão. A posição da mão direita é estimada pelo modelo de braço do jogo. **O braço esquerdo foi desativado: não aparece, não colide, não empurra e não alterna com o direito.** Não é rastreamento 6DoF. Gráficos **Baixos** são o padrão; isso não é promessa de FPS.
 
 No computador: WASD/setas movem, arrastar olha, Espaço pula, M/Escape abre o menu. SoloPlay/Lava Run não exigem servidor; multiplayer continua PeerJS e precisa de internet, sinalização e eventualmente TURN. GitHub Pages não hospeda o servidor Node em `server/`.
 
-## Correções desta adaptação
+## Atualização 1.1 — somente braço direito
+
+- Não precisa limpar seus dados: perfis antigos com mão esquerda, espelhamento ou troca automática são migrados para `simHand=0`, `handed=right`, preservando os demais ajustes.
+- As opções de duas mãos e seleção de mão foram removidas. Um único controle sempre move o braço **direito**, mesmo se o firmware o rotular como esquerdo.
+- O braço esquerdo foi retirado da malha renderizada (sem alterar o GLB original) e ignorado pela física; suas posições antigas não ativam colisões ou tag local.
+- Removidas a mão plantada, alternância automática e mão com atraso. Filtro da mão direita não depende mais do processamento da esquerda.
+- Movimento da escalada aplicado **uma vez** por quadro; anteriormente o ajuste da âncora era seguido de outra integração da mesma velocidade.
+- Menu, respawn, giro instantâneo, perda de pose e reconexão reinicializam o estado. Um gatilho já pressionado precisa ser solto antes de agarrar novamente. Cancelamentos não aplicam impulso de arremesso.
+- Mudança brusca de orientação/recentralização reinicia o filtro; velocidade angular e impulso da mão são limitados. Abertura/fechamento do menu não reativa contatos antigos.
+- Há 80 ms de proteção contra impulso após reinicializar a pose, sem simular rastreamento inexistente.
+
+Abra novamente o site/recarregue a aba. A página mostra **VERSÃO 1.1 · SOMENTE BRAÇO DIREITO** e usa URLs versionadas dos scripts para evitar misturar código antigo. Para o APK, baixe a versão nova; assinatura de desenvolvimento diferente pode exigir reinstalação (veja abaixo).
+
+## Correções anteriores desta adaptação
 
 - Pose WebXR consultada pelo `XRInputSource.targetRaySpace` correto, no `XRFrame` atual e no mesmo espaço de referência. Não associa mais o índice da lista de fontes ao índice interno do Three.
 - Eventos de seleção associados ao objeto da fonte (WeakMap), não a um índice que muda ao reconectar.
@@ -65,7 +78,7 @@ npm run test:browser
 
 ### Evidência e limites
 
-14 testes Node cobrem mapeamento, pose, identidade da fonte, desconexão e integridade dos assets. 12 verificações Chromium cobrem carregamento real WebGL, Solo, Lava, menu, download APK e **WebVR simulado**. Relatórios em `docs/NODE_TESTS.txt`, `docs/BROWSER_TESTS.json`, `docs/ANDROID_BUILD.txt`. Os artefatos de cada execução CI contêm os relatórios e checksums correspondentes àquele build; o APK local pode ter outra assinatura.
+24 testes Node cobrem mapeamento, pose, identidade da fonte, desconexão e integridade dos assets. 17 verificações Chromium cobrem carregamento real WebGL, Solo, Lava, menu, download APK e **WebVR simulado**. Relatórios em `docs/NODE_TESTS.txt`, `docs/BROWSER_TESTS.json`, `docs/ANDROID_BUILD.txt`. Os artefatos de cada execução CI contêm os relatórios e checksums correspondentes àquele build; o APK local pode ter outra assinatura.
 
 **Não testados:** headset PICO G2 físico, instalação Android, navegador real do G2, sessão WebXR imersiva real, FPS, temperatura, conforto, multiplayer na internet. Testes de WebXR usam mocks de frame/espaço; não substituem teste físico. Os documentos originais relatam testes de outra execução: veja `docs/*_ORIGINAL.md`, não confunda com estes resultados.
 
