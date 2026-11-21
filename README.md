@@ -2,6 +2,18 @@
 
 Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo Meta Quest): mundos em 360°, personagens 3D que andam e conversam com IA, casas com interior, braços que seguem o controle, sons e música. Tudo roda no navegador, sem instalar nada.
 
+## 🏓 Ping-Pong VR (WebXR) — jogar agora
+
+Campeonato de ping-pong em VR para o Pico G2: estádio com torcida, adversário 3D animado, física realista e raquete rastreada pelo controle.
+
+* **WebXR (abra no navegador do Pico → “Entrar em VR”):** **https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/pingpong/**
+* **APK (modo giroscópio, sem WebXR):** [PingPong-VR.apk](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/releases/download/pingpong-latest/PingPong-VR.apk)
+* Como jogar e detalhes: [`pingpong/README.md`](pingpong/README.md)
+
+## 📷 PicoCam — câmera do celular no Pico
+
+Use a câmera do celular dentro do VR (IP ou USB/tethering, zoom 0,5x, giroscópio): [APKs do celular e do Pico](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/releases/tag/picocam-latest) · [`picocam/README.md`](picocam/README.md)
+
 ## PICO — imagens de referência
 
 Imagens enviadas pelo usuário para o README do PicoVerso VR, apresentadas separadamente. Mostram o headset, o controle e o menu do sistema PICO; não são capturas do jogo nem comprovação de compatibilidade.
