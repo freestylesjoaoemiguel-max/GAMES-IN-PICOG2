@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Ping-Pong VR — Pico G2</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#070a16;overflow:hidden;font-family:Roboto,system-ui,sans-serif;color:#e8eaed;touch-action:none;-webkit-user-select:none;user-select:none}
+canvas#view{position:fixed;inset:0;width:100%;height:100%;display:block}
+#overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(1000px 600px at 70% 10%,#1d3a7a66,transparent),#070a16f0;z-index:5;transition:opacity .4s}
+#overlay.hide{opacity:0;pointer-events:none}
+.card{width:min(720px,92vw);padding:30px 34px;border-radius:26px;background:#151a2ecc;border:1px solid #ffffff22;text-align:center}
+h1{margin:0 0 4px;font-size:clamp(32px,6vw,54px)}.sub{color:#aab2c5;margin:0 0 20px}
+button{display:block;width:100%;margin:10px 0;padding:17px 20px;border:0;border-radius:16px;font:600 19px inherit;font-family:inherit;color:#fff;cursor:pointer;background:linear-gradient(135deg,#e63946,#f4a261)}
+button.alt{background:#252b45}button[disabled]{opacity:.45;cursor:not-allowed}
+button small{display:block;font-weight:400;font-size:13px;opacity:.85;margin-top:4px}
+#msg{min-height:20px;margin-top:10px;font-size:14px;color:#ffb4a9}.tips{margin-top:12px;font-size:13px;color:#8d96ad;line-height:1.5}
+</style></head><body>
+<canvas id="view"></canvas>
+<div id="overlay"><div class="card">
+<h1>🏓 Ping-Pong VR</h1><p class="sub">Raquete rastreada pelo controle · andar para os lados no touch de trás · feito para o Pico G2</p>
+<button id="btnXR" disabled>🥽 Entrar em VR (WebXR)<small id="xrNote">Verificando suporte…</small></button>
+<button id="btnGyro" class="alt">🧭 Tela cheia + giroscópio<small>Sem WebXR: olhe em volta mexendo o aparelho</small></button>
+<button id="btnSplit" class="alt">📱 Modo óculos — tela dividida<small>Dois olhos lado a lado</small></button>
+<button id="btnFlat" class="alt">🖥️ Jogar na tela<small>Mouse move a raquete · A/D andam · Espaço lança a bola</small></button>
+<div id="msg"></div>
+<div class="tips"></div></div></div>
+<script src="lib/three.min.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/pp.js"></script>
+</body></html>

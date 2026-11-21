@@ -10,7 +10,7 @@ jobs:
     environment: { name: github-pages, url: '${{ steps.d.outputs.page_url }}' }
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir site && cp -r index.html js lib site/ && touch site/.nojekyll
+      - run: mkdir -p site/pingpong && cp -r index.html js lib site/ && cp -r pingpong/index.html pingpong/js pingpong/lib site/pingpong/ && touch site/.nojekyll
       - uses: actions/configure-pages@v5
         with: { enablement: true }
       - uses: actions/upload-pages-artifact@v3
