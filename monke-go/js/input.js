@@ -83,7 +83,7 @@ const INPUT=(function(){
   };
   // Texto de diagnóstico (menu VR → Dispositivo): ajuda a confirmar o layout real dos botões no headset.
   I.diag=()=>{const c=I.ctrl;if(!c.present)return 'Controle: sem pose válida — reconecte/recentre no sistema';
-    return 'Controle: '+(c.id||'?')+' ('+c.source+', '+(I.mapping||'?')+') · botões '+(I.padCount===undefined?'?':I.padCount)+' · pressionados: ['+((I.padRaw||[]).join(',')||'—')+']'};
+    return 'Controle: '+(c.id||'?')+' ('+c.source+', '+(I.mapping||'?')+') · '+(VRP.threeDoF()?'braço estimado 3DoF':'posição XR')+' · mão direita · botões '+(I.padCount===undefined?'?':I.padCount)+' · pressionados: ['+((I.padRaw||[]).join(',')||'—')+']'};
   I.has=a=>{for(let i=0;i<I.actions.length;i++)if(I.actions[i].a===a)return I.actions[i];return null};
   // vetor de movimento assistido pelo touchpad (apenas tocado, sem clique) — suave, opcional
   I.padMove=()=>{const c=I.ctrl;if(!c.present||!c.touch||c.click||I.context!='game')return null;

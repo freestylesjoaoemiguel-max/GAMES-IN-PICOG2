@@ -340,7 +340,7 @@ function frame(t){if(!R.xr.isPresenting&&!(HOOK.ownLoop&&HOOK.ownLoop()))request
   const goal=on?V3((s.p.x-.5)*1.8,(.5-s.p.y)*3.2-.15,Math.max(.4,Math.min(.9,.12/s.p.s))):V3(i?.22:-.22,-1.05,.02);
   const prev=hl[i].clone();hl[i].lerp(goal,1-Math.exp(-dt*20));if(xh){const dP=xh.clone().sub(P);hl[i].set(dP.dot(rt),dP.y,dP.dot(fw))}if(lh)hl[i].copy(lh);
   const sh=V3(P.x-fw.x*.12,P.y-.3,P.z-fw.z*.12),des=P.clone().addScaledVector(rt,hl[i].x).addScaledVector(V3(0,1,0),hl[i].y).addScaledVector(fw,hl[i].z),dd=des.sub(sh),w=sh.clone().add(dd.setLength(Math.min(dd.length(),ARM)));
-  tgt[i].copy(w);const real=on?handTouch(tgt[i],fw,rt):false,tc=real||(on&&gPrev&&s.p.y>.3),tp=touch[i];touch[i]=tc;if(tc&&!tp)tapSound(i,real?lastCls:gCls,.35+Math.min(.65,hl[i].distanceTo(prev)/dt*.4));
+  tgt[i].copy(w);const real=on?(HOOK.handContact&&VRP.threeDoF()?HOOK.handContact(i,tgt[i],fw,rt):handTouch(tgt[i],fw,rt)):false,tc=real||(on&&!lh&&!xh&&gPrev&&s.p.y>.3),tp=touch[i];touch[i]=tc;if(tc&&!tp)tapSound(i,real?lastCls:gCls,.35+Math.min(.65,hl[i].distanceTo(prev)/dt*.4));
   {const ho=HO[i],l=on&&s.p.l;if(l){const asp=(ov.width/ov.height)||1.33,cr=V3(1,0,0).applyQuaternion(cam.quaternion),cu=V3(0,1,0).applyQuaternion(cam.quaternion),cf=V3(0,0,-1).applyQuaternion(cam.quaternion),
     cv=(a,b)=>V3().addScaledVector(cr,(a.x-b.x)*asp).addScaledVector(cu,-(a.y-b.y)).addScaledVector(cf,(a.z-b.z)*asp*.7),
     dist=(a,b)=>Math.hypot((a.x-b.x)*asp,a.y-b.y,(a.z-b.z)*asp*.7),cl=(x,lo,hi)=>Math.max(0,Math.min(1,(hi-x)/(hi-lo))),
@@ -367,7 +367,8 @@ function frame(t){if(!R.xr.isPresenting&&!(HOOK.ownLoop&&HOOK.ownLoop()))request
  if(P.y<floorMin){P.copy(spawnPos());vel.set(0,0,0);HOOK.respawned&&HOOK.respawned()}
  if(HOOK.rig&&HOOK.rig()){}else if(R.xr.isPresenting){xrRig.position.set(P.x,P.y-1.1,P.z)}else cam.position.copy(P);
  pg.quaternion.copy(faceQ(fw));pg.position.set(P.x-fw.x*.12,P.y-.3,P.z-fw.z*.12);pg.updateMatrixWorld(true);setBlob(LM.blob,P.x,P.y-1.1,P.z,g||hit(V3(P.x,P.y,P.z),DOWN,14));
- arm2(LM,'R',tgt[1],fw,rt);if((fr&1)==0)handPose(LM,'R',HO[1].d,HO[1].A,HO[1].c)
+ if(HOOK.poseAfterMove)HOOK.poseAfterMove(fw,rt);arm2(LM,'R',tgt[1],fw,rt);
+ if(!(HOOK.wristPose&&HOOK.wristPose())&&(fr&1)==0)handPose(LM,'R',HO[1].d,HO[1].A,HO[1].c);
  fr++;if(gfx>0&&fr%3==0){const ld=V3(30,55,20).normalize(),lr=V3().crossVectors(_Y,ld).normalize(),lu=V3().crossVectors(ld,lr),tx0=40/sun.shadow.mapSize.x,a1=Math.round(P.dot(lr)/tx0)*tx0,a2=Math.round(P.dot(lu)/tx0)*tx0,a3=P.dot(ld),T=V3().addScaledVector(lr,a1).addScaledVector(lu,a2).addScaledVector(ld,a3);sun.target.position.copy(T);sun.position.set(T.x+30,T.y+55,T.z+20);sun.target.updateMatrixWorld();R.shadowMap.needsUpdate=true}
  fa=fa*.95+dt*.05;if(!R.xr.isPresenting&&!(HOOK.vrActive&&HOOK.vrActive())&&now-lastAdj>2500){if(fa>.032&&dpr>.5){dpr=Math.max(.5,dpr-.12);lastAdj=now;rs()}else if(fa>.05&&gfx>0&&dpr<=.55){gfx--;dpr=prCap();lastAdj=now;fa=.02;rs();if(gfx<2)mapMeshes.forEach(m=>m.castShadow=false);if(gfx==0){R.shadowMap.enabled=false;sun.castShadow=false}$('gfx').value=gfx}else if(fa<.021&&dpr<prCap()){dpr=Math.min(prCap(),dpr+.08);lastAdj=now;rs()}}
  if(NET.host)hostTick(dt,now);netSend(now);renderRemotes(dt);hudTick(now);

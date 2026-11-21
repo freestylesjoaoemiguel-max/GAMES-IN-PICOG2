@@ -42,7 +42,7 @@ const MONKE=(function(){
     x.font=FONT(24);rows.slice(0,8).forEach((r,k)=>{const y=250+k*38;x.fillStyle=r.st=='PEGADOR'||r.st=='INFECTADO'?'#ff7043':'#eafff2';
       x.fillText((k+1)+'. '+r.n.toUpperCase().slice(0,18),40,y);x.textAlign='right';x.fillText((r.st?r.st.toUpperCase()+'  ':'')+r.sc,520,y);x.textAlign='left'});
     x.fillStyle='#ffd54f';x.font=FONT(26);x.fillText('COMO JOGAR',580,170);x.fillStyle='#eafff2';x.font=FONT(19);
-    ['APONTE PARA O CHÃO E PUXE O PULSO','PARA TRÁS: EMPURRA COMO GORILA','SOMENTE O BRAÇO DIREITO','GATILHO: AGARRAR / ESCALAR','TOUCHPAD: PULAR · BORDAS: GIRAR','SEGURAR TOUCHPAD: MENU'].forEach((t,k)=>x.fillText(t,580,212+k*36));
+    ['ENCOSTE A MÃO NO CHÃO / PAREDE','EMPURRE: O CORPO VAI NO OPOSTO','SOMENTE O BRAÇO DIREITO','GATILHO: SEGURAR CONTATO','TOUCHPAD: PULAR · BORDAS: GIRAR','SEGURAR TOUCHPAD: MENU'].forEach((t,k)=>x.fillText(t,580,212+k*36));
     x.globalAlpha=.75;x.font=FONT(17);x.fillText('♪ '+MUSIC.now().toUpperCase().slice(0,44),580,450);x.globalAlpha=1;
     x.fillStyle='#ffffff18';x.fillRect(30,H-80,W-60,3);x.fillStyle='#eafff2';x.font=FONT(20);x.textAlign='center';
     x.fillText(NET.mode=='inf'?'INFECÇÃO: QUEM É PEGO VIRA PEGADOR TAMBÉM':NET.mode=='tag'?'TAG: ENCOSTE NO OUTRO MONKE PARA PASSAR O PEGADOR':'EXPLORE, ESCALE E PULE ENTRE AS ÁRVORES',W/2,H-42);

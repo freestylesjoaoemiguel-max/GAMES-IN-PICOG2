@@ -1,5 +1,14 @@
 # Changelog — porte para Pico G2
 
+## 1.2.0 — mão visível, pose do controle e contato de superfície
+- Menu não recolhe mais o braço; rotação do pulso (incluindo roll) aplicada à malha da mão. Laser sai do pulso.
+- Neutro à frente do jogador; braço articulado via IK, sem trocar de mão.
+- Perfil 3DoF explícito; correção da confusão generic-touchpad/Touch e suporte à indicação emulatedPosition.
+- Varredura aproximada da esfera da mão, deslizamento e empurrão do corpo sem gatilho. Código próprio, não física exata de Gorilla Tag.
+- Aviso de perda de pose e mão em repouso visível.
+- 30 testes Node + 17 verificações gerais + 10 específicas de mão/física (poses XR simuladas; sem hardware físico).
+- APK 1.2.0/versionCode 3 continua modo tela + link VR, sem SDK nativo.
+
 ## 1.1.0 — somente braço direito
 - Desativação visual e física do braço esquerdo; remoção de troca automática/espelhamento.
 - Migração de configurações antigas para braço direito fixo; menus sem opções de duas mãos.

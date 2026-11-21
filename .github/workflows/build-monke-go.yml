@@ -53,6 +53,7 @@ jobs:
           path: |
             monke-go/build/MonkeGo-WebXR.zip
             monke-go/docs/BROWSER_TESTS.json
+            monke-go/docs/HAND_TESTS.json
             monke-go/docs/NODE_TESTS.txt
             monke-go/docs/preview-*.png
           if-no-files-found: error
