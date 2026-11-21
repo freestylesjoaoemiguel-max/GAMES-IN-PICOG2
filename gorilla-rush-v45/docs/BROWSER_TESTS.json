@@ -4,7 +4,10 @@
     "Real frame loop requests legacy presentation, draws both eye projection/view matrices and submits frames",
     "Right wrist matches collider target and measured orientation in actual miniature player scale",
     "Left skin removed only from local rendering, supplied GLB preserved",
+    "Continuous hand sweep stops on actual triangles in both supplied maps",
+    "Every sampled hand/finger skin vertex remains above floor throughout push, lift and gravity, not just the wrist collider",
     "Actual full v45 frame: three ground strokes move forward without trigger/joystick; lifting releases and stationary hand stops",
+    "Actual mesh stays above floor during 360-degree anchored roll and 50ms gravity frames; trigger hold and open-hand release work",
     "Actual skinned hand rotates 360 degrees about all three axes",
     "Immersive menu renders in scene and cancels locomotion without throwing player",
     "Controller loss cancels contact and explicitly reports missing pose",
@@ -12,12 +15,12 @@
   ],
   "errors": [],
   "neutral": {
-    "error": 3.044343063917371e-13,
-    "gap": 8.458131884911719e-8,
+    "error": 1.5221719015645176e-13,
+    "gap": 3.552713678800501e-15,
     "wrist": [
-      69.9049999659086,
-      29.55017635781855,
-      -24.87750004504977
+      69.90499999999999,
+      29.550176420765318,
+      -24.8775
     ],
     "target": [
       69.90499999999999,
@@ -27,23 +30,42 @@
     "PS": 0.25,
     "mesh": 2
   },
+  "mapContacts": [
+    {
+      "contact": true,
+      "clearance": 1.0019999999999998
+    },
+    {
+      "contact": true,
+      "clearance": 1.0020000000000133
+    }
+  ],
   "movement": {
+    "minSkinY": 0.040982204503178465,
+    "maxWristError": 1.3517848686956847e-15,
     "strokes": [
-      0.2572208421238535,
-      0.2509606492254984,
-      0.2509606492253337
+      1.3092336973340752,
+      1.3154518057777098,
+      1.3154518057774078
     ],
-    "forward": 0.7591421405746855,
+    "forward": 3.940137308889193,
     "release": true,
-    "drift": 0.008521934919570096,
+    "drift": 0.01025502097489861,
     "trigger": false,
     "keys": false,
     "buttons": [],
     "scale": 0.25
   },
+  "anchor": {
+    "minSkinY": 0.07397385565047498,
+    "maxAnchorDrift": 0,
+    "contacts": 70,
+    "held": true,
+    "released": true
+  },
   "rotation": {
-    "forwardError": 2.2341847455734854e-8,
-    "rollError": 5.545377887482426e-8
+    "forwardError": 2.3628821747216568e-8,
+    "rollError": 5.66659838855428e-8
   },
   "limitations": [
     "Mocked WebVR display/WebXR frame and controller, real v45 game/model/triangle collision/WebGL.",

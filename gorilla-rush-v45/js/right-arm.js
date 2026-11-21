@@ -19,5 +19,13 @@
   });
   return removed;
  }
- const api={strip:strip};root.RIGHT_ARM=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
+ // Collision radius is derived from hand/finger skin, not the wrist bone alone.
+ function points(model,wrist){
+  const bones=new Set(),out=[];wrist.traverse(b=>bones.add(b));model.updateMatrixWorld(true);
+  model.traverse(mesh=>{if(!mesh.isSkinnedMesh)return;mesh.skeleton.update();const g=mesh.geometry,j=g.attributes.skinIndex,w=g.attributes.skinWeight,p=g.attributes.position;
+   if(!j||!w)return;for(let i=0;i<p.count;i++){let weight=0;for(const get of ['getX','getY','getZ','getW'])if(bones.has(mesh.skeleton.bones[j[get](i)]))weight+=w[get](i);if(weight>.05){const v=wrist.position.clone().fromBufferAttribute(p,i);mesh.boneTransform(i,v);out.push(v.applyMatrix4(mesh.matrixWorld))}}
+  });return out;
+ }
+ function radius(model,wrist){const center=wrist.getWorldPosition(wrist.position.clone());return points(model,wrist).reduce((r,p)=>Math.max(r,p.distanceTo(center)),0)}
+ const api={strip:strip,points:points,radius:radius};root.RIGHT_ARM=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

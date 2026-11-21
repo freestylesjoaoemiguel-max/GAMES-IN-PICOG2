@@ -1,4 +1,12 @@
-# Alterações — v45 / PICO G2 teste 1
+# Alterações — v45 / PICO G2
+
+## 1.0.2 — âncora e colisão da mão
+- Substituídos os sete raios do pulso por colisão contínua esfera/triângulo, cobrindo faces, arestas e vértices com consulta à grade real dos mapas.
+- Raio conservador calculado para envolver mão e dedos; o raio antigo de 0,075 × escala não cobria a malha (~0,335 × escala até os dedos).
+- Âncora fixa em superfícies, soltura ao levantar sem puxar o corpo de volta, gatilho mantém apoio real; remoção de superfície e perda de pose invalidam a âncora.
+- Movimento causado por gravidade também passa pelo solver; removido o deslocamento visual sem colisão após a física. Pulso visível coincide com o alvo após IK.
+- 21 testes Node e 12 cenários de navegador, mais 7 de entrada VR. Novas verificações da malha visível, âncora, bordas, rampas, cantos, queda e frames de 50 ms. Poses/runtime simulados; sem headset físico.
+- Cache `v45-anchor-3`, painel **ANCORA 1.0.2**, link WebXR do README e launcher atualizados; APK tela/navegador 1.0.2/code 3. MonkeGo e outros jogos preservados.
 
 ## 1.0.1 — iniciar diretamente em VR
 - Botão principal **INICIAR VR** no lugar do atalho principal de entrada rápida; o clique solicita a sessão imersiva no próprio gesto do usuário, sem abrir câmera, microfone ou rede antes.

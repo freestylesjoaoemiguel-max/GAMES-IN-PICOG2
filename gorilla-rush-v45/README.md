@@ -1,8 +1,8 @@
-# Gorilla Rush v45 — adaptação de navegador para PICO G2 (teste 1)
+# Gorilla Rush v45 — adaptação de navegador para PICO G2 (âncora 1.0.2)
 
 **Não é uma declaração de compatibilidade física certificada.** O usuário confirmou que a versão anterior acompanhava a cabeça/controle em Firefox Reality ou Wolvic, mas não permitia andar por gesto. Esta edição usa o **novo TXT v45**, em endereço e pacote separados. MonkeGo 1.3 permanece intacto.
 
-- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2
+- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.2-anchor
 - APK: `downloads/Gorilla-Rush-v45-PicoG2.apk` — **tela offline + abrir navegador externo**, não VR nativo.
 - Projeto completo: `downloads/Gorilla-Rush-v45-projeto.zip`.
 - Versão anterior: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3
@@ -12,18 +12,26 @@
 1. No navegador VR que já acompanha seu controle, abra o endereço novo por HTTPS. Aguarde o carregamento dos mapas. Verifique o botão principal **INICIAR VR**.
 2. Toque em **INICIAR VR**. Não precisa selecionar um modo no topo: o próprio clique solicita WebXR e inicia o jogo após a autorização do navegador. Em navegadores antigos sem WebXR, usa WebVR quando disponível. O botão só é habilitado se a API oferecer sessão WebXR imersiva ou VRDisplay WebVR com apresentação. Não há fallback disfarçado para VR Box.
 3. Apenas a mão direita é controlada. A posição do braço é **estimada**; o quaternion medido controla o pulso em 360°. Não há duas mãos 6DoF nem rastreamento óptico dos dedos.
-4. **Andar sem botão:** aponte para baixo até o painel indicar **APOIADA**. Gire mais para baixo/trás para empurrar o chão. Levante a ponta para soltar e repita. A mão não gera força no ar. **Mover o controle para trás sem girá-lo não fornece translação ao jogo**, pois o G2 é 3DoF.
+4. **Andar sem botão:** aponte para baixo até o painel indicar **ANCORADA**. Gire mais para baixo/trás para empurrar o chão. Levante a ponta para soltar e repita. A mão não gera força no ar. **Mover o controle para trás sem girá-lo não fornece translação ao jogo**, pois o G2 é 3DoF.
 5. Segure o clique do touchpad por 0,6 s para o menu. Aponte o laser ou use cima/baixo do touchpad para escolher; gatilho ou clique curto confirma. Em **CALIBRAR**, aponte para a frente antes de confirmar; isso corrige o eixo do braço estimado, não inventa posição rastreada.
 6. Gatilho segura contato real em chão/parede. Clique curto no centro do touchpad pula; bordas giram 30°. **Ajuda no touchpad** é opcional, identificada no menu e desligada por padrão; não é apresentada como locomoção física.
-7. Se continuar sem andar, veja se o painel mostra **NO AR**, **APOIADA** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
+7. Se continuar sem andar, veja se o painel mostra **NO AR**, **ANCORADA** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
 
 A interface 2D do jogo original permite selecionar salas, acessórios e modos antes da sessão. A entrada rápida online, o modo tela e os diagnósticos ficam em **Configurações → Controles**, não em um painel flutuante no topo. O botão VR inicia Solo se você ainda não entrou em um modo. Para um modo de rede, entre pela interface original primeiro e então entre em VR. As telas de perfil/amigos/microfone do original continuam 2D; não foram todas reescritas como UI imersiva. Rede PeerJS, voz, câmera opcional e conforto de VR não foram validados em hardware.
+
+## Correção de contato — 1.0.2
+
+A mão agora usa **âncora em coordenadas do mapa**: ao tocar uma superfície, o ponto fica fixo enquanto o braço empurra o corpo. Levantar a mão aberta solta a âncora; o gatilho mantém a pegada enquanto houver apoio e alcance válidos. Menu, perda de pose, teleporte e mudança de mapa/escala cancelam apoio antigo.
+
+A colisão foi trocada de raios ao redor do pulso para uma esfera varrida contra **faces, arestas e vértices** dos triângulos. Seu raio envolve a mão/dedos do modelo (mínimo 0,36 × escala do jogador, ampliado pela malha), não só o pulso. É um volume conservador: pode existir folga visual ao girar a palma; não é colisão individual de cada dedo. A movimentação da gravidade também é varrida antes de posicionar a mão visível. O pulso é alinhado à posição corrigida após o IK, com ajuste visual de alcance do antebraço.
+
+Os testes verificam vértices da mão acima do piso durante empurrão, soltura, queda e giro com âncora; cantos, rampas, bordas, escalas pequenas e frames de 50 ms; além de contatos nos dois mapas originais. Isso cobre regressões no código, **não confirma a correção no seu G2**. Se ainda atravessar, confira **ANCORA 1.0.2** no painel e envie o diagnóstico e um vídeo do ponto do mapa.
 
 ## APK / instalação
 
 O arquivo recebido é HTML/JS/Three.js, não Unity/Unreal. **O APK gerado não contém o compositor PICO ou integração nativa do controle.** Android WebView não adquire WebXR por trocar manifesto ou nome do dispositivo. O modo VR é o site no navegador externo já instalado.
 
-- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.1/code 2; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
+- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.2/code 3; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
 - Abra o APK no instalador do G2 ou use `adb install Gorilla-Rush-v45-PicoG2.apk` com depuração USB autorizada. **Instalação não testada aqui.** Não desinstale o MonkeGo anterior.
 - O botão **ABRIR EM VR** abre o site externo (internet necessária). No APK, o jogo fica em tela/WebView. Não confundir duas imagens no modo VR Box original com uma sessão imersiva.
 - APK assinado para desenvolvimento. Configure `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE`, `SIGNING_ALIAS` para atualizações com certificado estável. Um certificado novo pode impedir atualização; não desinstale sem backup dos dados.
