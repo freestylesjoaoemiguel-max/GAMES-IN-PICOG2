@@ -1,8 +1,8 @@
-# Gorilla Rush v45 — adaptação de navegador para PICO G2 (física 1.0.7)
+# Gorilla Rush v45 — adaptação de navegador para PICO G2 (física 1.0.8 — GMotion)
 
 **Não é uma declaração de compatibilidade física certificada.** O usuário confirmou que a versão anterior acompanhava a cabeça/controle em Firefox Reality ou Wolvic, mas não permitia andar por gesto. Esta edição usa o **novo TXT v45**, em endereço e pacote separados. MonkeGo 1.3 permanece intacto.
 
-- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.7-free
+- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion
 - APK: `downloads/Gorilla-Rush-v45-PicoG2.apk` — **tela offline + abrir navegador externo**, não VR nativo.
 - Projeto completo: `downloads/Gorilla-Rush-v45-projeto.zip`.
 - Versão anterior: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3
@@ -23,39 +23,38 @@ A interface 2D do jogo original permite selecionar salas, acessórios e modos an
 
 Mantidos neutro automático (rápido nos primeiros segundos, lento depois), alcance amplificado 2×, trajetória baixa, retorno elevado da mão, histerese de ângulo contra tremor e touchpad de reserva opcional, agora desligado por padrão. Deixe o controle relaxado por alguns segundos ao entrar. Aproximadamente 15° abaixo do neutro aprendido encosta a mão no chão; o modo padrão já usa apenas as mãos para andar, sem deslizar o dedo no touchpad. A nova integração não usa a ajuda para mascarar testes de mãos: todas as passadas automatizadas desligam essa opção.
 
-## Mãos livres e touchpad — 1.0.7
+## Locomoção do ZIP — 1.0.8
 
-O diagnóstico antes das alterações está em `docs/FREE_HAND_DIAGNOSIS.md`. Três regressões novas falharam na 1.0.6: gatilho transformava a âncora em mola, impedia a soltura no retorno e eixos residuais do touchpad eram interpretados como toque.
+Usa o **núcleo portado do `gmotion.js` enviado pelo usuário**, identificado no próprio ZIP como Lights Out: Bear Facility, não código oficial de Gorilla Tag. Fonte preservada em `reference/gorilla-movement`; detalhes de procedência, diferenças e testes em `docs/GMOTION_PORT.md` e `GMOTION_IMPORT.json`.
 
-Agora o gatilho não muda a reação física: a mão empurra em contato e solta ao levantar, mantendo o impulso do corpo. O personagem continua sujeito à gravidade e colisões, sem força de retorno ao ponto antigo. A assistência opcional usa toque confirmado e zona morta radial de 18%; vem desligada. Cliques de menu/pulo/giro permanecem, assim como tirolesa e pose dos dedos.
+- Mão bloqueada na superfície versus posição desejada produz a correção do corpo, sem o ganho/interpolação da 1.0.7.
+- Duas mãos em contato são promediadas, inclusive quando uma está parada. Um único controle nunca vira duas fontes.
+- **Apoiar a mão sustenta o corpo**, como no ZIP. Levantar/recolher solta e a gravidade retorna; gatilho não muda essa regra.
+- Impulso ao soltar: média de **8 deslocamentos efetivos do corpo**, limiar **0,4 m/s**, multiplicador **1,1**, limite **4 m/s**. Mão batendo numa parede sem mover o corpo não carrega um salto falso.
+- Gravidade do ZIP: **5 m/s²**. Sem o antigo atrito de caminhada que freava o impulso. O corpo pode continuar deslizando após soltar; novo apoio permite frear. Tudo convertido pela escala PS.
+- Assistência do touchpad permanece desligada por padrão e com zona morta/toque confirmado. Pulo por clique também funciona quando sustentado por mão no chão.
 
-36 testes Node e a suíte do frame real verificam também três passadas 3DoF com e sem gatilho (mesmo deslocamento), soltura, queda junto da parede com gatilho, impulso após soltar e ausência de deriva com eixos residuais. Isso não certifica funcionamento físico no G2 nem reproduz o tracking 6DoF do Gorilla Tag original.
+**Adaptações explícitas:** preservamos Three r128 e a colisão contínua existente, em vez de instalar outro motor Rapier que moveria o corpo duas vezes. O raio envolve a malha da mão, não a esfera de 3 cm da demonstração; há soltura por histerese 3DoF, proteção contra pose inválida/recentralização e limite de contato 8 m/s. A correção vertical passa pelo integrador com colisão, não pelo teleporte de até 0,25 m do ZIP. Não foram importados os efeitos de monstro/sprint do outro jogo.
 
-## Correção de movimentação — 1.0.6
+43 testes Node incluem comparação numérica do núcleo portado com o `update()` do arquivo enviado em 30/60/72/90 Hz (backend de colisão simulado). Os 5 checks do exemplo original também passaram isoladamente com Three r160/Rapier 0.11.2. A suíte de navegador verifica os 13 cenários de locomoção, suporte/soltura em parede, salto pela média, gatilho, três tamanhos e quatro taxas de frame. Os testes executam o jogo e os triângulos reais com sessões/poses simuladas. **Não são testes físicos no headset.**
 
-O diagnóstico prévio está em `docs/LOCOMOTION_DIAGNOSIS.md`. A versão anterior ignorava posições fornecidas pelo runtime, tinha só um estado de mão e retornava da física em qualquer contato, suspendendo gravidade/pulo. Também copiava uma velocidade de correção da âncora para o jogador, em vez de medir a velocidade da mão relativa ao corpo.
+Menu, perda/troca de fonte, teleporte e mudança de escala limpam o histórico. Mapas/assets, modo VR, resolução/framebuffer, câmera, menus, sons e protocolo de rede foram mantidos. Gatilho na tirolesa e tag local usam o lado realmente conectado; multiplayer/voz continuam sem validação de rede no headset.
 
-Agora cada fonte mantém posição anterior, velocidade e contato. O impulso contrário ao movimento só existe em superfície válida; a componente que puxaria uma palma aberta para dentro da parede é removida. Duas mãos contribuem por média das reações ativas (não dobram velocidade). Um único integrador aplica reação, gravidade, colisões existentes e atrito, preservando momento após soltar. Na 1.0.7, mão imóvel não suspende o corpo no ar, mesmo com gatilho segurado; não há mola de retorno para a âncora.
-
-Limites em unidades virtuais, convertidos pela escala `PS`: horizontal 8 m/s, subida 6 m/s e queda 10 m/s; gravidade 9,8 m/s². Não há velocidade de caminhada fixa. A resposta depende de deslocamento/tempo da mão. Posição impossível/recentralização, perda de pose e troca de fonte reiniciam a amostra, sem lançar o jogador. Menu pausa; pulo tem retorno normal ao chão.
-
-`docs/LOCOMOTION_TESTS.json` cobre os 13 cenários solicitados no frame real: esquerda/direita/ambas, parede, rápido/lento, repouso, pulo, queda, colisão corporal com parede, frente/trás/lados. Também verifica limite, momento após soltar, fontes reordenadas, fonte ausente e alternativa 3DoF. Sessões/poses são fixtures; o compositor é substituído nos passos determinísticos de física, após o teste separado de renderização estéreo. **Não são testes físicos no headset.**
-
-Mapas/assets, modo VR, resolução/framebuffer, câmera, menus, configuração de botões, sons e protocolo de rede foram mantidos. A visibilidade local das mãos passou a ser reversível conforme fontes; ao sair de VR, o modelo completo é restaurado. Gatilho na tirolesa e colisão local de tag usam o lado realmente conectado. Multiplayer/voz continuam sem validação de rede no headset.
+As mudanças históricas de 1.0.6/1.0.7 estão no CHANGELOG e diagnósticos anteriores. A regra antiga de gravidade permanente durante contato foi substituída intencionalmente pelo suporte do ZIP, sem manter dois motores concorrentes.
 
 ## Colisão de contato preservada — base 1.0.2
 
-A mão agora usa **âncora em coordenadas do mapa**: ao tocar uma superfície, o ponto fica fixo enquanto o braço empurra o corpo. Levantar a mão solta a âncora visual, com ou sem gatilho. O ponto de contato não gera força de retorno acumulada. Menu, perda de pose, teleporte e mudança de mapa/escala cancelam apoio antigo.
+A mão agora usa **âncora em coordenadas do mapa**: ao tocar uma superfície, o ponto fica fixo enquanto o braço empurra o corpo. Levantar a mão solta a âncora visual, com ou sem gatilho. Na 1.0.8, o erro entre esse ponto e a posição desejada é consumido uma vez pelo deslocamento do corpo, como no ZIP. Levantar desfaz o apoio, sem trava extra de gatilho. Menu, perda de pose, teleporte e mudança de mapa/escala cancelam apoio antigo.
 
 A colisão foi trocada de raios ao redor do pulso para uma esfera varrida contra **faces, arestas e vértices** dos triângulos. Seu raio envolve a mão/dedos do modelo (mínimo 0,36 × escala do jogador, ampliado pela malha), não só o pulso. É um volume conservador: pode existir folga visual ao girar a palma; não é colisão individual de cada dedo. A movimentação da gravidade também é varrida antes de posicionar a mão visível. O pulso é alinhado à posição corrigida após o IK, com ajuste visual de alcance do antebraço.
 
-Os testes verificam vértices da mão acima do piso durante empurrão, soltura, queda e giro com âncora; cantos, rampas, bordas, escalas pequenas e frames de 50 ms; além de contatos nos dois mapas originais. Isso cobre regressões no código, **não confirma a correção no seu G2**. Se ainda atravessar, confira **FISICA 1.0.7** no painel e envie o diagnóstico e um vídeo do ponto do mapa.
+Os testes verificam vértices da mão acima do piso durante empurrão, soltura, queda e giro com âncora; cantos, rampas, bordas, escalas pequenas e frames de 50 ms; além de contatos nos dois mapas originais. Isso cobre regressões no código, **não confirma a correção no seu G2**. Se ainda atravessar, confira **FISICA 1.0.8** no painel e envie o diagnóstico e um vídeo do ponto do mapa.
 
 ## APK / instalação
 
 O arquivo recebido é HTML/JS/Three.js, não Unity/Unreal. **O APK gerado não contém o compositor PICO ou integração nativa do controle.** Android WebView não adquire WebXR por trocar manifesto ou nome do dispositivo. O modo VR é o site no navegador externo já instalado.
 
-- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.7/code 8; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
+- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.8/code 9; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
 - Abra o APK no instalador do G2 ou use `adb install Gorilla-Rush-v45-PicoG2.apk` com depuração USB autorizada. **Instalação não testada aqui.** Não desinstale o MonkeGo anterior.
 - O botão **ABRIR EM VR** abre o site externo (internet necessária). No APK, o jogo fica em tela/WebView. Não confundir duas imagens no modo VR Box original com uma sessão imersiva.
 - APK assinado para desenvolvimento. Configure `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE`, `SIGNING_ALIAS` para atualizações com certificado estável. Um certificado novo pode impedir atualização; não desinstale sem backup dos dados.

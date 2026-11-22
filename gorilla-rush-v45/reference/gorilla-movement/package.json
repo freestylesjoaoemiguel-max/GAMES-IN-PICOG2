@@ -1,0 +1,9 @@
+{
+  "name": "gorilla-movement",
+  "version": "1.0.0",
+  "description": "Gorilla-Tag style VR locomotion (Rapier + three.js) from Lights Out: Bear Facility, standard speed",
+  "type": "module",
+  "main": "gmotion.js",
+  "scripts": { "test": "node test.mjs" },
+  "dependencies": { "three": "0.160.0", "@dimforge/rapier3d-compat": "0.11.2" }
+}
