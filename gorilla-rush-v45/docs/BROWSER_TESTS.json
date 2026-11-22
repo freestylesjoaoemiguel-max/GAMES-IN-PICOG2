@@ -7,7 +7,7 @@
     "Continuous hand sweep stops on actual triangles in both supplied maps",
     "Every sampled hand/finger skin vertex remains above floor throughout push, lift and gravity, not just the wrist collider",
     "Actual full v45 frame: three ground strokes move forward without trigger/joystick; lifting releases and stationary hand stops",
-    "Actual mesh stays above floor during 360-degree anchored roll and 50ms gravity frames; trigger hold and open-hand release work",
+    "Actual mesh stays above floor during 360-degree anchored roll and 50ms gravity frames; trigger closes fingers without changing contact physics; lifting releases",
     "Actual skinned hand rotates 360 degrees about all three axes",
     "Immersive menu becomes visible in scene and cancels locomotion without throwing player",
     "Controller loss cancels contact and explicitly reports missing pose",
@@ -15,11 +15,11 @@
   ],
   "errors": [],
   "neutral": {
-    "error": 3.044342136076464e-13,
+    "error": 3.0443421359874905e-13,
     "gap": 1.464821375527116e-14,
     "wrist": [
       69.90499999999997,
-      29.474386772570373,
+      29.474386772570366,
       -24.748586086856406
     ],
     "target": [
@@ -41,31 +41,31 @@
     }
   ],
   "movement": {
-    "minSkinY": 0.04098238934394183,
-    "maxWristError": 2.387786214752898e-15,
+    "minSkinY": 0.04098238909599372,
+    "maxWristError": 1.9860273225978185e-15,
     "strokes": [
-      3.1027630309381102,
-      1.7690814678197615,
-      2.1178364411006374
+      3.1027630309383585,
+      1.7690814678198916,
+      2.1178364411007893
     ],
-    "forward": 6.989680939858509,
+    "forward": 6.989680939859039,
     "release": true,
-    "drift": 0.003335233346870581,
+    "drift": 0.0033352333468750217,
     "trigger": false,
     "keys": false,
     "buttons": [],
     "scale": 0.25
   },
   "anchor": {
-    "minSkinY": 0.15737220277697683,
+    "minSkinY": 0.15737220287217024,
     "maxAnchorDrift": 0,
-    "contacts": 55,
+    "contacts": 53,
     "held": true,
     "released": true
   },
   "rotation": {
-    "forwardError": 8.262632930801279e-8,
-    "rollError": 1.2286866254040983e-7
+    "forwardError": 8.745112927550174e-8,
+    "rollError": 1.706489125138713e-7
   },
   "limitations": [
     "Mocked WebVR display/WebXR frame and controller; initial real stereo WebGL draw. Deterministic physics steps run real game/model/triangle collision with only compositor rendering stubbed.",

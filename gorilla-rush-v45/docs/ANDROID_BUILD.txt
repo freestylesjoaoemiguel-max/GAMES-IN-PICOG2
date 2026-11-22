@@ -10,16 +10,16 @@ Verified using v4 scheme (APK Signature Scheme v4): false
 Verified for SourceStamp: false
 Number of signers: 1
 Signer #1 certificate DN: CN=Gorilla Rush v45 Screen Edition Development, OU=Unvalidated Device Build, O=Independent Project, C=BR
-Signer #1 certificate SHA-256 digest: e8d582503e90b567e27da04bb6407761703f2ff372424be372d11feaf5ee63aa
-Signer #1 certificate SHA-1 digest: c4f1371fb62e9b0aed4db29182aedc1a61a653ee
-Signer #1 certificate MD5 digest: d0e0e06e676b00cabbb67234d4ed611e
+Signer #1 certificate SHA-256 digest: 1f69738bdb3003fa3d9848b0d09b8b43a25a0feda327809e221cc15d88e2e7b2
+Signer #1 certificate SHA-1 digest: c2491192b486ca6c30e0b7097ca0177e72f16605
+Signer #1 certificate MD5 digest: 9d5b89a851d8ff5d4897eba86db7ea4a
 Signer #1 key algorithm: RSA
 Signer #1 key size (bits): 2048
-Signer #1 public key SHA-256 digest: ddc749922518311fda2a35f9a211a5f8946769ee3b59ecd9c3ecb96ae45bb823
-Signer #1 public key SHA-1 digest: efa1b82b4c022564a3bdc4dd213c1ceb578fc5ef
-Signer #1 public key MD5 digest: be872be1120b9cebf2d8a5e53879621b
+Signer #1 public key SHA-256 digest: 08082e3ffca665e365bac27119776063a02b7f46dd78d37aba4cea74991d02fb
+Signer #1 public key SHA-1 digest: f865a3886359d9f8ff45600d924d831714546383
+Signer #1 public key MD5 digest: d42ec34fce8f4b799958ded887983dfd
 
-package: name='com.picog2.gorillarushv45' versionCode='7' versionName='1.0.6' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+package: name='com.picog2.gorillarushv45' versionCode='8' versionName='1.0.7' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
 minSdkVersion:'23'
 targetSdkVersion:'28'
 uses-permission: name='android.permission.INTERNET'
@@ -38,5 +38,5 @@ supports-any-density: 'true'
 locales: '--_--'
 densities: '160'
 
-SHA-256: 82dfe20bdc6f2b601d13e6f862703f541881ce5222f8cf57dbc892652462f687
+SHA-256: 7eeee8f6c18280c0de8a69aff4d990f577ad83837191ca72e00c7efb5d1fbc1b
 Size: 25067804 bytes

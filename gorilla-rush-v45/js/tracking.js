@@ -13,7 +13,12 @@
   var click=settings.padClick|0,trig=settings.padTrig|0,app=settings.padApp|0,offset=0;
   if(standard){trig=0;var pad=touch(2)||Math.abs(axis(0))+Math.abs(axis(1))>.01;var stick=!pad&&(touch(3)||Math.abs(axis(2))+Math.abs(axis(3))>.01);click=stick?3:2;offset=stick?2:0;app=4;}
   var x=axis(offset),y=axis(offset+1);if(settings.padSwap){var temp=x;x=y;y=temp}if(settings.padInvertY)y=-y;
-  return {trigger:down(trig)||!!selected,click:down(click),touch:touch(click)||Math.abs(x)+Math.abs(y)>.01,x:x,y:y,menu:app!==click&&app!==trig&&down(app),pressed:b.map(function(v,i){return down(i)?i:-1}).filter(function(i){return i>=0}),count:b.length,axes:a.length,mapping:standard?'xr-standard':'configurável'};
+  // Some legacy runtimes lack touched entirely; only those may infer touch from
+  // axes. An explicit false must win over stale axes after lifting the finger.
+  var button=b[click],hasTouch=button&&typeof button.touched==='boolean';
+  var touching=hasTouch?touch(click):(touch(click)||Math.hypot(x,y)>.18);
+  var magnitude=Math.hypot(x,y),gain=touching&&magnitude>.18?(Math.min(1,magnitude)-.18)/((1-.18)*magnitude):0;
+  return {moveX:gain?x*gain:0,moveY:gain?y*gain:0,trigger:down(trig)||!!selected,click:down(click),touch:touching,x:x,y:y,menu:app!==click&&app!==trig&&down(app),pressed:b.map(function(v,i){return down(i)?i:-1}).filter(function(i){return i>=0}),count:b.length,axes:a.length,mapping:standard?'xr-standard':'configurável'};
  }
  var api={orientation:orientation,choose:choose,position:position,pair:pair,measured:measured,controls:controls};root.TRACKING=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

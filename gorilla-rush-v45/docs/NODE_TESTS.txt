@@ -1,212 +1,230 @@
 
-> gorilla-rush-v45-pico-g2@1.0.6 test
+> gorilla-rush-v45-pico-g2@1.0.7 test
 > node --test tests/*.test.cjs
 
 TAP version 13
 # Subtest: all 68 decoded source payloads match recorded hashes
 ok 1 - all 68 decoded source payloads match recorded hashes
   ---
-  duration_ms: 76.149768
+  duration_ms: 55.481753
   type: 'test'
   ...
 # Subtest: contact strokes transfer horizontal displacement at both miniature and metre scale
 ok 2 - contact strokes transfer horizontal displacement at both miniature and metre scale
   ---
-  duration_ms: 24.613712
+  duration_ms: 19.104394
   type: 'test'
   ...
 # Subtest: open-hand lift releases; free air cannot move the body
 ok 3 - open-hand lift releases; free air cannot move the body
   ---
-  duration_ms: 7.875991
+  duration_ms: 5.40101
   type: 'test'
   ...
 # Subtest: 360 degree roll leaves estimated position unchanged and support active
 ok 4 - 360 degree roll leaves estimated position unchanged and support active
   ---
-  duration_ms: 15.387303
+  duration_ms: 8.563829
   type: 'test'
   ...
 # Subtest: pose loss and menu cancel support without an old throw
 ok 5 - pose loss and menu cancel support without an old throw
   ---
-  duration_ms: 5.179944
+  duration_ms: 3.393707
   type: 'test'
   ...
 # Subtest: collision-clamped body movement determines launch velocity
 ok 6 - collision-clamped body movement determines launch velocity
   ---
-  duration_ms: 2.450747
+  duration_ms: 1.492938
   type: 'test'
   ...
 # Subtest: no floor means no motion or phantom downward magnet
 ok 7 - no floor means no motion or phantom downward magnet
   ---
-  duration_ms: 1.719951
+  duration_ms: 0.84073
   type: 'test'
   ...
 # Subtest: large pointing jump is not a real stroke
 ok 8 - large pointing jump is not a real stroke
   ---
-  duration_ms: 7.004736
+  duration_ms: 3.66036
   type: 'test'
   ...
 # Subtest: normalized orientation rejects invalid and zero values
 ok 9 - normalized orientation rejects invalid and zero values
   ---
-  duration_ms: 2.3044
+  duration_ms: 2.40724
   type: 'test'
   ...
 # Subtest: WebXR controller routing uses source identity and right hand
 ok 10 - WebXR controller routing uses source identity and right hand
   ---
-  duration_ms: 0.958509
+  duration_ms: 1.233138
   type: 'test'
   ...
 # Subtest: XR standard and configurable legacy buttons are not interchangeable
 ok 11 - XR standard and configurable legacy buttons are not interchangeable
   ---
-  duration_ms: 1.754214
+  duration_ms: 0.74236
   type: 'test'
   ...
 # Subtest: lifting an overlapping sphere cannot stick under double-sided floor
 ok 12 - lifting an overlapping sphere cannot stick under double-sided floor
   ---
-  duration_ms: 0.346483
+  duration_ms: 0.345037
   type: 'test'
   ...
 # Subtest: fast sphere sweep stops on floor at all supported sizes
 ok 13 - fast sphere sweep stops on floor at all supported sizes
   ---
-  duration_ms: 0.471273
+  duration_ms: 0.451046
   type: 'test'
   ...
 # Subtest: sphere catches finite triangle edges and vertices missed by a centre ray
 ok 14 - sphere catches finite triangle edges and vertices missed by a centre ray
   ---
-  duration_ms: 0.273341
+  duration_ms: 0.30333
   type: 'test'
   ...
 # Subtest: floor/wall corner cannot tunnel and sliding preserves nonpenetration
 ok 15 - floor/wall corner cannot tunnel and sliding preserves nonpenetration
   ---
-  duration_ms: 0.34915
+  duration_ms: 0.41473
   type: 'test'
   ...
 # Subtest: inclined surface supports a swept hand at real radius
 ok 16 - inclined surface supports a swept hand at real radius
   ---
-  duration_ms: 0.314197
+  duration_ms: 0.313393
   type: 'test'
   ...
 # Subtest: post-physics gravity shift is swept instead of moving hand under floor
 ok 17 - post-physics gravity shift is swept instead of moving hand under floor
   ---
-  duration_ms: 0.640818
+  duration_ms: 0.676296
   type: 'test'
   ...
 # Subtest: world anchor stays fixed during push and body-blocked correction
 ok 18 - world anchor stays fixed during push and body-blocked correction
   ---
-  duration_ms: 3.822055
+  duration_ms: 3.522211
   type: 'test'
   ...
-# Subtest: trigger retains contacting anchor until release, never creates one in free air
-ok 19 - trigger retains contacting anchor until release, never creates one in free air
+# Subtest: trigger never creates contact in free air and lifting releases a contacting hand
+ok 19 - trigger never creates contact in free air and lifting releases a contacting hand
   ---
-  duration_ms: 3.131553
+  duration_ms: 3.734108
   type: 'test'
   ...
 # Subtest: world removal clears support without retaining a floating anchor
 ok 20 - world removal clears support without retaining a floating anchor
   ---
-  duration_ms: 9.980285
+  duration_ms: 4.041317
   type: 'test'
   ...
 # Subtest: startup, blocked body and large controller jump never bypass hand collision
 ok 21 - startup, blocked body and large controller jump never bypass hand collision
   ---
-  duration_ms: 1.589319
+  duration_ms: 1.396653
   type: 'test'
   ...
 # Subtest: Gorilla-style small wrist strokes (under 50 deg) walk forward despite sensor jitter
 ok 22 - Gorilla-style small wrist strokes (under 50 deg) walk forward despite sensor jitter
   ---
-  duration_ms: 24.810705
+  duration_ms: 18.995636
   type: 'test'
   ...
 # Subtest: level controller keeps the hand just above the floor; ~13 deg down touches it
 ok 23 - level controller keeps the hand just above the floor; ~13 deg down touches it
   ---
-  duration_ms: 1.647995
+  duration_ms: 0.922027
   type: 'test'
   ...
 # Subtest: real-hand tremor (2-3 deg at 9 Hz) at rest neither flickers contact nor lifts the body
 ok 24 - real-hand tremor (2-3 deg at 9 Hz) at rest neither flickers contact nor lifts the body
   ---
-  duration_ms: 30.138792
+  duration_ms: 21.297538
   type: 'test'
   ...
 # Subtest: swinging back after a push never drags the body backwards
 ok 25 - swinging back after a push never drags the body backwards
   ---
-  duration_ms: 1.349843
+  duration_ms: 1.455154
   type: 'test'
   ...
 # Subtest: auto-neutral: relaxed hold reported 20 deg up or 25 deg down still walks and rests in the air
 ok 26 - auto-neutral: relaxed hold reported 20 deg up or 25 deg down still walks and rests in the air
   ---
-  duration_ms: 8.645596
+  duration_ms: 9.353728
   type: 'test'
   ...
 # Subtest: named left/right and anonymous single sources never duplicate a controller
 ok 27 - named left/right and anonymous single sources never duplicate a controller
   ---
-  duration_ms: 0.929699
+  duration_ms: 0.970537
   type: 'test'
   ...
 # Subtest: position validation rejects nonfinite/emulated/unavailable poses but accepts measured origin
 ok 28 - position validation rejects nonfinite/emulated/unavailable poses but accepts measured origin
   ---
-  duration_ms: 0.481905
+  duration_ms: 0.492243
   type: 'test'
   ...
 # Subtest: measured translation, not quaternion rotation, drives a contacting hand
 ok 29 - measured translation, not quaternion rotation, drives a contacting hand
   ---
-  duration_ms: 0.856769
+  duration_ms: 0.772663
   type: 'test'
   ...
 # Subtest: faster equal-distance measured strokes produce greater reaction velocity
 ok 30 - faster equal-distance measured strokes produce greater reaction velocity
   ---
-  duration_ms: 1.034311
+  duration_ms: 1.927012
   type: 'test'
   ...
 # Subtest: body motion and gravity do not become synthetic hand velocity
 ok 31 - body motion and gravity do not become synthetic hand velocity
   ---
-  duration_ms: 0.592579
+  duration_ms: 0.432755
   type: 'test'
   ...
 # Subtest: two equal hand reactions are averaged, not doubled
 ok 32 - two equal hand reactions are averaged, not doubled
   ---
-  duration_ms: 0.378446
+  duration_ms: 0.295367
   type: 'test'
   ...
 # Subtest: tracked-pose recenter suppresses launch instead of treating teleport as a fast push
 ok 33 - tracked-pose recenter suppresses launch instead of treating teleport as a fast push
   ---
-  duration_ms: 0.411347
+  duration_ms: 0.312268
   type: 'test'
   ...
-1..33
-# tests 33
+# Subtest: held trigger cannot turn a stationary measured hand into an anchor spring
+ok 34 - held trigger cannot turn a stationary measured hand into an anchor spring
+  ---
+  duration_ms: 0.388943
+  type: 'test'
+  ...
+# Subtest: 3DoF return stroke releases even while trigger is held
+ok 35 - 3DoF return stroke releases even while trigger is held
+  ---
+  duration_ms: 1.600231
+  type: 'test'
+  ...
+# Subtest: touchpad respects explicit no-touch and radial movement deadzone
+ok 36 - touchpad respects explicit no-touch and radial movement deadzone
+  ---
+  duration_ms: 0.372003
+  type: 'test'
+  ...
+1..36
+# tests 36
 # suites 0
-# pass 33
+# pass 36
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 421.346599
+# duration_ms 301.992155

@@ -25,7 +25,7 @@ import java.util.HashMap;
  * No claim of native PICO compositor/controller SDK support; no JavaScript native bridge. */
 public class MainActivity extends Activity {
     private static final String ORIGIN = "https://gorillav45.invalid";
-    private static final String VR_URL = "https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.6-motion";
+    private static final String VR_URL = "https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.7-free";
     private WebView web;
     private LinearLayout layout;
     @Override public void onCreate(Bundle b) {

@@ -1,5 +1,11 @@
 # Alterações — v45 / PICO G2
 
+## 1.0.7 — mãos livres, sem mola no gatilho / touchpad opt-in
+- Removida a reação por erro acumulado da âncora ao segurar gatilho. Contato sempre reage à velocidade relativa da mão; levantar solta com ou sem botão. Mantém momento, gravidade, limites e colisões.
+- Assistência de touchpad desligada por padrão. Toque explicitamente falso impede eixos residuais de mover o corpo; zona morta radial de 18% na assistência opcional. Menu/pulo/giro/tirolesa preservados.
+- Três regressões reproduzidas antes da correção; 36 testes Node, 7 de entrada, 12 de navegador e suíte estendida de locomoção. Sem teste físico G2.
+- APK tela+navegador 1.0.7/code 8, cache `v45-free-8`, HUD **FISICA 1.0.7**.
+
 ## 1.0.6 — velocidade das mãos e gravidade independente do contato
 - Diagnóstico antes da alteração: posição ignorada, mão única, retorno antecipado em contato e velocidade sobrescrita pela correção da âncora.
 - Estende o input existente: fontes esquerda/direita únicas, gripSpace/targetRaySpace WebXR e posição WebVR quando válida; quaternion/botões preservados. Posição emulada ou ausente usa braço 3DoF identificado, não tracking fictício.
