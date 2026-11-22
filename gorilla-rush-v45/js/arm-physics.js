@@ -67,9 +67,9 @@
    // Trigger closes fingers / operates menus and ziplines, never glues a palm.
    A.held=!!(A.contact&&o.trigger&&!o.needsRelease);
    if(A.contact&&A.grace===0){
-    A.reaction.copy(A.handVelocity).negate();
-    // Contact is unilateral, regardless of trigger. A fixed visual plant must not
-    // turn accumulated body/gravity displacement into a spring or a hanging force.
+    A.reaction.copy(A.target).sub(A.desired).divideScalar(dt);
+    // ZIP follower correction, not a gain on hand velocity. The body consumes
+    // this displacement once; trigger never changes support/release.
     A.reaction.addScaledVector(A.normal,-Math.min(0,A.reaction.dot(A.normal)));
     A.reaction.clampLength(0,8*scale);A.driving=A.reaction.length()>.04*scale;
     if(!A.driving)A.reaction.set(0,0,0);

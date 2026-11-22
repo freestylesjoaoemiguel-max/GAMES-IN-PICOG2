@@ -15,16 +15,16 @@
   ],
   "errors": [],
   "neutral": {
-    "error": 3.0443421359874905e-13,
-    "gap": 1.464821375527116e-14,
+    "error": 4.294500150023053e-9,
+    "gap": 3.552713678800501e-15,
     "wrist": [
-      69.90499999999997,
-      29.474386772570366,
+      69.90499999999999,
+      29.491256864305047,
       -24.748586086856406
     ],
     "target": [
       69.90499999999999,
-      29.47438677257037,
+      29.49125686430505,
       -24.748586086856406
     ],
     "PS": 0.25,
@@ -41,31 +41,31 @@
     }
   ],
   "movement": {
-    "minSkinY": 0.04098238909599372,
-    "maxWristError": 1.9860273225978185e-15,
+    "minSkinY": 0.04098237756598122,
+    "maxWristError": 2.7012892057857038e-15,
     "strokes": [
-      3.1027630309383585,
-      1.7690814678198916,
-      2.1178364411007893
+      1.487143069874746,
+      1.4178890654268703,
+      1.4459303163638815
     ],
-    "forward": 6.989680939859039,
+    "forward": 4.350962451665498,
     "release": true,
-    "drift": 0.0033352333468750217,
+    "drift": 0,
     "trigger": false,
     "keys": false,
     "buttons": [],
     "scale": 0.25
   },
   "anchor": {
-    "minSkinY": 0.15737220287217024,
+    "minSkinY": 0.15737220424346532,
     "maxAnchorDrift": 0,
-    "contacts": 53,
+    "contacts": 32,
     "held": true,
     "released": true
   },
   "rotation": {
-    "forwardError": 8.745112927550174e-8,
-    "rollError": 1.706489125138713e-7
+    "forwardError": 2.2850214844940364e-8,
+    "rollError": 1.2611450111416895e-7
   },
   "limitations": [
     "Mocked WebVR display/WebXR frame and controller; initial real stereo WebGL draw. Deterministic physics steps run real game/model/triangle collision with only compositor rendering stubbed.",

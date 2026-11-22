@@ -1,0 +1,10 @@
+
+> gorilla-movement@1.0.0 test
+> node test.mjs
+
+ok   falls and rests on the floor (y 0.25, head radius 0.25)
+ok   carries momentum (1.33 m in 1/3 s)
+ok   does not cross the wall (furthest x 3.86)
+ok   release speed stays at the original scale (1.2 m/s)
+ok   no boost state left on the object
+5 passed, 0 failed

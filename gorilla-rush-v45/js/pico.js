@@ -5,6 +5,7 @@
 const PICO=(()=>{
  const p={starting:false,mode:'flat',presenting:false,frame:null,session:null,display:null,head:new THREE.Quaternion(),rawHead:new THREE.Quaternion(),headPosition:V3(),yaw:0,source:null,menu:false,choice:0,assist:false,nearFloor:null,buttonMap:{padClick:0,padTrig:1,padApp:2},ctrl:{present:false,quat:new THREE.Quaternion(),raw:new THREE.Quaternion(),trigger:false},select:new WeakMap(),needsRelease:true,reason:'Entre em VR para ler o controle',stats:{frames:0,eyes:0},calibration:null};
  const surface=HAND_SURFACE.create(THREE,handTriangles);p.surface=surface;
+ const motor=GMOTION_PORT.create(THREE);p.motor=motor;
  const makeHand=side=>({side,present:false,quat:new THREE.Quaternion(),raw:new THREE.Quaternion(),position:V3(),trigger:false,controls:null,source:null,key:null,tracking:'absent',needsRelease:true,calibration:null,radius:.36,arm:ARM_PHYSICS.create(THREE,surface.solve)});
  p.hands={left:makeHand('left'),right:makeHand('right')};const hands=Object.values(p.hands);
  let arm=p.hands.right.arm;p.arm=arm;p.ctrl=p.hands.right;p.handRadius=.36;
@@ -16,7 +17,7 @@ const PICO=(()=>{
  const ray=new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(),V3(0,0,-1)]),new THREE.LineBasicMaterial({color:0xffcc66,depthTest:false}));ray.renderOrder=10001;ray.visible=false;S.add(ray);
  const rows=['CONTINUAR','CALIBRAR: aponte para a frente','ANDAR PELO TOUCHPAD (OPCIONAL): ','VOLTAR AO INICIO DO MAPA','SAIR DO VR'];
  p.immersive=()=>p.presenting;
- p.reset=()=>{for(const h of hands){h.arm.reset();h.needsRelease=true;h.swimPrev=null}p.needsRelease=true;vel.set(0,0,0);touch[0]=touch[1]=false;slot.forEach(s=>{s.p=null;s.t=0});hv.forEach(v=>v.set(0,0,0))};
+ p.reset=()=>{motor.reset();p.supported=false;for(const h of hands){h.arm.reset();h.needsRelease=true;h.swimPrev=null}p.needsRelease=true;vel.set(0,0,0);touch[0]=touch[1]=false;slot.forEach(s=>{s.p=null;s.t=0});hv.forEach(v=>v.set(0,0,0))};
  p.toggleMenu=()=>{p.menu=!p.menu;p.reset();lastText=''};
  p.runChoice=()=>{if(p.choice===0)p.toggleMenu();else if(p.choice===1){if(p.ctrl.present){for(const h of hands)if(h.present)h.calibration=h.raw.clone().invert().multiply(p.rawHead);p.reset();p.menu=false}}else if(p.choice===2){p.assist=!p.assist;lastText=''}else if(p.choice===3){P.copy(spawnPos());p.reset();p.menu=false}else p.stop()};
  p.configureButtons=()=>{for(const k of ['padClick','padTrig','padApp'])p.buttonMap[k]=+document.getElementById(k).value;try{localStorage.setItem('v45-buttons',JSON.stringify(p.buttonMap))}catch(e){}};
@@ -37,7 +38,7 @@ const PICO=(()=>{
    const src=routed[h.side];let pose=null,g=null,q=null,position=null;
    if(src&&validHead)try{if(p.mode==='webxr'){pose=p.frame.getPose(src.gripSpace||src.targetRaySpace,ref);g=src.gamepad;q=pose&&TRACKING.orientation(pose.transform.orientation);position=TRACKING.measured(pose,false)}else{pose=src.pose;g=src;q=TRACKING.orientation(pose.orientation);position=TRACKING.measured(pose,true)}}catch(e){}
    const id=src&&key(src),tracking=q?(position?'measured':'estimated-3dof'):'absent';
-   if(id!==h.key||tracking!==h.tracking){h.arm.reset();h.needsRelease=true;h.lastTrigger=h.lastClick=h.lastMenu=h.longClick=false;h.swimPrev=null}
+   if(id!==h.key||tracking!==h.tracking){motor.reset();h.arm.reset();h.needsRelease=true;h.lastTrigger=h.lastClick=h.lastMenu=h.longClick=false;h.swimPrev=null}
    h.key=id;h.source=src;h.tracking=tracking;h.present=!!q;h.trigger=false;h.controls=null;
    if(!q)continue;
    h.raw.fromArray(q);h.quat.copy(yawQ).multiply(h.raw);
@@ -67,19 +68,22 @@ const PICO=(()=>{
  };
  p.physics=(dt,d,rt,now)=>{
   if(p.menu){vel.set(0,0,0);jumpReq=false;return}
-  if(ZIP.on){for(const h of hands)h.arm.reset();zipRide(dt);return}
-  // Exactly one velocity integrator, even with two hands. Contact never skips gravity.
-  const drive=p.reaction;
-  if(drive&&drive.count){const target=drive.velocity.clone().multiplyScalar(1.15);vel.lerp(target,1-Math.exp(-dt*60))}
-  vel.y-=9.8*PS*dt*(WTR.in?.1:1);
+  if(ZIP.on){motor.reset();for(const h of hands)h.arm.reset();zipRide(dt);return}
+  // ZIP sections 9-11: follower error -> body velocity -> actual velocity history.
+  // Reuse the existing single collision integrator; never run a second gravity step.
+  const drive=p.reaction,contactCount=motor.apply(hands.map(h=>h.arm),vel,dt,PS);
+  p.supported=contactCount>0;
+  if(!p.supported)vel.y-=GMOTION_PORT.GRAVITY*PS*dt*(WTR.in?.1:1);
   for(const h of hands){const a=h.arm,local=a.desired.clone().sub(lastPosition);if(WTR.in&&h.present&&h.swimPrev){const delta=local.clone().sub(h.swimPrev);if(delta.length()<PS*.5)vel.addScaledVector(delta,-2/Math.max(dt,.001)/Math.max(1,hands.filter(x=>x.present).length))}h.swimPrev=local}
   if(WTR.in)vel.multiplyScalar(Math.exp(-dt*2));
   const b=p.ctrl.controls;if(p.assist&&b&&b.touch&&!b.click)vel.addScaledVector(forward,-b.moveY*PS*dt*10).addScaledVector(rt,b.moveX*PS*dt*10);
   const grounded=()=>{const g=hit(P.clone().add(V3(0,.08,0)),DOWN,2*PS+.08),gap=g?P.y-1.1*CSC-g.point.y:Infinity;return !!(g&&g.n.y>.55&&gap>=-.02*PS&&gap<.035*PS&&vel.y<=.01*PS)};
-  if(jumpReq&&grounded()){vel.y=4.5*PS;for(const h of hands)h.arm.reset()}jumpReq=false;
+  if(jumpReq&&(grounded()||hands.some(h=>h.arm.active&&h.arm.contact&&h.arm.normal.y>.55))){vel.y=4.5*PS;motor.reset();for(const h of hands)h.arm.reset()}jumpReq=false;
   const speed=Math.hypot(vel.x,vel.z);if(speed>8*PS){vel.x*=8*PS/speed;vel.z*=8*PS/speed}vel.y=Math.max(-10*PS,Math.min(6*PS,vel.y));
   const y=P.y,n=Math.min(48,Math.max(1,Math.ceil(vel.length()*dt/(.04*PS))));for(let i=0;i<n;i++){stepMove(dt/n);wallFix()}sweepFloor(y);
-  gPrev=grounded();const friction=gPrev?(SNOW(P)?.18:7):.3;vel.x*=Math.exp(-dt*friction);vel.z*=Math.exp(-dt*friction);
+  gPrev=grounded();
+  // The supplied motor carries momentum after release; no old walking friction.
+  motor.record(P.clone().sub(lastPosition),dt);
   p.grounded=gPrev;p.bodySpeed=vel.length()/PS;
   if(drive&&drive.count)for(const h of hands)if(h.arm.driving)h.arm.travel+=Math.hypot(P.x-lastPosition.x,P.z-lastPosition.z)/PS;
   if(P.y<floorMin){P.copy(spawnPos());p.reset()}
@@ -101,9 +105,9 @@ const PICO=(()=>{
  p.drawHUD=()=>{
   const now=performance.now(),b=p.ctrl.controls;
   const status=!p.ctrl.present?'SEM POSE':hands.some(h=>h.arm.contact)?'CONTATO - EMPURRE / LEVANTE PARA SOLTAR':p.ctrl.tracking==='measured'?'NO AR - APROXIME A MAO DA SUPERFICIE':'NO AR - GIRE O CONTROLE PARA BAIXO';
-  const diag=[p.mode+' | '+status,p.reason+(p.assist?' | TOUCHPAD LIGADO':' | SO MAOS'),'Vel: '+(p.bodySpeed||0).toFixed(2)+' | reto: '+Math.round(-(arm.neutral||0)*57.3)+' graus | piso: '+(p.nearFloor==null?'longe':p.nearFloor.toFixed(2))];
+  const diag=[p.mode+' | '+status,p.reason+(p.assist?' | TOUCHPAD LIGADO':' | GMOTION / SO MAOS'),'Vel: '+(p.bodySpeed||0).toFixed(2)+' | reto: '+Math.round(-(arm.neutral||0)*57.3)+' graus | piso: '+(p.nearFloor==null?'longe':p.nearFloor.toFixed(2))];
   const text=JSON.stringify([p.menu,p.choice,p.assist,diag,p.reason,b&&b.pressed]);
-  if(text!==lastText&&now-hudTime>100){lastText=text;hudTime=now;ctx.clearRect(0,0,768,448);ctx.fillStyle='rgba(9,22,16,.93)';ctx.fillRect(0,0,768,p.menu?448:150);ctx.textBaseline='middle';ctx.font='bold 25px sans-serif';ctx.fillStyle='#e6ffe9';ctx.fillText('GORILLA RUSH V45 - PICO G2 / FISICA 1.0.7',20,25);
+  if(text!==lastText&&now-hudTime>100){lastText=text;hudTime=now;ctx.clearRect(0,0,768,448);ctx.fillStyle='rgba(9,22,16,.93)';ctx.fillRect(0,0,768,p.menu?448:150);ctx.textBaseline='middle';ctx.font='bold 25px sans-serif';ctx.fillStyle='#e6ffe9';ctx.fillText('GORILLA RUSH V45 - PICO G2 / FISICA 1.0.8',20,25);
    ctx.font='20px sans-serif';if(p.menu){rows.forEach((r,i)=>{ctx.fillStyle=i===p.choice?'#ffcc66':'#e6ffe9';ctx.fillText((i===p.choice?'> ':'  ')+r+(i===2?(p.assist?'LIGADA':'DESLIGADA'):''),20,80+i*45)});ctx.font='16px sans-serif';ctx.fillStyle='#b9e4c4';ctx.fillText(p.reason.slice(0,86),20,330);ctx.fillText('Botoes: '+(b?b.pressed.join(','):'sem pose')+' | Touchpad cima/baixo: escolher',20,360);ctx.fillText('Gatilho: confirmar | Segure clique do touchpad: menu',20,390)}else{diag.forEach((t,i)=>{ctx.fillStyle=i===0?'#ffcc66':'#d4eadb';ctx.fillText(t,20,62+i*29)})}tex.needsUpdate=true;
   }
   const e=P.clone().add(V3(0,EYEUP,0)),f=V3(0,0,-1).applyQuaternion(p.head),u=V3(0,1,0).applyQuaternion(p.head);
@@ -167,7 +171,7 @@ const PICO=(()=>{
   p.refreshStart();
  };
  document.getElementById('pico-vr').onclick=p.start;document.getElementById('pico-solo').onclick=()=>enter('solo');
- document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-free-8',touchpadAssist:p.assist,hands:hands.map(h=>({side:h.side,present:h.present,tracking:h.tracking,source:h.source&&(h.source.id||(h.source.profiles||[]).join(',')),position:h.tracking==='measured'?h.position.toArray():null,rotation:h.raw.toArray(),buttons:h.controls,contact:h.arm.contact,velocity:h.arm.handVelocity.toArray(),reaction:h.arm.reaction.toArray(),anchor:h.arm.plant&&h.arm.plant.toArray()})),bodyVelocity:vel.toArray(),grounded:p.grounded,userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,anchor:arm.plant&&arm.plant.toArray(),handRadius:arm.radius,target:arm.target.toArray(),desired:arm.desired.toArray(),floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+ document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-gmotion-9',touchpadAssist:p.assist,motor:'gmotion-port',supported:p.supported,releaseSpeed:motor.throwSpeed,velocityAverage:motor.average.toArray(),hands:hands.map(h=>({side:h.side,present:h.present,tracking:h.tracking,source:h.source&&(h.source.id||(h.source.profiles||[]).join(',')),position:h.tracking==='measured'?h.position.toArray():null,rotation:h.raw.toArray(),buttons:h.controls,contact:h.arm.contact,velocity:h.arm.handVelocity.toArray(),reaction:h.arm.reaction.toArray(),anchor:h.arm.plant&&h.arm.plant.toArray()})),bodyVelocity:vel.toArray(),grounded:p.grounded,userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,anchor:arm.plant&&arm.plant.toArray(),handRadius:arm.radius,target:arm.target.toArray(),desired:arm.desired.toArray(),floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
  try{Object.assign(p.buttonMap,JSON.parse(localStorage.getItem('v45-buttons')||'{}'))}catch(e){}
  for(const k of ['padClick','padTrig','padApp']){const s=document.getElementById(k);s.value=p.buttonMap[k];s.onchange=p.configureButtons}
  p.detect();return p;

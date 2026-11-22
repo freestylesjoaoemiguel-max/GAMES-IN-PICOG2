@@ -1,6 +1,6 @@
 {
   "name": "gorilla-rush-v45-pico-g2",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "scripts": {
     "test": "node --test tests/*.test.cjs",

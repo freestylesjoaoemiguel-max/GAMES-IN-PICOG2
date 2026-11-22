@@ -1,5 +1,12 @@
 # Alterações — v45 / PICO G2
 
+## 1.0.8 — port do Gorilla Movement enviado pelo usuário
+- ZIP de Lights Out: Bear Facility analisado e preservado com hashes; não identificado como código oficial de Gorilla Tag.
+- Núcleo GMotion: erro follower/target, média de mãos em contato, suporte, histórico de 8 velocidades efetivas, soltura 1,1× com cap 4 m/s e gravidade 5 m/s². Remove ganho/interpolação/atrito do motor anterior.
+- Port usa colisor contínuo/corpo existentes, raio da mão real e adaptação 3DoF. Mantém segurança/recentralização/cap de contato, menu/tirolesa/água e touchpad opt-in. Sem trocar renderer ou adicionar Rapier ao runtime.
+- 43 testes Node, comparação numérica com o update original em quatro taxas; 5 checks do ZIP executados separadamente. Entrada/estéreo/locomoção/pele, suporte e queda após soltar, escala e frame rates testados. Sem teste físico no G2.
+- APK tela+navegador 1.0.8/code 9, cache `v45-gmotion-9`, HUD **FISICA 1.0.8 / GMOTION**.
+
 ## 1.0.7 — mãos livres, sem mola no gatilho / touchpad opt-in
 - Removida a reação por erro acumulado da âncora ao segurar gatilho. Contato sempre reage à velocidade relativa da mão; levantar solta com ou sem botão. Mantém momento, gravidade, limites e colisões.
 - Assistência de touchpad desligada por padrão. Toque explicitamente falso impede eixos residuais de mover o corpo; zona morta radial de 18% na assistência opcional. Menu/pulo/giro/tirolesa preservados.

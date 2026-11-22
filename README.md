@@ -109,15 +109,15 @@ js/main.js      renderização, entrada do controle, braços, locomoção
 
 ## MonkeGo / Gorilla Rush v45 — versão atual
 
-- **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.7](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.7-free)**
+- **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.8](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion)**
 - **[Baixar APK e pacote — compilações no GitHub](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/workflows/build-gorilla-v45.yml)**
 
 **Download:** abra a compilação da versão desejada com status aprovado e, em **Artifacts**, baixe `Gorilla-Rush-v45-project-screen-APK-reports` (é necessário entrar no GitHub; artefatos têm prazo de expiração).
-**Confira a versão no headset:** o painel deve mostrar **FISICA 1.0.7** e **SO MAOS**. Se mostrar outra versão, feche a aba antiga e abra novamente o link acima após a publicação terminar. O parâmetro da URL, sozinho, não comprova a versão carregada.
+**Confira a versão no headset:** o painel deve mostrar **FISICA 1.0.8** e **GMOTION / SO MAOS**. Se mostrar outra versão, feche a aba antiga e abra novamente o link acima após a publicação terminar. O parâmetro da URL, sozinho, não comprova a versão carregada.
 
-A versão atual usa o novo arquivo **Gorilla Rush v45** enviado pelo usuário, preservando os dois mapas e os recursos recebidos. Inclui locomoção por velocidade das mãos, gravidade e colisão contínua. Usa fontes esquerda/direita disponíveis, sem duplicar um controle. Posição medida quando fornecida; braço estimado por rotação no controle 3DoF. Painel distingue os dois tipos de entrada.
+A versão atual usa o novo arquivo **Gorilla Rush v45** enviado pelo usuário, preservando os dois mapas e os recursos recebidos. Inclui o núcleo de locomoção portado do **Gorilla Movement** enviado pelo usuário: mão bloqueada empurra o corpo, apoio sustenta e soltura usa a média dos últimos 8 movimentos. O ZIP se identifica como Lights Out: Bear Facility, não como código oficial de Gorilla Tag. Colisão contínua e mapas preservados. Usa fontes esquerda/direita disponíveis, sem duplicar um controle. Posição medida quando fornecida; braço estimado por rotação no controle 3DoF. Painel distingue os dois tipos de entrada.
 
-**Como andar (1.0.7):** ao entrar, segure o controle parado 2–3 s (ele aprende sua posição "reta"); depois incline uns 10–15° para baixo e a mão encosta no chão (painel: **CONTATO**). Incline mais para baixo e para trás num gesto rápido: a mão apoia na superfície e você vai para a frente. Volte o controle para cima: a mão solta, volta pelo ar e o impulso continua. Com a mão no chão, gire o controle para os lados para ir de lado. **Não precisa apertar gatilho nem usar o touchpad para andar.** Levantar solta a mão mesmo com o gatilho segurado. Caminhada pelo touchpad vem desligada; só é ativada se você escolher essa ajuda no menu.
+**Como andar (1.0.8):** ao entrar, segure o controle parado 2–3 s (ele aprende sua posição "reta"); depois incline uns 10–15° para baixo e a mão encosta no chão (painel: **CONTATO**). Incline mais para baixo e para trás num gesto rápido: a mão apoia na superfície e você vai para a frente. Volte o controle para cima: a mão solta, volta pelo ar e o impulso continua. Enquanto a mão está apoiada, ela pode sustentar o corpo; ao soltar, ele volta a cair. Com a mão no chão, gire o controle para os lados para ir de lado. **Não precisa apertar gatilho nem usar o touchpad para andar.** Levantar solta a mão mesmo com o gatilho segurado. Caminhada pelo touchpad vem desligada; só é ativada se você escolher essa ajuda no menu.
 
 **APK = jogo em tela/WebView + botão para abrir o navegador VR, não porte VR nativo PICO.**
 Gráficos baixos por padrão. Os testes automatizados usam poses simuladas; PICO G2 físico, instalação Android e FPS ainda não validados.

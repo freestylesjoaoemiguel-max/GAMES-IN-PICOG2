@@ -11,3 +11,7 @@ Créditos declarados na interface original (não auditados independentemente):
 - Música/efeitos adicionais vieram incorporados; a origem/licença individual não estava especificada no TXT. Não atribuímos a eles a licença de músicas de outro ZIP anterior.
 
 Dependências locais: Three.js r128, GLTFLoader, SkeletonUtils, Reflector (MIT); PeerJS 1.5.4 (MIT), avisos em `lib/licenses/`. MediaPipe mantém o caminho opcional de câmera do projeto original em dispositivos de tela, carregado sob demanda do CDN; não é usado para controle G2 e não foi validado offline. Os scripts de importação, integração e física desta adaptação não incorporam o SDK PICO nem código proprietário de Gorilla Tag.
+
+## Gorilla Movement enviado pelo usuário
+
+`Gorilla Movement copy (1).zip`, Drive `1EXzcK1RDot5FTe49oqlknTC_yc4SP3xe`, 16.087 bytes. O README atribui a implementação a Lights Out: Bear Facility / gmotion_alpha_2.html; não foi identificado como código oficial da Another Axiom. Nenhum arquivo de licença veio no ZIP; a licença da raiz não relicencia esse material. Os seis arquivos de referência foram preservados com hashes e o port está descrito em `docs/GMOTION_PORT.md`. As dependências Three r160/Rapier 0.11.2 foram usadas só no teste isolado da referência, não adicionadas ao jogo.
