@@ -109,7 +109,7 @@ js/main.js      renderização, entrada do controle, braços, locomoção
 
 ## MonkeGo / Gorilla Rush v45 — versão atual
 
-- **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.8](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion)**
+- **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.8](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion-10)**
 - **[Baixar APK e pacote — compilações no GitHub](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/workflows/build-gorilla-v45.yml)**
 
 **Download:** abra a compilação da versão desejada com status aprovado e, em **Artifacts**, baixe `Gorilla-Rush-v45-project-screen-APK-reports` (é necessário entrar no GitHub; artefatos têm prazo de expiração).

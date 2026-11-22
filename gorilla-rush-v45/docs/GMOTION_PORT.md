@@ -30,4 +30,8 @@ A 1.0.7 aplicava velocidade da mão relativa ao corpo, ganho 1,15 e interpolaç�
 - Os testes antigos que exigiam gravidade permanente durante contato e ausência de correção do follower foram substituídos por verificações de suporte estável + soltura real. Isso é uma mudança deliberada de semântica solicitada pelo ZIP, não remoção de cobertura de queda/colisão.
 - Sem novo renderer, SDK ou WASM; dependências do jogo não mudaram. A esfera de 3 cm e o teleporte vertical do ZIP não são usados: preservamos a mão visível com raio conservador e deslocamento corporal varrido/limitado. O frame corporal antigo é o único integrador, com gravidade 5 fora de apoio.
 
-Versão final: **1.0.8/code 9**, cache `v45-gmotion-9`, painel **FISICA 1.0.8 / GMOTION / SO MAOS**. Sem hardware G2, compositor real, FPS, instalação Android ou multiplayer validados.
+Versão final: **1.0.8/code 10**, cache `v45-gmotion-10`, painel **FISICA 1.0.8 / GMOTION / SO MAOS**. Sem hardware G2, compositor real, FPS, instalação Android ou multiplayer validados.
+
+### Reinício de pose não é soltura física
+
+A revisão final também limpa o histórico corporal quando o estimador sinaliza salto de pose/recentralização internamente, não só nos resets externos. A perda de contato causada por um salto inválido de dois metros não pode disparar o impulso 1,1×. Teste no frame real verifica velocidade prévia preservada sem lançamento extra. As fixtures de soltura usam levantamento plausível (<0,65 m por frame); não confundem um teleporte de controle com um gesto. Cache final `v45-gmotion-10`, APK code 10.

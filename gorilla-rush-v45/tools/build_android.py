@@ -39,7 +39,7 @@ def main():
         for file in (BUILD/'classes').rglob('*.class'): jar.write(file,file.relative_to(BUILD/'classes'))
     run(java,'-cp',TOOLS/'d8.jar','com.android.tools.r8.D8','--lib',TOOLS/'android.jar','--min-api','23','--release','--output',BUILD/'dex',BUILD/'classes.jar')
     run(AAPT,'compile','--dir',ROOT/'android/res','-o',BUILD/'resources.zip')
-    run(AAPT,'link','-o',BUILD/'unsigned.apk','-I',TOOLS/'android.jar','--manifest',ROOT/'android/AndroidManifest.xml','--min-sdk-version','23','--target-sdk-version','28','--version-code','9','--version-name','1.0.8',BUILD/'resources.zip')
+    run(AAPT,'link','-o',BUILD/'unsigned.apk','-I',TOOLS/'android.jar','--manifest',ROOT/'android/AndroidManifest.xml','--min-sdk-version','23','--target-sdk-version','28','--version-code','10','--version-name','1.0.8',BUILD/'resources.zip')
     with zipfile.ZipFile(BUILD/'unsigned.apk','a',zipfile.ZIP_DEFLATED) as apk:
         for dex in (BUILD/'dex').glob('*.dex'): apk.write(dex,dex.name)
         for folder in ('assets','js','css','lib'):

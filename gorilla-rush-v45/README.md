@@ -2,7 +2,7 @@
 
 **Não é uma declaração de compatibilidade física certificada.** O usuário confirmou que a versão anterior acompanhava a cabeça/controle em Firefox Reality ou Wolvic, mas não permitia andar por gesto. Esta edição usa o **novo TXT v45**, em endereço e pacote separados. MonkeGo 1.3 permanece intacto.
 
-- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion
+- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion-10
 - APK: `downloads/Gorilla-Rush-v45-PicoG2.apk` — **tela offline + abrir navegador externo**, não VR nativo.
 - Projeto completo: `downloads/Gorilla-Rush-v45-projeto.zip`.
 - Versão anterior: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3
@@ -54,7 +54,7 @@ Os testes verificam vértices da mão acima do piso durante empurrão, soltura, 
 
 O arquivo recebido é HTML/JS/Three.js, não Unity/Unreal. **O APK gerado não contém o compositor PICO ou integração nativa do controle.** Android WebView não adquire WebXR por trocar manifesto ou nome do dispositivo. O modo VR é o site no navegador externo já instalado.
 
-- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.8/code 9; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
+- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.8/code 10; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
 - Abra o APK no instalador do G2 ou use `adb install Gorilla-Rush-v45-PicoG2.apk` com depuração USB autorizada. **Instalação não testada aqui.** Não desinstale o MonkeGo anterior.
 - O botão **ABRIR EM VR** abre o site externo (internet necessária). No APK, o jogo fica em tela/WebView. Não confundir duas imagens no modo VR Box original com uma sessão imersiva.
 - APK assinado para desenvolvimento. Configure `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE`, `SIGNING_ALIAS` para atualizações com certificado estável. Um certificado novo pode impedir atualização; não desinstale sem backup dos dados.
