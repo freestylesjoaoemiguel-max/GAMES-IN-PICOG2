@@ -39,7 +39,7 @@ def main():
         for file in (BUILD/'classes').rglob('*.class'): jar.write(file,file.relative_to(BUILD/'classes'))
     run(java,'-cp',TOOLS/'d8.jar','com.android.tools.r8.D8','--lib',TOOLS/'android.jar','--min-api','23','--release','--output',BUILD/'dex',BUILD/'classes.jar')
     run(AAPT,'compile','--dir',ROOT/'android/res','-o',BUILD/'resources.zip')
-    run(AAPT,'link','-o',BUILD/'unsigned.apk','-I',TOOLS/'android.jar','--manifest',ROOT/'android/AndroidManifest.xml','--min-sdk-version','23','--target-sdk-version','28','--version-code','5','--version-name','1.0.4',BUILD/'resources.zip')
+    run(AAPT,'link','-o',BUILD/'unsigned.apk','-I',TOOLS/'android.jar','--manifest',ROOT/'android/AndroidManifest.xml','--min-sdk-version','23','--target-sdk-version','28','--version-code','6','--version-name','1.0.5',BUILD/'resources.zip')
     with zipfile.ZipFile(BUILD/'unsigned.apk','a',zipfile.ZIP_DEFLATED) as apk:
         for dex in (BUILD/'dex').glob('*.dex'): apk.write(dex,dex.name)
         for folder in ('assets','js','css','lib'):
@@ -60,7 +60,7 @@ def main():
     run(java,'-jar',TOOLS/'apksigner.jar','sign','--ks',key,'--ks-key-alias',alias,'--ks-pass','file:'+str(password),'--min-sdk-version','23','--v1-signing-enabled','true','--v2-signing-enabled','true','--v4-signing-enabled','false','--out',target,BUILD/'unsigned.apk')
     validation=subprocess.check_output([str(java),'-jar',str(TOOLS/'apksigner.jar'),'verify','--verbose','--print-certs',str(target)],text=True)
     badging=subprocess.check_output([str(AAPT),'dump','badging',str(target)],text=True)
-    assert "package: name='com.picog2.gorillarushv45'" in badging and "versionName='1.0.4'" in badging
+    assert "package: name='com.picog2.gorillarushv45'" in badging and "versionName='1.0.5'" in badging
     with zipfile.ZipFile(target) as archive:
         assert archive.testzip() is None
         assert archive.getinfo('classes.dex').file_size>5000

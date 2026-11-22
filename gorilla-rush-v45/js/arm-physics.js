@@ -18,11 +18,16 @@
   // point of the stroke, and can grab again only after tilting down REARM from the
   // highest point since letting go (or after leaving the surface).
   const RELEASE=.16,REARM=.12,AWAY=.15;
+  // Auto-neutral: how each person (and each browser/controller) reports a relaxed
+  // hold differs by tens of degrees. The relaxed, still, free-air pitch is learned
+  // slowly and treated as "level", so the floor is always ~13 deg of tilt away.
+  let neutral=0,elev=0,learned=0;const NEUTRAL_MIN=-.6,NEUTRAL_MAX=.5,NEUTRAL_TAU=2.5;
   function downOf(dir){
    const flat=Math.hypot(dir.x,dir.z);
    if(flat>.2)heading.set(dir.x/flat,0,dir.z/flat);
    else if(heading.lengthSq()<.5)heading.set(0,0,-1);
-   return Math.max(-1,Math.min(2.3,OFFSET+GAIN*Math.atan2(-dir.y,Math.max(flat,1e-6))));
+   elev=Math.atan2(-dir.y,Math.max(flat,1e-6));
+   return Math.max(-1,Math.min(2.3,OFFSET+GAIN*(elev-neutral)));
   }
   function reachOffset(down,scale,out){
    return out.copy(heading).multiplyScalar(REACH*Math.cos(down)*scale).addScaledVector(up,(RETURN*lift-DROP*Math.sin(down))*scale);
@@ -51,6 +56,10 @@
    const down=downOf(filtered);
    downVel=lastDown==null?0:downVel+((down-lastDown)/dt-downVel)*(1-Math.exp(-dt*14));lastDown=down;
    // After letting go, keep tilting up = the hand travels back through the air.
+   // Learn whenever the controller is held still (in the air or resting on the floor);
+   // quickly during the first seconds in VR, then slowly.
+   if(A.active&&!A.held&&Math.abs(downVel)<.3&&(learned<3||!A.contact)){learned+=dt;neutral=Math.max(NEUTRAL_MIN,Math.min(NEUTRAL_MAX,neutral+(elev-neutral)*(1-Math.exp(-dt/(learned<3?.7:NEUTRAL_TAU)))))}
+   A.elev=elev;A.neutral=neutral;
    if(!A.plant&&downVel<-.6)lift=Math.min(1,lift+dt*8);else lift=Math.max(0,lift-dt*(downVel>.3?10:1.5));
    // While an open hand is planted the body follows the DEEPEST tilt of this stroke:
    // tilting back (or shaking) can then never drag the body backwards or sideways-up.

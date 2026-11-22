@@ -1,5 +1,12 @@
 # Alterações — v45 / PICO G2
 
+## 1.0.5 — calibração automática e touchpad como reserva
+- Relato no G2: ainda "parece que estou no ar". Provável causa: o ângulo que o navegador/controle informa para a mão relaxada difere do esperado; com leitura para baixo a mão fica sempre no chão, com leitura para cima nunca alcança o chão.
+- **Neutro automático**: o ângulo do controle parado é aprendido (rápido nos primeiros 3 s, depois devagar) e tratado como "reto"; o chão fica sempre ~15° abaixo da sua posição relaxada. Não aprende com o gatilho segurando.
+- **Touchpad anda por padrão** (deslize o dedo), como reserva; pode desligar no menu (AJUDA NO TOUCHPAD).
+- Painel mostra ângulo do controle, ângulo "reto" aprendido e distância mão-chão.
+- Simulado com mão relaxada lida a 0°, +20° e −25°, tremor de 2° e poses repetidas: neutro aprendido em ±1°, ~0,8 corpo por empurrão, repouso sem piscar nem subir, touchpad ~1,7 corpo/s. 26 testes Node e 12 de navegador. Sem headset físico.
+
 ## 1.0.4 — sem piscar NO AR/NO CHÃO e sem voar
 - Relato no G2: parado, o painel alternava NO AR/NO CHÃO rapidamente e o corpo "voava". Reproduzido com tremor real de mão (2–3° a 9 Hz) e poses repetidas: 45 trocas em 3 s, deriva de 2 corpos e subida de 2 alturas.
 - Contato decidido por **histerese de ângulo**, não por velocidade: solta só ao inclinar ~5° de volta a partir do ponto mais fundo; só agarra de novo após inclinar para baixo outra vez (ou depois de sair da superfície).
@@ -11,7 +18,7 @@
 - Braço 3DoF longo e reto pivotando no ombro; inclinação do pulso amplificada 2×, caminho achatado perto do chão. Controle reto = mão logo acima do chão; ~13° para baixo = mão no chão; ~45° = mão atrás do corpo.
 - Soltura imediata ao inclinar o controle de volta para cima (detector sem filtro + filtrado); o retorno passa pelo ar e não puxa o corpo para trás. Varrer o braço para trás continua empurrando.
 - Impulso de soltura 1,25× (limite 6,5 × escala/s). Desvio lateral girando o controle com a mão no chão.
-- Painel **GORILA 1.0.3** com instruções novas; cache `v45-gorila-4`; link WebXR `v=1.0.4-gorila` no README e no launcher do APK (1.0.3/code 4).
+- Painel **GORILA 1.0.3** com instruções novas; cache `v45-gorila-4`; link WebXR `v=1.0.5-gorila` no README e no launcher do APK (1.0.3/code 4).
 - Testes: 23 Node (novos: passadas curtas com ruído, mão perto do chão com controle reto) e os 12 cenários de navegador com ângulos atualizados. Poses simuladas; sem headset físico.
 
 ## 1.0.2 — âncora e colisão da mão

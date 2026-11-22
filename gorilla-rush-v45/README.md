@@ -1,8 +1,8 @@
-# Gorilla Rush v45 — adaptação de navegador para PICO G2 (gorila 1.0.4)
+# Gorilla Rush v45 — adaptação de navegador para PICO G2 (gorila 1.0.5)
 
 **Não é uma declaração de compatibilidade física certificada.** O usuário confirmou que a versão anterior acompanhava a cabeça/controle em Firefox Reality ou Wolvic, mas não permitia andar por gesto. Esta edição usa o **novo TXT v45**, em endereço e pacote separados. MonkeGo 1.3 permanece intacto.
 
-- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.4-gorila
+- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.5-gorila
 - APK: `downloads/Gorilla-Rush-v45-PicoG2.apk` — **tela offline + abrir navegador externo**, não VR nativo.
 - Projeto completo: `downloads/Gorilla-Rush-v45-projeto.zip`.
 - Versão anterior: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3
@@ -12,12 +12,16 @@
 1. No navegador VR que já acompanha seu controle, abra o endereço novo por HTTPS. Aguarde o carregamento dos mapas. Verifique o botão principal **INICIAR VR**.
 2. Toque em **INICIAR VR**. Não precisa selecionar um modo no topo: o próprio clique solicita WebXR e inicia o jogo após a autorização do navegador. Em navegadores antigos sem WebXR, usa WebVR quando disponível. O botão só é habilitado se a API oferecer sessão WebXR imersiva ou VRDisplay WebVR com apresentação. Não há fallback disfarçado para VR Box.
 3. Apenas a mão direita é controlada. A posição do braço é **estimada**; o quaternion medido controla o pulso em 360°. Não há duas mãos 6DoF nem rastreamento óptico dos dedos.
-4. **Andar como no Gorilla Tag (sem botão):** segure o controle quase reto: a mão fica logo acima do chão. Incline uns **10–15° para baixo** e ela encosta (painel: **NO CHÃO**). Num gesto rápido, incline mais **para baixo e para trás** (até ~45°): a mão fica presa no chão e o corpo vai para a frente. **Volte o controle para cima**: a mão solta na hora, volta pelo ar sem te puxar para trás, e o impulso continua (como soltar a mão no Gorilla Tag). Com a mão no chão, gire o controle para os lados para ir de lado; empurrar forte para baixo te levanta. A mão não gera força no ar. Como o G2 é 3DoF, **mover o controle sem girá-lo não é medido**: o movimento vem da inclinação do pulso.
+4. **Andar como no Gorilla Tag:** ao entrar, segure o controle parado e relaxado por 2–3 s (o jogo aprende esse ângulo como "reto"). Incline uns **15° para baixo**: a mão encosta (painel: **NO CHÃO**). Num gesto rápido, incline mais **para baixo e para trás**: você vai para a frente. **Volte o controle para cima**: a mão solta e volta pelo ar. Com a mão no chão, gire o controle para os lados para ir de lado. **Reserva:** deslizar o dedo no touchpad também anda (desligue em AJUDA NO TOUCHPAD no menu). O G2 é 3DoF: o que conta é a inclinação do pulso, não mover o braço no ar.
 5. Segure o clique do touchpad por 0,6 s para o menu. Aponte o laser ou use cima/baixo do touchpad para escolher; gatilho ou clique curto confirma. Em **CALIBRAR**, aponte para a frente antes de confirmar; isso corrige o eixo do braço estimado, não inventa posição rastreada.
 6. Gatilho segura contato real em chão/parede. Clique curto no centro do touchpad pula; bordas giram 30°. **Ajuda no touchpad** é opcional, identificada no menu e desligada por padrão; não é apresentada como locomoção física.
 7. Se continuar sem andar, veja se o painel mostra **NO AR**, **ANCORADA** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
 
 A interface 2D do jogo original permite selecionar salas, acessórios e modos antes da sessão. A entrada rápida online, o modo tela e os diagnósticos ficam em **Configurações → Controles**, não em um painel flutuante no topo. O botão VR inicia Solo se você ainda não entrou em um modo. Para um modo de rede, entre pela interface original primeiro e então entre em VR. As telas de perfil/amigos/microfone do original continuam 2D; não foram todas reescritas como UI imersiva. Rede PeerJS, voz, câmera opcional e conforto de VR não foram validados em hardware.
+
+## Calibração automática — 1.0.5
+
+O jogo aprende sozinho como você segura o controle relaxado (fique parado uns 2–3 s ao entrar) e considera isso "reto". A mão encosta no chão inclinando ~15° para baixo a partir daí, não importa se o seu controle/navegador lê a posição relaxada como para cima ou para baixo. O **touchpad também anda** (deslize o dedo); dá para desligar em **AJUDA NO TOUCHPAD** no menu. O painel mostra o ângulo do controle, o "reto" aprendido e a distância da mão ao chão.
 
 ## Correção de tremor — 1.0.4
 
