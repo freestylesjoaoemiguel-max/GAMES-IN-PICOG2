@@ -107,22 +107,6 @@ js/main.js      renderização, entrada do controle, braços, locomoção
 
 ---
 
-## Pulse Saber G2 — jogo de ritmo original
-
-**[Jogar WebXR](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/pulse-saber-g2/)** · **[Baixar APK direto](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/pulse-saber-g2/downloads/Pulse-Saber-G2.apk)** · **[Guia, código e testes](pulse-saber-g2/README.md)**
-
-Um sabre, três músicas originais, nove mapas, modelos externos CC0, combos, bombas, resultados e recordes locais. Jogo independente inspirado no gênero — não Beat Saber nem seu conteúdo comercial. WebXR requer navegador compatível; APK Java/OpenGL monoscópico experimental, **sem runtime PICO ou teste físico no G2**. O PicoVerso permanece intacto na raiz.
-
-![Menu do jogo original Pulse Saber G2](pulse-saber-g2/docs/preview-menu.png)
-
----
-
-## Discord VR G2 — novo aplicativo independente
-
-**[Abrir WebXR](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/)** · **[Baixar APK](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/discord-vr-g2/downloads/Discord-VR-G2.apk)** · **[Passo a passo fácil](discord-vr-g2/docs/COMO_USAR.md)**
-
-O PicoVerso VR continua preservado na raiz. Discord VR G2 está em uma subpasta: modo local no Pages, WebXR exige navegador compatível, APK experimental sem validação no G2/runtime PICO. [Código e limites](discord-vr-g2/README.md).
-
 ## MonkeGo / Gorilla Rush v45 — versão atual
 
 - **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.6](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.6-motion)**
