@@ -1,5 +1,14 @@
 # Alterações — v45 / PICO G2
 
+## 1.0.3 — velocidade das mãos e gravidade independente do contato
+- Diagnóstico antes da alteração: posição ignorada, mão única, retorno antecipado em contato e velocidade sobrescrita pela correção da âncora.
+- Estende o input existente: fontes esquerda/direita únicas, gripSpace/targetRaySpace WebXR e posição WebVR quando válida; quaternion/botões preservados. Posição emulada ou ausente usa braço 3DoF identificado, não tracking fictício.
+- Reação calculada a partir de delta da mão relativo ao corpo / dt. Integração única de velocidade, gravidade e colisões; média de duas reações ativas. Mantém impulso após soltura e limita velocidade sem motor de caminhada fixa.
+- Contato aberto não desliga gravidade nem cancela pulo. Repouso no chão tem atrito; perda/troca de fonte não injeta impulso.
+- Geometria local esquerda/direita reversível; fontes ausentes não fazem força. Tirolesa/tag local respeitam mãos disponíveis. Câmera, resolução, framebuffer, mapas, menu e protocolo de rede preservados.
+- 28 testes Node, regressões de entrada/estéreo/colisão, nova suíte dos 13 cenários pedidos e casos de reconexão/limite/momento/3DoF. Sem validação física no G2.
+- Cache `v45-motion-4`, painel **FISICA 1.0.3**, links do README/launcher atualizados, APK tela+navegador 1.0.3/code 4.
+
 ## 1.0.2 — âncora e colisão da mão
 - Substituídos os sete raios do pulso por colisão contínua esfera/triângulo, cobrindo faces, arestas e vértices com consulta à grade real dos mapas.
 - Raio conservador calculado para envolver mão e dedos; o raio antigo de 0,075 × escala não cobria a malha (~0,335 × escala até os dedos).

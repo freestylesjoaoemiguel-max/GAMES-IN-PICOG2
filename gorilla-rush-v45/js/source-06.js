@@ -407,7 +407,7 @@ function buildZip(k){if(!beachG)return;if(ZG){beachG.remove(ZG);ZG.traverse(o=>{
   H.add(cyl(V3(0,-.2*k,-.24*k),V3(0,-.2*k,.24*k),.03*k,blue,8));
   H.rotation.y=Math.atan2(-Z.dir.z,Z.dir.x);Z.s=.35*k;H.position.copy(A).addScaledVector(Z.dir,Z.s);ZG.add(H);Z.h=H}
 function zipTick(dt,now){const Z=ZIP;if(Z.on||!Z.h||state!='play')return;Z.cd-=dt;if(Z.cd>0)return;
-  const H=Z.h.position,k=Z.k,hang=V3(H.x,H.y-.3*k,H.z);let g=PICO.immersive()?PICO.ctrl.present&&PICO.ctrl.trigger&&tgt[1].distanceTo(H)<.35*k:P.distanceTo(hang)<.5*k;
+  const H=Z.h.position,k=Z.k,hang=V3(H.x,H.y-.3*k,H.z);let g=PICO.immersive()?Object.values(PICO.hands).some((h,i)=>h.present&&h.trigger&&tgt[i].distanceTo(H)<.35*k):P.distanceTo(hang)<.5*k;
   if(!g)for(let i=0;i<2;i++){const s=slot[i];if(s.p&&now-s.t<650&&tgt[i].distanceTo(H)<.35*k){g=true;break}}
   if(g){Z.on=true;Z.v=1.2;toast('ZIPLINE · JUMP TO LET GO',1800)}}
 function zipRide(dt){const Z=ZIP,k=Z.k;Z.v=Math.min(7,Z.v+Math.max(1.5,-Z.dir.y*9.8*.9)*dt);Z.s+=Z.v*dt;
@@ -650,7 +650,7 @@ function pickGo(v){$('pick').classList.remove('on');enter('join',v)}
 document.querySelectorAll('#menu .tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('#menu .tab').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#menu .pane').forEach(p=>p.classList.toggle('on',p.dataset.t===b.dataset.t))});
 $('mv').onchange=e=>assist=+e.target.value;$('qj').onclick=()=>enter('quick');$('solo').onclick=()=>enter('solo');$('selb').onpointerdown=e=>{e.stopPropagation();e.preventDefault();if(camSolo())return;pickAim()};$('jn').onclick=openPick;$('pkc').onclick=()=>pickGo('cas');$('pki').onclick=()=>pickGo('inf');$('pkh').onclick=()=>pickGo('hun');$('pkx').onclick=()=>$('pick').classList.remove('on');
 // ---------- bots (apenas servidor público, simulados pelo host) ----------
-function hbHit(it,ih,o,oh){const A=[[V3(it.x,it.y,it.z),.3]];ih.forEach((h,i)=>{if(!(PICO.immersive()&&it.id===me.id&&i===0))A.push([h,.16])});const B=[[V3(o.x,o.y,o.z),.3]];oh.forEach((h,i)=>{if(!(PICO.immersive()&&o.id===me.id&&i===0))B.push([h,.16])});for(const a of A)for(const b of B)if(a[0].distanceTo(b[0])<a[1]+b[1])return true;return false}
+function hbHit(it,ih,o,oh){const A=[[V3(it.x,it.y,it.z),.3]];ih.forEach((h,i)=>{if(!(PICO.immersive()&&it.id===me.id&&!PICO.hands[i?'right':'left'].present))A.push([h,.16])});const B=[[V3(o.x,o.y,o.z),.3]];oh.forEach((h,i)=>{if(!(PICO.immersive()&&o.id===me.id&&!PICO.hands[i?'right':'left'].present))B.push([h,.16])});for(const a of A)for(const b of B)if(a[0].distanceTo(b[0])<a[1]+b[1])return true;return false}
 function infTick(all,now){itId=null;
  const ids={};all.forEach(e=>ids[e.id]=1);for(const k in INF)if(!ids[k])delete INF[k];
  const n=all.length,ic=Object.keys(INF).length;

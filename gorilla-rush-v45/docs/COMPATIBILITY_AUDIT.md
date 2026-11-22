@@ -14,13 +14,13 @@ O importador percorre todo o arquivo e extrai 68 payloads distintos, inclusive d
 | Sessão VR | `renderPlay` duplica câmera em dois viewports; sem requestSession/requestPresent | Integração WebXR local e WebVR 1.1, loop do runtime, projeção/view por olho e submitFrame |
 | Cabeça | DeviceOrientation/arrastar; não pose do compositor | ViewerPose/VRFrameData antes da física; yaw comum ao controle |
 | Controle | Gamepad eixos/botões; nenhuma orientação PICO usada como mão | Pose da fonte targetRaySpace atual ou Gamepad.pose.orientation legado, normalização/rejeição de inválidos |
-| Mãos | MediaPipe câmera, landmarks em `slot[]` | Câmera/worker não usados em sessão VR; uma mão direita com posição estimada, quaternion real e IK |
+| Mãos | MediaPipe câmera, landmarks em `slot[]` | Câmera/worker não usados em sessão VR; fontes esquerda/direita únicas; posição medida quando fornecida, estimada no 3DoF; quaternion real e IK |
 | Movimento | Só landmarks ativam `on`/contato; Solo usa outro caminho (`soloFly`) | Caminho de física do controle entra antes do Solo e da física de câmera, sem dupla integração |
 | Escala | `PS=.25`, `CSC<=.14`, `EYEUP=1.1*(PS-CSC)`; aumenta na praia | Distâncias, gravidade, velocidade e tamanho do rig parametrizados por PS; resets em teleporte/troca de tamanho |
 | Mapas | `DecompressionStream('gzip')` obrigatório | Expansão no importador, sem mudar conteúdo dos mapas; falha explícita, sem substituir mapa por plano vazio |
 | Dependências | Three/PeerJS/MediaPipe por CDN | Engine/loaders/Reflector/PeerJS locais; câmera original opcional sob demanda, ainda externa |
 | Interface | HTML na janela, não dentro do compositor | Menu/painel/laser 3D para ações essenciais; perfil/amigos/configurações completas ainda 2D |
-| Braço | Camera landmarks, repouso pendurado | Braço direito articulado, alcance limitado, pulso 360°, esquerda removida da malha local sem modificar GLB |
+| Braço | Camera landmarks, repouso pendurado | Braços articulados, pulso 360°, máscaras locais reversíveis conforme fontes, sem modificar GLB |
 | Atrito | Não recebe gesto do controle no código original | Apoio tangencial no piso; empurrão oposto ao gesto, soltura ao levantar, velocidade medida após colisão |
 | Segurança da pose | Sem gerenciamento de source/pose perdida | Reseta apoio, filtro e velocidade ao perder/trocar pose, abrir menu, teleportar ou recentrar abruptamente |
 | APK | Inexistente na entrada | Build Java/DEX assinado, tela offline e link para browser; NÃO runtime VR nativo |
@@ -41,7 +41,7 @@ Foi encontrada uma alternativa comunitária Wolvic específica para G2, baseada 
 
 O repositório público `Another-Axiom/GorillaLocomotion` disponibiliza um sistema de locomoção sob MIT. Inspecionamos README e Player.cs: utiliza posições de `leftHandTransform/rightHandTransform`, colisores/casts e Rigidbody Unity. Não foi importado como se funcionasse em JavaScript, nem copiado para alegar fidelidade exata. [6](https://github.com/Another-Axiom/GorillaLocomotion)
 
-Um controle G2 3DoF não mede essas duas posições. A adaptação implementada é própria, com varredura contínua de uma esfera conservadora envolvendo a mão contra triângulos, âncora na superfície, correção do corpo e soltura. O volume não reproduz cada dedo separadamente e pode deixar folga visual; o pulso é alinhado ao alvo após IK. Pode reproduzir o princípio de empurrar superfícies com um braço virtual, mas não a mesma entrada/física de duas mãos 6DoF. Torção/rotação é medida; translação é estimada. Ragdoll e dedos medidos não foram implementados nem simulados como tracking real.
+Um controle G2 3DoF não mede essas duas posições. A adaptação implementada é própria, com varredura contínua de uma esfera conservadora envolvendo a mão contra triângulos, âncora na superfície, correção do corpo e soltura. O volume não reproduz cada dedo separadamente e pode deixar folga visual; o pulso é alinhado ao alvo após IK. Pode reproduzir o princípio de empurrar superfícies com um braço virtual, mas não a mesma entrada/física de duas mãos 6DoF. Torção/rotação é medida; translação no G2 original continua estimada, mas posições reais fornecidas por outros runtimes/fontes não são descartadas. Ragdoll e dedos medidos não foram implementados nem simulados como tracking real.
 
 ## Otimizações aplicadas
 

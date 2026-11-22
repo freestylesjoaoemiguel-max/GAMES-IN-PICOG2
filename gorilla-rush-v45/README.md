@@ -1,8 +1,8 @@
-# Gorilla Rush v45 — adaptação de navegador para PICO G2 (âncora 1.0.2)
+# Gorilla Rush v45 — adaptação de navegador para PICO G2 (física 1.0.3)
 
 **Não é uma declaração de compatibilidade física certificada.** O usuário confirmou que a versão anterior acompanhava a cabeça/controle em Firefox Reality ou Wolvic, mas não permitia andar por gesto. Esta edição usa o **novo TXT v45**, em endereço e pacote separados. MonkeGo 1.3 permanece intacto.
 
-- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.2-anchor
+- Jogo: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.3-motion
 - APK: `downloads/Gorilla-Rush-v45-PicoG2.apk` — **tela offline + abrir navegador externo**, não VR nativo.
 - Projeto completo: `downloads/Gorilla-Rush-v45-projeto.zip`.
 - Versão anterior: https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/monke-go/?device=picog2&v=1.3
@@ -11,27 +11,39 @@
 
 1. No navegador VR que já acompanha seu controle, abra o endereço novo por HTTPS. Aguarde o carregamento dos mapas. Verifique o botão principal **INICIAR VR**.
 2. Toque em **INICIAR VR**. Não precisa selecionar um modo no topo: o próprio clique solicita WebXR e inicia o jogo após a autorização do navegador. Em navegadores antigos sem WebXR, usa WebVR quando disponível. O botão só é habilitado se a API oferecer sessão WebXR imersiva ou VRDisplay WebVR com apresentação. Não há fallback disfarçado para VR Box.
-3. Apenas a mão direita é controlada. A posição do braço é **estimada**; o quaternion medido controla o pulso em 360°. Não há duas mãos 6DoF nem rastreamento óptico dos dedos.
-4. **Andar sem botão:** aponte para baixo até o painel indicar **ANCORADA**. Gire mais para baixo/trás para empurrar o chão. Levante a ponta para soltar e repita. A mão não gera força no ar. **Mover o controle para trás sem girá-lo não fornece translação ao jogo**, pois o G2 é 3DoF.
+3. O painel indica **E/D: posição medida** ou **3DoF estimado** por fonte. Usa esquerda, direita ou ambas se o navegador fornecer essas fontes; nunca duplica um controle para duas mãos. `gripSpace` tem preferência no WebXR; WebVR usa `pose.position` quando válida. A rotação do pulso continua livre em 360°. Não há tracking óptico dos dedos.
+4. **Andar sem botão:** encoste a mão na superfície até indicar **CONTATO**, empurre para trás para avançar, levante e repita. Com posição medida, usa o deslocamento real. **No controlador original G2 3DoF, gire para baixo/trás:** translação física sem rotação não é medida pelo aparelho. A mão livre no ar não gera impulso. Não é possível obter duas posições 6DoF de um único controle 3DoF por software.
 5. Segure o clique do touchpad por 0,6 s para o menu. Aponte o laser ou use cima/baixo do touchpad para escolher; gatilho ou clique curto confirma. Em **CALIBRAR**, aponte para a frente antes de confirmar; isso corrige o eixo do braço estimado, não inventa posição rastreada.
 6. Gatilho segura contato real em chão/parede. Clique curto no centro do touchpad pula; bordas giram 30°. **Ajuda no touchpad** é opcional, identificada no menu e desligada por padrão; não é apresentada como locomoção física.
-7. Se continuar sem andar, veja se o painel mostra **NO AR**, **ANCORADA** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
+7. Se continuar sem andar, veja se o painel mostra **NO AR**, **CONTATO** ou **SEM POSE**. Use **SALVAR DIAGNÓSTICO** em **Configurações → Controles** na interface do lobby; envie esse JSON, navegador/versão e uma gravação curta. O diagnóstico contém apenas dados locais de execução, não credenciais.
 
 A interface 2D do jogo original permite selecionar salas, acessórios e modos antes da sessão. A entrada rápida online, o modo tela e os diagnósticos ficam em **Configurações → Controles**, não em um painel flutuante no topo. O botão VR inicia Solo se você ainda não entrou em um modo. Para um modo de rede, entre pela interface original primeiro e então entre em VR. As telas de perfil/amigos/microfone do original continuam 2D; não foram todas reescritas como UI imersiva. Rede PeerJS, voz, câmera opcional e conforto de VR não foram validados em hardware.
 
-## Correção de contato — 1.0.2
+## Correção de movimentação — 1.0.3
+
+O diagnóstico prévio está em `docs/LOCOMOTION_DIAGNOSIS.md`. A versão anterior ignorava posições fornecidas pelo runtime, tinha só um estado de mão e retornava da física em qualquer contato, suspendendo gravidade/pulo. Também copiava uma velocidade de correção da âncora para o jogador, em vez de medir a velocidade da mão relativa ao corpo.
+
+Agora cada fonte mantém posição anterior, velocidade e contato. O impulso contrário ao movimento só existe em superfície válida; a componente que puxaria uma palma aberta para dentro da parede é removida. Duas mãos contribuem por média das reações ativas (não dobram velocidade). Um único integrador aplica reação, gravidade, colisões existentes e atrito, preservando momento após soltar. Mão imóvel aberta não suspende o corpo no ar; gatilho ainda pode manter uma pegada real.
+
+Limites em unidades virtuais, convertidos pela escala `PS`: horizontal 8 m/s, subida 6 m/s e queda 10 m/s; gravidade 9,8 m/s². Não há velocidade de caminhada fixa. A resposta depende de deslocamento/tempo da mão. Posição impossível/recentralização, perda de pose e troca de fonte reiniciam a amostra, sem lançar o jogador. Menu pausa; pulo tem retorno normal ao chão.
+
+`docs/LOCOMOTION_TESTS.json` cobre os 13 cenários solicitados no frame real: esquerda/direita/ambas, parede, rápido/lento, repouso, pulo, queda, colisão corporal com parede, frente/trás/lados. Também verifica limite, momento após soltar, fontes reordenadas, fonte ausente e alternativa 3DoF. Sessões/poses são fixtures; o compositor é substituído nos passos determinísticos de física, após o teste separado de renderização estéreo. **Não são testes físicos no headset.**
+
+Mapas/assets, modo VR, resolução/framebuffer, câmera, menus, configuração de botões, sons e protocolo de rede foram mantidos. A visibilidade local das mãos passou a ser reversível conforme fontes; ao sair de VR, o modelo completo é restaurado. Gatilho na tirolesa e colisão local de tag usam o lado realmente conectado. Multiplayer/voz continuam sem validação de rede no headset.
+
+## Colisão de contato preservada — base 1.0.2
 
 A mão agora usa **âncora em coordenadas do mapa**: ao tocar uma superfície, o ponto fica fixo enquanto o braço empurra o corpo. Levantar a mão aberta solta a âncora; o gatilho mantém a pegada enquanto houver apoio e alcance válidos. Menu, perda de pose, teleporte e mudança de mapa/escala cancelam apoio antigo.
 
 A colisão foi trocada de raios ao redor do pulso para uma esfera varrida contra **faces, arestas e vértices** dos triângulos. Seu raio envolve a mão/dedos do modelo (mínimo 0,36 × escala do jogador, ampliado pela malha), não só o pulso. É um volume conservador: pode existir folga visual ao girar a palma; não é colisão individual de cada dedo. A movimentação da gravidade também é varrida antes de posicionar a mão visível. O pulso é alinhado à posição corrigida após o IK, com ajuste visual de alcance do antebraço.
 
-Os testes verificam vértices da mão acima do piso durante empurrão, soltura, queda e giro com âncora; cantos, rampas, bordas, escalas pequenas e frames de 50 ms; além de contatos nos dois mapas originais. Isso cobre regressões no código, **não confirma a correção no seu G2**. Se ainda atravessar, confira **ANCORA 1.0.2** no painel e envie o diagnóstico e um vídeo do ponto do mapa.
+Os testes verificam vértices da mão acima do piso durante empurrão, soltura, queda e giro com âncora; cantos, rampas, bordas, escalas pequenas e frames de 50 ms; além de contatos nos dois mapas originais. Isso cobre regressões no código, **não confirma a correção no seu G2**. Se ainda atravessar, confira **FISICA 1.0.3** no painel e envie o diagnóstico e um vídeo do ponto do mapa.
 
 ## APK / instalação
 
 O arquivo recebido é HTML/JS/Three.js, não Unity/Unreal. **O APK gerado não contém o compositor PICO ou integração nativa do controle.** Android WebView não adquire WebXR por trocar manifesto ou nome do dispositivo. O modo VR é o site no navegador externo já instalado.
 
-- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.2/code 3; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
+- Pacote independente `com.picog2.gorillarushv45`, versão 1.0.3/code 4; Android mínimo API 23, alvo 28; Java/DEX, sem biblioteca JNI/ABI de engine.
 - Abra o APK no instalador do G2 ou use `adb install Gorilla-Rush-v45-PicoG2.apk` com depuração USB autorizada. **Instalação não testada aqui.** Não desinstale o MonkeGo anterior.
 - O botão **ABRIR EM VR** abre o site externo (internet necessária). No APK, o jogo fica em tela/WebView. Não confundir duas imagens no modo VR Box original com uma sessão imersiva.
 - APK assinado para desenvolvimento. Configure `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE`, `SIGNING_ALIAS` para atualizações com certificado estável. Um certificado novo pode impedir atualização; não desinstale sem backup dos dados.
@@ -63,7 +75,7 @@ O bootstrap baixa ferramentas Java/Android fixadas por versão e verifica seus h
 
 - **Compilação:** relatório real em `docs/ANDROID_BUILD.txt`; sintaxe JS verificada pelo build.
 - **Código/análise estática:** inventário integral dos 68 payloads, hashes, dependências e pontos de integração; `docs/COMPATIBILITY_AUDIT.md`, `INPUT_PROVENANCE.json`, `SOURCE_STRUCTURE.json`.
-- **Testes automatizados:** `docs/NODE_TESTS.txt`, `BROWSER_TESTS.json` e `ENTRY_TESTS.json`. Chromium executa o modelo, mapas, colisões e frame loop reais, mas as poses/sessões são simuladas. Inclui movimento horizontal em três ciclos com gravidade, sem botões, giro 360°, soltura, perda de pose e as duas projeções WebVR. Isso não prova o comportamento do navegador do G2.
+- **Testes automatizados:** `docs/NODE_TESTS.txt`, `BROWSER_TESTS.json`, `ENTRY_TESTS.json` e `LOCOMOTION_TESTS.json`. Chromium executa o modelo, mapas, colisões e frame loop reais, mas as poses/sessões são simuladas. Inclui movimento horizontal em três ciclos com gravidade, sem botões, giro 360°, soltura, perda de pose e as duas projeções WebVR. Isso não prova o comportamento do navegador do G2.
 - **NÃO testado no hardware físico PICO G2:** instalação Android, compositor real, firmware/browser do usuário, FPS, latência, temperatura, conforto, câmera, voz, multiplayer e transições completas entre todos os modos.
 - Sem promessa de "perfeito/sem bugs", nem de física idêntica ao Gorilla Tag original: um controle 3DoF não fornece as posições independentes de duas mãos usadas por esse tipo de jogo. Braço articulado por IK, não ragdoll.
 
