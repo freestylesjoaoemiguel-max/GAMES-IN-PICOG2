@@ -125,10 +125,12 @@ O PicoVerso VR continua preservado na raiz. Discord VR G2 está em uma subpasta:
 
 ## MonkeGo / Gorilla Rush v45 — versão atual
 
-- **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.3](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.3-motion)**
+- **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.6](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.6-motion)**
 - [Baixar APK v45 compilado no GitHub](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/downloads/Gorilla-Rush-v45-PicoG2.apk)
 
 A versão atual usa o novo arquivo **Gorilla Rush v45** enviado pelo usuário, preservando os dois mapas e os recursos recebidos. Inclui locomoção por velocidade das mãos, gravidade e colisão contínua. Usa fontes esquerda/direita disponíveis, sem duplicar um controle. Posição medida quando fornecida; braço estimado por rotação no controle 3DoF. Painel distingue os dois tipos de entrada.
+
+**Como andar (1.0.6):** ao entrar, segure o controle parado 2–3 s (ele aprende sua posição "reta"); depois incline uns 10–15° para baixo e a mão encosta no chão (painel: **CONTATO**). Incline mais para baixo e para trás num gesto rápido: a mão fica presa e você vai para a frente. Volte o controle para cima: a mão solta, volta pelo ar e o impulso continua. Com a mão no chão, gire o controle para os lados para ir de lado. Reserva: deslizar o dedo no touchpad também anda.
 
 **APK = jogo em tela/WebView + botão para abrir o navegador VR, não porte VR nativo PICO.**
 Gráficos baixos por padrão. Os testes automatizados usam poses simuladas; PICO G2 físico, instalação Android e FPS ainda não validados.

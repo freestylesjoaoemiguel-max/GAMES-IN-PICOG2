@@ -31,7 +31,7 @@ try{
   // Keep the full game frame, input, scene, bones and triangle/body collisions.
   // Only the headset compositor is a fixture; stereo rendering is tested separately.
   PICO.render=()=>true;PICO.mode='webxr';R.xr.getReferenceSpace=()=>({});
-  const sources={},poses=new Map(),report={};let minSkinY=Infinity,maxHorizontal=0;
+  const sources={},poses=new Map(),report={assistDefault:PICO.assist};let minSkinY=Infinity,maxHorizontal=0;
   for(const side of ['left','right']){const space={},s={handedness:side,targetRayMode:'tracked-pointer',targetRaySpace:{},gripSpace:space,profiles:['generic-trigger'],gamepad:{mapping:'xr-standard',axes:[0,0],buttons:[{pressed:false}]}};sources[side]=s;poses.set(space,{x:side==='left'?-.25:.25,y:-.7,z:-.55})}
   const xr={getViewerPose:()=>({transform:{orientation:{x:0,y:0,z:0,w:1},position:{x:0,y:0,z:0}}}),getPose:space=>{const p=poses.get(space);return p?{emulatedPosition:!!p.emulated,transform:{position:p,orientation:p.q||{x:0,y:0,z:0,w:1}}}:null}};
   const material=new THREE.MeshBasicMaterial();material.userData.cls=0;
@@ -57,6 +57,8 @@ try{
   const oldPos=poses.get(sources.left.gripSpace);poses.delete(sources.left.gripSpace);tick();report.poseLoss=!PICO.hands.left.present&&!PICO.hands.left.arm.contact;poses.set(sources.left.gripSpace,oldPos);tick();report.reconnectReaction=PICO.hands.left.arm.reaction.length()/PS;
   reset();ground();PICO.toggleMenu();tick();report.menu=PICO.menu&&!PICO.arm.contact&&vel.length()===0;PICO.toggleMenu();
   report.estimated={};for(const side of ['left','right']){reset([side]);const pose=poses.get(sources[side].gripSpace);pose.emulated=true;tick(12);const start=P.clone();for(let i=1;i<=40;i++){const q=new THREE.Quaternion().setFromAxisAngle(V3(1,0,0),-1.6*i/40);pose.q={x:q.x,y:q.y,z:q.z,w:q.w};tick()}report.estimated[side]={forward:(start.z-P.z)/PS,tracking:PICO.hands[side].tracking,otherAbsent:!PICO.hands[side==='left'?'right':'left'].present}}
+  report.calibration=[];for(const offset of [-.35,.44]){reset(['right']);PICO.hands.right.arm=ARM_PHYSICS.create(THREE,PICO.surface.solve);const pose=poses.get(sources.right.gripSpace);pose.emulated=true;const set=q=>{const t=new THREE.Quaternion().setFromAxisAngle(V3(1,0,0),q);pose.q={x:t.x,y:t.y,z:t.z,w:t.w}};set(offset);tick(300);const before=P.clone();for(let i=0;i<144;i++){if(i%3===0)set(offset+.035*Math.sin(2*Math.PI*9*i/72));tick()}report.calibration.push({neutralError:Math.abs(PICO.arm.neutral+offset),drift:P.distanceTo(before)/PS,feet:(P.y-1.1*CSC)/PS})}
+  reset();poses.get(sources.right.gripSpace).y=.2;PICO.assist=true;sources.right.gamepad.axes=[0,-1];const padStart=P.clone();tick(60);report.touchpad=(padStart.z-P.z)/PS;sources.right.gamepad.axes=[0,0];
   reset(['left']);PICO.mode='webvr';navigator.getGamepads=()=>[{id:'legacy-left',index:2,hand:'left',connected:true,pose:{hasPosition:true,position:[-.25,-.7,-.55],orientation:[0,0,0,1]},buttons:[],axes:[]}];tick();report.legacyPosition=PICO.hands.left.tracking==='measured'&&!PICO.hands.right.present;
   report.minSkinY=minSkinY;report.maxHorizontal=maxHorizontal;return report;
  });
@@ -72,6 +74,7 @@ try{
  assert(results.routing.bothVisible.every(v=>v==='LR'));assert(results.routing.leftMask.every(v=>v==='L'));assert(results.poseLoss&&results.reconnectReaction===0&&results.menu);
  for(const side of ['left','right'])assert(results.estimated[side].forward>.2&&results.estimated[side].tracking==='estimated-3dof'&&results.estimated[side].otherAbsent);assert(results.legacyPosition);
  assert(results.minSkinY>=-.001&&results.maxHorizontal<=8.001&&results.momentum>.05&&results.limits.peak<8.01);
+ assert(results.assistDefault&&results.touchpad>.2);assert(results.calibration.every(c=>c.neutralError<.03&&c.drift<.1&&Math.abs(c.feet)<.05));
  assert.deepEqual(errors,[]);
  const report={checks:['Left hand floor push','Right hand floor push','Both hands floor push','Hand wall push','Fast stroke','Slow stroke','Stationary grounded body','Jump and land','Fall without tunneling','Body wall collision','Forward motion','Backward motion','Left/right lateral motion'],results,errors,limitations:'Full game frames and real model/triangle/body collision. Two positional WebXR sources are fixtures, not proof that stock PICO G2 supplies two positional controllers. Actual rendering and legacy 3DoF are exercised by check_browser.mjs. No physical headset/FPS/latency test.'};
  fs.writeFileSync(path.join(root,'docs/LOCOMOTION_TESTS.json'),JSON.stringify(report,null,2)+'\n');

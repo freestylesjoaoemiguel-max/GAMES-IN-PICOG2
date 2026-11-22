@@ -15,6 +15,7 @@
     "Left/right lateral motion"
   ],
   "results": {
+    "assistDefault": true,
     "left": {
       "delta": [
         0,
@@ -104,9 +105,9 @@
       "delta": [
         0,
         0,
-        -0.42243033028073534
+        -0.42243033028073673
       ],
-      "peak": 0.701344926960211,
+      "peak": 0.7013449269601214,
       "contact": 40,
       "tracking": [
         "measured"
@@ -182,19 +183,32 @@
     "menu": true,
     "estimated": {
       "left": {
-        "forward": 0.8830764295226108,
+        "forward": 2.3352233379065797,
         "tracking": "estimated-3dof",
         "otherAbsent": true
       },
       "right": {
-        "forward": 0.8616065400165569,
+        "forward": 2.1632960755446407,
         "tracking": "estimated-3dof",
         "otherAbsent": true
       }
     },
+    "calibration": [
+      {
+        "neutralError": 0.0019075501115122795,
+        "drift": 0,
+        "feet": 0
+      },
+      {
+        "neutralError": 0.002585573035589539,
+        "drift": 0,
+        "feet": 0
+      }
+    ],
+    "touchpad": 1.0459603116007021,
     "legacyPosition": true,
-    "minSkinY": 0.032509446425420196,
-    "maxHorizontal": 7.2588347954233505
+    "minSkinY": 0.03250957520819764,
+    "maxHorizontal": 7.822040902139261
   },
   "errors": [],
   "limitations": "Full game frames and real model/triangle/body collision. Two positional WebXR sources are fixtures, not proof that stock PICO G2 supplies two positional controllers. Actual rendering and legacy 3DoF are exercised by check_browser.mjs. No physical headset/FPS/latency test."

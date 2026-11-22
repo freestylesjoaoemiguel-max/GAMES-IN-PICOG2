@@ -1,182 +1,212 @@
 
-> gorilla-rush-v45-pico-g2@1.0.3 test
+> gorilla-rush-v45-pico-g2@1.0.6 test
 > node --test tests/*.test.cjs
 
 TAP version 13
 # Subtest: all 68 decoded source payloads match recorded hashes
 ok 1 - all 68 decoded source payloads match recorded hashes
   ---
-  duration_ms: 78.430693
+  duration_ms: 76.149768
   type: 'test'
   ...
 # Subtest: contact strokes transfer horizontal displacement at both miniature and metre scale
 ok 2 - contact strokes transfer horizontal displacement at both miniature and metre scale
   ---
-  duration_ms: 27.894604
+  duration_ms: 24.613712
   type: 'test'
   ...
 # Subtest: open-hand lift releases; free air cannot move the body
 ok 3 - open-hand lift releases; free air cannot move the body
   ---
-  duration_ms: 6.188173
+  duration_ms: 7.875991
   type: 'test'
   ...
 # Subtest: 360 degree roll leaves estimated position unchanged and support active
 ok 4 - 360 degree roll leaves estimated position unchanged and support active
   ---
-  duration_ms: 5.450229
+  duration_ms: 15.387303
   type: 'test'
   ...
 # Subtest: pose loss and menu cancel support without an old throw
 ok 5 - pose loss and menu cancel support without an old throw
   ---
-  duration_ms: 5.454824
+  duration_ms: 5.179944
   type: 'test'
   ...
 # Subtest: collision-clamped body movement determines launch velocity
 ok 6 - collision-clamped body movement determines launch velocity
   ---
-  duration_ms: 2.907773
+  duration_ms: 2.450747
   type: 'test'
   ...
 # Subtest: no floor means no motion or phantom downward magnet
 ok 7 - no floor means no motion or phantom downward magnet
   ---
-  duration_ms: 1.305409
+  duration_ms: 1.719951
   type: 'test'
   ...
 # Subtest: large pointing jump is not a real stroke
 ok 8 - large pointing jump is not a real stroke
   ---
-  duration_ms: 2.501138
+  duration_ms: 7.004736
   type: 'test'
   ...
 # Subtest: normalized orientation rejects invalid and zero values
 ok 9 - normalized orientation rejects invalid and zero values
   ---
-  duration_ms: 1.831908
+  duration_ms: 2.3044
   type: 'test'
   ...
 # Subtest: WebXR controller routing uses source identity and right hand
 ok 10 - WebXR controller routing uses source identity and right hand
   ---
-  duration_ms: 0.940685
+  duration_ms: 0.958509
   type: 'test'
   ...
 # Subtest: XR standard and configurable legacy buttons are not interchangeable
 ok 11 - XR standard and configurable legacy buttons are not interchangeable
   ---
-  duration_ms: 0.725131
+  duration_ms: 1.754214
   type: 'test'
   ...
 # Subtest: lifting an overlapping sphere cannot stick under double-sided floor
 ok 12 - lifting an overlapping sphere cannot stick under double-sided floor
   ---
-  duration_ms: 0.31449
+  duration_ms: 0.346483
   type: 'test'
   ...
 # Subtest: fast sphere sweep stops on floor at all supported sizes
 ok 13 - fast sphere sweep stops on floor at all supported sizes
   ---
-  duration_ms: 0.430259
+  duration_ms: 0.471273
   type: 'test'
   ...
 # Subtest: sphere catches finite triangle edges and vertices missed by a centre ray
 ok 14 - sphere catches finite triangle edges and vertices missed by a centre ray
   ---
-  duration_ms: 0.219926
+  duration_ms: 0.273341
   type: 'test'
   ...
 # Subtest: floor/wall corner cannot tunnel and sliding preserves nonpenetration
 ok 15 - floor/wall corner cannot tunnel and sliding preserves nonpenetration
   ---
-  duration_ms: 0.349371
+  duration_ms: 0.34915
   type: 'test'
   ...
 # Subtest: inclined surface supports a swept hand at real radius
 ok 16 - inclined surface supports a swept hand at real radius
   ---
-  duration_ms: 0.255085
+  duration_ms: 0.314197
   type: 'test'
   ...
 # Subtest: post-physics gravity shift is swept instead of moving hand under floor
 ok 17 - post-physics gravity shift is swept instead of moving hand under floor
   ---
-  duration_ms: 1.296961
+  duration_ms: 0.640818
   type: 'test'
   ...
 # Subtest: world anchor stays fixed during push and body-blocked correction
 ok 18 - world anchor stays fixed during push and body-blocked correction
   ---
-  duration_ms: 2.572625
+  duration_ms: 3.822055
   type: 'test'
   ...
 # Subtest: trigger retains contacting anchor until release, never creates one in free air
 ok 19 - trigger retains contacting anchor until release, never creates one in free air
   ---
-  duration_ms: 3.271209
+  duration_ms: 3.131553
   type: 'test'
   ...
 # Subtest: world removal clears support without retaining a floating anchor
 ok 20 - world removal clears support without retaining a floating anchor
   ---
-  duration_ms: 1.747422
+  duration_ms: 9.980285
   type: 'test'
   ...
 # Subtest: startup, blocked body and large controller jump never bypass hand collision
 ok 21 - startup, blocked body and large controller jump never bypass hand collision
   ---
-  duration_ms: 1.137882
+  duration_ms: 1.589319
+  type: 'test'
+  ...
+# Subtest: Gorilla-style small wrist strokes (under 50 deg) walk forward despite sensor jitter
+ok 22 - Gorilla-style small wrist strokes (under 50 deg) walk forward despite sensor jitter
+  ---
+  duration_ms: 24.810705
+  type: 'test'
+  ...
+# Subtest: level controller keeps the hand just above the floor; ~13 deg down touches it
+ok 23 - level controller keeps the hand just above the floor; ~13 deg down touches it
+  ---
+  duration_ms: 1.647995
+  type: 'test'
+  ...
+# Subtest: real-hand tremor (2-3 deg at 9 Hz) at rest neither flickers contact nor lifts the body
+ok 24 - real-hand tremor (2-3 deg at 9 Hz) at rest neither flickers contact nor lifts the body
+  ---
+  duration_ms: 30.138792
+  type: 'test'
+  ...
+# Subtest: swinging back after a push never drags the body backwards
+ok 25 - swinging back after a push never drags the body backwards
+  ---
+  duration_ms: 1.349843
+  type: 'test'
+  ...
+# Subtest: auto-neutral: relaxed hold reported 20 deg up or 25 deg down still walks and rests in the air
+ok 26 - auto-neutral: relaxed hold reported 20 deg up or 25 deg down still walks and rests in the air
+  ---
+  duration_ms: 8.645596
   type: 'test'
   ...
 # Subtest: named left/right and anonymous single sources never duplicate a controller
-ok 22 - named left/right and anonymous single sources never duplicate a controller
+ok 27 - named left/right and anonymous single sources never duplicate a controller
   ---
-  duration_ms: 0.586853
+  duration_ms: 0.929699
   type: 'test'
   ...
 # Subtest: position validation rejects nonfinite/emulated/unavailable poses but accepts measured origin
-ok 23 - position validation rejects nonfinite/emulated/unavailable poses but accepts measured origin
+ok 28 - position validation rejects nonfinite/emulated/unavailable poses but accepts measured origin
   ---
-  duration_ms: 0.275202
+  duration_ms: 0.481905
   type: 'test'
   ...
 # Subtest: measured translation, not quaternion rotation, drives a contacting hand
-ok 24 - measured translation, not quaternion rotation, drives a contacting hand
+ok 29 - measured translation, not quaternion rotation, drives a contacting hand
   ---
-  duration_ms: 0.764134
+  duration_ms: 0.856769
   type: 'test'
   ...
 # Subtest: faster equal-distance measured strokes produce greater reaction velocity
-ok 25 - faster equal-distance measured strokes produce greater reaction velocity
+ok 30 - faster equal-distance measured strokes produce greater reaction velocity
   ---
-  duration_ms: 5.859763
+  duration_ms: 1.034311
   type: 'test'
   ...
 # Subtest: body motion and gravity do not become synthetic hand velocity
-ok 26 - body motion and gravity do not become synthetic hand velocity
+ok 31 - body motion and gravity do not become synthetic hand velocity
   ---
-  duration_ms: 1.282496
+  duration_ms: 0.592579
   type: 'test'
   ...
 # Subtest: two equal hand reactions are averaged, not doubled
-ok 27 - two equal hand reactions are averaged, not doubled
+ok 32 - two equal hand reactions are averaged, not doubled
   ---
-  duration_ms: 0.519846
+  duration_ms: 0.378446
   type: 'test'
   ...
 # Subtest: tracked-pose recenter suppresses launch instead of treating teleport as a fast push
-ok 28 - tracked-pose recenter suppresses launch instead of treating teleport as a fast push
+ok 33 - tracked-pose recenter suppresses launch instead of treating teleport as a fast push
   ---
-  duration_ms: 0.842711
+  duration_ms: 0.411347
   type: 'test'
   ...
-1..28
-# tests 28
+1..33
+# tests 33
 # suites 0
-# pass 28
+# pass 33
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 332.300725
+# duration_ms 421.346599

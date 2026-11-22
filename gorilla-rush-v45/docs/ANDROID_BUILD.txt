@@ -19,7 +19,7 @@ Signer #1 public key SHA-256 digest: ddc749922518311fda2a35f9a211a5f8946769ee3b5
 Signer #1 public key SHA-1 digest: efa1b82b4c022564a3bdc4dd213c1ceb578fc5ef
 Signer #1 public key MD5 digest: be872be1120b9cebf2d8a5e53879621b
 
-package: name='com.picog2.gorillarushv45' versionCode='4' versionName='1.0.3' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+package: name='com.picog2.gorillarushv45' versionCode='7' versionName='1.0.6' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
 minSdkVersion:'23'
 targetSdkVersion:'28'
 uses-permission: name='android.permission.INTERNET'
@@ -38,5 +38,5 @@ supports-any-density: 'true'
 locales: '--_--'
 densities: '160'
 
-SHA-256: e7e5447d2af39d4d97a58084cdcb6af940299304f818b36a3d4ddebb64768b42
+SHA-256: 82dfe20bdc6f2b601d13e6f862703f541881ce5222f8cf57dbc892652462f687
 Size: 25067804 bytes

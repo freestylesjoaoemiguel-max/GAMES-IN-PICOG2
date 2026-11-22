@@ -1,13 +1,36 @@
 # Alterações — v45 / PICO G2
 
-## 1.0.3 — velocidade das mãos e gravidade independente do contato
+## 1.0.6 — velocidade das mãos e gravidade independente do contato
 - Diagnóstico antes da alteração: posição ignorada, mão única, retorno antecipado em contato e velocidade sobrescrita pela correção da âncora.
 - Estende o input existente: fontes esquerda/direita únicas, gripSpace/targetRaySpace WebXR e posição WebVR quando válida; quaternion/botões preservados. Posição emulada ou ausente usa braço 3DoF identificado, não tracking fictício.
 - Reação calculada a partir de delta da mão relativo ao corpo / dt. Integração única de velocidade, gravidade e colisões; média de duas reações ativas. Mantém impulso após soltura e limita velocidade sem motor de caminhada fixa.
 - Contato aberto não desliga gravidade nem cancela pulo. Repouso no chão tem atrito; perda/troca de fonte não injeta impulso.
 - Geometria local esquerda/direita reversível; fontes ausentes não fazem força. Tirolesa/tag local respeitam mãos disponíveis. Câmera, resolução, framebuffer, mapas, menu e protocolo de rede preservados.
-- 28 testes Node, regressões de entrada/estéreo/colisão, nova suíte dos 13 cenários pedidos e casos de reconexão/limite/momento/3DoF. Sem validação física no G2.
-- Cache `v45-motion-4`, painel **FISICA 1.0.3**, links do README/launcher atualizados, APK tela+navegador 1.0.3/code 4.
+- 33 testes Node, regressões de entrada/estéreo/colisão, nova suíte dos 13 cenários pedidos e casos de reconexão/limite/momento/3DoF. Sem validação física no G2.
+- Cache `v45-motion-7`, painel **FISICA 1.0.6**, links do README/launcher atualizados, APK tela+navegador 1.0.6/code 7.
+
+- Integra a main 1.0.5 sem perder neutro automático, trajetória 3DoF amplificada, histerese/retorno aéreo e touchpad de reserva. Testes anteriores mantidos; novos testes de repouso/calibração com poses repetidas e touchpad.
+
+## 1.0.5 — calibração automática e touchpad como reserva
+- Relato no G2: ainda "parece que estou no ar". Provável causa: o ângulo que o navegador/controle informa para a mão relaxada difere do esperado; com leitura para baixo a mão fica sempre no chão, com leitura para cima nunca alcança o chão.
+- **Neutro automático**: o ângulo do controle parado é aprendido (rápido nos primeiros 3 s, depois devagar) e tratado como "reto"; o chão fica sempre ~15° abaixo da sua posição relaxada. Não aprende com o gatilho segurando.
+- **Touchpad anda por padrão** (deslize o dedo), como reserva; pode desligar no menu (AJUDA NO TOUCHPAD).
+- Painel mostra ângulo do controle, ângulo "reto" aprendido e distância mão-chão.
+- Simulado com mão relaxada lida a 0°, +20° e −25°, tremor de 2° e poses repetidas: neutro aprendido em ±1°, ~0,8 corpo por empurrão, repouso sem piscar nem subir, touchpad ~1,7 corpo/s. 26 testes Node e 12 de navegador. Sem headset físico.
+
+## 1.0.4 — sem piscar NO AR/NO CHÃO e sem voar
+- Relato no G2: parado, o painel alternava NO AR/NO CHÃO rapidamente e o corpo "voava". Reproduzido com tremor real de mão (2–3° a 9 Hz) e poses repetidas: 45 trocas em 3 s, deriva de 2 corpos e subida de 2 alturas.
+- Contato decidido por **histerese de ângulo**, não por velocidade: solta só ao inclinar ~5° de volta a partir do ponto mais fundo; só agarra de novo após inclinar para baixo outra vez (ou depois de sair da superfície).
+- Com a mão aberta no chão, o corpo segue o ponto **mais fundo** do empurrão: voltar o controle ou tremer não puxa para trás nem empurra para cima. Removida a regra "só empurra" que acumulava cada tremida como subida.
+- Filtro mais forte da orientação (12/s); impulso de soltura só após contato ≥ 0,1 s e subida limitada.
+- Simulado com tremor de 3°: 0 trocas em repouso, altura máxima 0,07 do corpo, ~1 corpo por empurrão. 25 testes Node (novos: tremor em repouso, retorno sem arrasto) e 12 de navegador. Sem headset físico.
+
+## 1.0.3 — locomoção estilo Gorilla Tag
+- Braço 3DoF longo e reto pivotando no ombro; inclinação do pulso amplificada 2×, caminho achatado perto do chão. Controle reto = mão logo acima do chão; ~13° para baixo = mão no chão; ~45° = mão atrás do corpo.
+- Soltura imediata ao inclinar o controle de volta para cima (detector sem filtro + filtrado); o retorno passa pelo ar e não puxa o corpo para trás. Varrer o braço para trás continua empurrando.
+- Impulso de soltura 1,25× (limite 6,5 × escala/s). Desvio lateral girando o controle com a mão no chão.
+- Painel **GORILA 1.0.3** com instruções novas; cache `v45-gorila-4`; link WebXR `v=1.0.5-gorila` no README e no launcher do APK (1.0.3/code 4).
+- Testes: 23 Node (novos: passadas curtas com ruído, mão perto do chão com controle reto) e os 12 cenários de navegador com ângulos atualizados. Poses simuladas; sem headset físico.
 
 ## 1.0.2 — âncora e colisão da mão
 - Substituídos os sete raios do pulso por colisão contínua esfera/triângulo, cobrindo faces, arestas e vértices com consulta à grade real dos mapas.

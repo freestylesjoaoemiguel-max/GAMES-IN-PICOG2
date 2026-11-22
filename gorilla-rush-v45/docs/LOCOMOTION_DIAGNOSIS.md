@@ -26,3 +26,7 @@ O controlador original do PICO G2 é 3DoF. Não mede translação independente d
 - `source-06.js`: somente seleção do lado na pegada da tirolesa e no teste local de tag; demais sistemas preservados.
 
 Resultados reproduzíveis: `NODE_TESTS.txt`, `ENTRY_TESTS.json`, `BROWSER_TESTS.json`, `LOCOMOTION_TESTS.json`. Esta última suíte cobre esquerda/direita/duas mãos, parede, rápido/lento, repouso, pulo, queda, colisão corporal, frente/trás/lados; também velocidade máxima, momento após soltar, malha acima do piso, reordenação/desconexão, ausência de propulsão no ar e alternativa 3DoF de ambos os lados. Compositor/poses são fixtures: não mede FPS nem latência no G2 e não certifica o hardware.
+
+## Integração com a main mais recente
+
+Antes da publicação, a main já estava em `19ebaed` (1.0.5), com neutro automático, trajetória amplificada 2×, filtro 12/s, histerese de ângulo/retorno elevado e touchpad de reserva ligado. Essas funções e os cinco testes adicionais de tremor/calibração/passada curta foram integrados, não revertidos. A entrega combinada é **1.0.6/code 7**, não a versão intermediária 1.0.3 usada no primeiro teste desta branch. São 33 testes Node; a suíte de frame real também verifica neutro em +20°/−25°, poses repetidas/tremor sem deriva e funcionamento da reserva de touchpad. A reação de uma pose medida não passa pelo estimador 3DoF.
