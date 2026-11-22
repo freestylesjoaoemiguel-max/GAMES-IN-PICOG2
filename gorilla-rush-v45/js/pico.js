@@ -5,107 +5,114 @@
 const PICO=(()=>{
  const p={starting:false,mode:'flat',presenting:false,frame:null,session:null,display:null,head:new THREE.Quaternion(),rawHead:new THREE.Quaternion(),headPosition:V3(),yaw:0,source:null,menu:false,choice:0,assist:true,nearFloor:null,buttonMap:{padClick:0,padTrig:1,padApp:2},ctrl:{present:false,quat:new THREE.Quaternion(),raw:new THREE.Quaternion(),trigger:false},select:new WeakMap(),needsRelease:true,reason:'Entre em VR para ler o controle',stats:{frames:0,eyes:0},calibration:null};
  const surface=HAND_SURFACE.create(THREE,handTriangles);p.surface=surface;
- const arm=ARM_PHYSICS.create(THREE,surface.solve);p.arm=arm;p.handRadius=.36;
+ const makeHand=side=>({side,present:false,quat:new THREE.Quaternion(),raw:new THREE.Quaternion(),position:V3(),trigger:false,controls:null,source:null,key:null,tracking:'absent',needsRelease:true,calibration:null,radius:.36,arm:ARM_PHYSICS.create(THREE,surface.solve)});
+ p.hands={left:makeHand('left'),right:makeHand('right')};const hands=Object.values(p.hands);
+ let arm=p.hands.right.arm;p.arm=arm;p.ctrl=p.hands.right;p.handRadius=.36;
  const yawQ=new THREE.Quaternion(),lastPosition=V3(),eye=V3(),forward=V3(0,0,-1),right=V3(1,0,0);
  const rig=new THREE.Group();S.add(rig);rig.add(cam);const ecam=new THREE.PerspectiveCamera();ecam.matrixAutoUpdate=false;
- let lastTrigger=false,lastClick=false,clickTime=0,clickX=0,longClick=false,lastMenu=false,menuAxis=false,lastText='',hudTime=0,sourceKey=null,ready=false;
+ let lastText='',hudTime=0,ready=false;
  const c=document.createElement('canvas');c.width=768;c.height=448;const ctx=c.getContext('2d'),tex=new THREE.CanvasTexture(c);tex.minFilter=THREE.LinearFilter;tex.generateMipmaps=false;
  const panel=new THREE.Mesh(new THREE.PlaneGeometry(1.65,.96),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthTest:false,depthWrite:false,fog:false}));panel.renderOrder=10000;panel.frustumCulled=false;panel.visible=false;S.add(panel);p.panel=panel;
  const ray=new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(),V3(0,0,-1)]),new THREE.LineBasicMaterial({color:0xffcc66,depthTest:false}));ray.renderOrder=10001;ray.visible=false;S.add(ray);
  const rows=['CONTINUAR','CALIBRAR: aponte para a frente','AJUDA NO TOUCHPAD: ','VOLTAR AO INICIO DO MAPA','SAIR DO VR'];
  p.immersive=()=>p.presenting;
- p.reset=()=>{arm.reset();p.needsRelease=true;vel.set(0,0,0);touch[0]=touch[1]=false;slot.forEach(s=>{s.p=null;s.t=0});hv.forEach(v=>v.set(0,0,0));};
+ p.reset=()=>{for(const h of hands){h.arm.reset();h.needsRelease=true;h.swimPrev=null}p.needsRelease=true;vel.set(0,0,0);touch[0]=touch[1]=false;slot.forEach(s=>{s.p=null;s.t=0});hv.forEach(v=>v.set(0,0,0))};
  p.toggleMenu=()=>{p.menu=!p.menu;p.reset();lastText=''};
- p.runChoice=()=>{if(p.choice===0)p.toggleMenu();else if(p.choice===1){if(p.ctrl.present){p.calibration=p.ctrl.raw.clone().invert().multiply(p.rawHead);p.reset();p.menu=false}}else if(p.choice===2){p.assist=!p.assist;lastText=''}else if(p.choice===3){P.copy(spawnPos());p.reset();p.menu=false}else p.stop()};
+ p.runChoice=()=>{if(p.choice===0)p.toggleMenu();else if(p.choice===1){if(p.ctrl.present){for(const h of hands)if(h.present)h.calibration=h.raw.clone().invert().multiply(p.rawHead);p.reset();p.menu=false}}else if(p.choice===2){p.assist=!p.assist;lastText=''}else if(p.choice===3){P.copy(spawnPos());p.reset();p.menu=false}else p.stop()};
  p.configureButtons=()=>{for(const k of ['padClick','padTrig','padApp'])p.buttonMap[k]=+document.getElementById(k).value;try{localStorage.setItem('v45-buttons',JSON.stringify(p.buttonMap))}catch(e){}};
  p.beforeFrame=dt=>{
-  if(!p.presenting)return;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);
-  yawQ.setFromAxisAngle(V3(0,1,0),p.yaw);
-  let h=null,src=null,q=null,g=null;
+  if(!p.presenting)return;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);yawQ.setFromAxisAngle(V3(0,1,0),p.yaw);
+  let sources=[],ref=null,validHead=false;
   if(p.mode==='webxr'&&p.frame){
-   const ref=R.xr.getReferenceSpace();try{h=p.frame.getViewerPose(ref);const a=h&&TRACKING.orientation(h.transform.orientation);if(a){p.rawHead.fromArray(a);const z=h.transform.position;p.headPosition.set(z.x,z.y,z.z)}}catch(e){p.reason='Falha ao ler pose da cabeca'}
-   src=TRACKING.choose(p.session.inputSources,'right',p.source);
-   if(src)try{const t=p.frame.getPose(src.targetRaySpace,ref);q=t&&TRACKING.orientation(t.transform.orientation);g=src.gamepad}catch(e){}
-  }else if(p.mode==='webvr'&&p.display){
-   p.display.getFrameData(p.fd);h=p.fd.pose;const a=h&&TRACKING.orientation(h.orientation);if(a)p.rawHead.fromArray(a);if(h&&h.position)p.headPosition.fromArray(h.position);else p.headPosition.set(0,0,0);
-   const list=Array.from(navigator.getGamepads?navigator.getGamepads():[]).filter(g=>g&&g.connected&&g.pose&&TRACKING.orientation(g.pose.orientation));g=list.find(g=>g.hand==='right')||list[0];if(g){src=g.index+':'+g.id;q=TRACKING.orientation(g.pose.orientation)}
+   ref=R.xr.getReferenceSpace();try{const viewer=p.frame.getViewerPose(ref),q=viewer&&TRACKING.orientation(viewer.transform.orientation);if(q){p.rawHead.fromArray(q);p.headPosition.fromArray(TRACKING.position(viewer.transform.position)||[0,0,0]);validHead=true}}catch(e){}
+   sources=Array.from(p.session.inputSources||[]).filter(s=>s&&s.targetRayMode==='tracked-pointer'&&(s.gripSpace||s.targetRaySpace));
+  }else if(p.mode==='webvr'&&p.display){p.display.getFrameData(p.fd);const pose=p.fd.pose,q=pose&&TRACKING.orientation(pose.orientation);if(q){p.rawHead.fromArray(q);p.headPosition.fromArray(TRACKING.position(pose.position)||[0,0,0]);validHead=true}
+   sources=Array.from(navigator.getGamepads?navigator.getGamepads():[]).filter(g=>g&&g.connected&&g.pose).sort((a,b)=>a.index-b.index);
   }
-  p.head.copy(yawQ).multiply(p.rawHead);cam.quaternion.copy(p.head);
-  if(src!==sourceKey||(!q&&p.ctrl.present)){p.reset();sourceKey=src;lastTrigger=lastClick=lastMenu=false;longClick=false}
-  p.source=typeof src==='object'?src:null;p.ctrl.present=!!q;
-  p.ctrl.trigger=false;p.ctrl.controls=null;
-  if(q){p.ctrl.raw.fromArray(q);p.ctrl.quat.copy(yawQ).multiply(p.ctrl.raw);const b=TRACKING.controls(g,p.buttonMap,p.source&&p.select.get(p.source));p.ctrl.controls=b;p.ctrl.trigger=b.trigger;p.reason=(p.mode==='webxr'?(src.profiles||[]).join(','):g.id)||p.mode;
-   if(!b.trigger)p.needsRelease=false;
-   if(b.menu&&!lastMenu)p.toggleMenu();lastMenu=b.menu;
-   const now=performance.now();if(b.click&&!lastClick){clickTime=now;clickX=b.x;longClick=false}
-   if(b.click&&!longClick&&now-clickTime>600){longClick=true;p.toggleMenu()}
-   if(!b.click&&lastClick&&!longClick){if(p.menu)p.runChoice();else if(Math.abs(clickX)>.55){p.yaw+=(clickX<0?1:-1)*Math.PI/6;p.reset()}else jumpReq=true}
-   if(p.menu&&b.trigger&&!lastTrigger)p.runChoice();
-   if(p.menu&&Math.abs(b.y)>.6&&!menuAxis){p.choice=(p.choice+(b.y>0?1:rows.length-1))%rows.length;lastText=''}menuAxis=Math.abs(b.y)>.6;
-   lastTrigger=b.trigger;lastClick=b.click;
-  }else p.reason='SEM POSE: reconecte o controle. Nao ha rastreamento sintetico.';
+  const key=s=>p.mode==='webvr'?s.index+':'+s.id:s;
+  const previous={};for(const h of hands)previous[h.side]=sources.find(s=>key(s)===h.key);
+  const routed=TRACKING.pair(sources,previous);p.head.copy(yawQ).multiply(p.rawHead);cam.quaternion.copy(p.head);
+  let toggle=false,confirm=false,turn=0;
+  for(const h of hands){
+   const src=routed[h.side];let pose=null,g=null,q=null,position=null;
+   if(src&&validHead)try{if(p.mode==='webxr'){pose=p.frame.getPose(src.gripSpace||src.targetRaySpace,ref);g=src.gamepad;q=pose&&TRACKING.orientation(pose.transform.orientation);position=TRACKING.measured(pose,false)}else{pose=src.pose;g=src;q=TRACKING.orientation(pose.orientation);position=TRACKING.measured(pose,true)}}catch(e){}
+   const id=src&&key(src),tracking=q?(position?'measured':'estimated-3dof'):'absent';
+   if(id!==h.key||tracking!==h.tracking){h.arm.reset();h.needsRelease=true;h.lastTrigger=h.lastClick=h.lastMenu=h.longClick=false;h.swimPrev=null}
+   h.key=id;h.source=src;h.tracking=tracking;h.present=!!q;h.trigger=false;h.controls=null;
+   if(!q)continue;
+   h.raw.fromArray(q);h.quat.copy(yawQ).multiply(h.raw);
+   if(position)h.position.fromArray(position).sub(p.headPosition).applyQuaternion(yawQ).multiplyScalar(PS).add(P).add(V3(0,EYEUP,0));
+   const b=TRACKING.controls(g,p.buttonMap,p.mode==='webxr'&&p.select.get(src));h.controls=b;h.trigger=b.trigger;if(!b.trigger)h.needsRelease=false;
+   if(b.menu&&!h.lastMenu)toggle=true;h.lastMenu=b.menu;
+   const now=performance.now();if(b.click&&!h.lastClick){h.clickTime=now;h.clickX=b.x;h.longClick=false}
+   if(b.click&&!h.longClick&&now-h.clickTime>600){h.longClick=true;toggle=true}
+   if(!b.click&&h.lastClick&&!h.longClick){if(p.menu)confirm=true;else if(Math.abs(h.clickX)>.55)turn=(h.clickX<0?1:-1)*Math.PI/6;else jumpReq=true}
+   if(p.menu&&b.trigger&&!h.lastTrigger)confirm=true;
+   if(p.menu&&Math.abs(b.y)>.6&&!h.menuAxis){p.choice=(p.choice+(b.y>0?1:rows.length-1))%rows.length;lastText=''}h.menuAxis=Math.abs(b.y)>.6;
+   h.lastTrigger=b.trigger;h.lastClick=b.click;
+  }
+  p.ctrl=p.hands.right.present?p.hands.right:p.hands.left.present?p.hands.left:p.hands.right;arm=p.ctrl.arm;p.arm=arm;p.source=p.ctrl.source;p.needsRelease=p.ctrl.needsRelease;
+  p.reason=hands.filter(h=>h.present).map(h=>(h.side==='left'?'E':'D')+': '+(h.tracking==='measured'?'posicao medida':'3DoF estimado')).join(' | ')||'SEM POSE: reconecte o controle';
+  if(toggle)p.toggleMenu();if(confirm)p.runChoice();if(turn){p.yaw+=turn;p.reset()}
   p.stats.frames++;
  };
  p.handFrame=(dt,fw,rt)=>{
   forward.copy(fw);right.copy(rt);eye.copy(P).add(V3(0,EYEUP,0));lastPosition.copy(P);
-  // The source map uses a miniature player: all distances must use PS, not metres.
-  let aq=p.ctrl.quat;if(p.calibration)aq=p.ctrl.quat.clone().multiply(p.calibration);
-  const was=arm.contact;
-  const touching=arm.update({position:P,eye,quat:p.ctrl.quat,armQuat:aq,forward:fw,right:rt,scale:PS,handRadius:p.handRadius,dt,present:p.ctrl.present,paused:p.menu,trigger:p.ctrl.trigger,needsRelease:p.needsRelease,
-   move(delta,stepDt){const n=Math.max(1,Math.ceil(delta.length()/(.04*PS)));const saved=vel.clone();vel.copy(delta).divideScalar(stepDt);const y=P.y;for(let i=0;i<n;i++){stepMove(stepDt/n);wallFix()}sweepFloor(y);vel.copy(saved)}
-  });
-  tgt[1].copy(arm.target);tgt[0].copy(P);touch[0]=false;touch[1]=touching;
-  if(touching&&!was){tapSound(1,arm.cls,.6)}
-  if(touching)vel.copy(arm.velocity);else if(was){vel.copy(arm.velocity).multiplyScalar(arm.since>.1?1.2:.3);vel.y=Math.min(vel.y,1.2*PS);vel.clampLength(0,6.5*PS)} // release throw, Gorilla-style; no launch from brief taps
+  for(let i=0;i<hands.length;i++){const h=hands[i],a=h.arm,was=a.contact,aq=h.calibration?h.quat.clone().multiply(h.calibration):h.quat;
+   a.update({position:P,eye,quat:h.quat,armQuat:aq,forward:fw,right:rt,side:h.side,handPosition:h.tracking==='measured'?h.position:null,scale:PS,handRadius:h.radius,dt,present:h.present,paused:p.menu||ZIP.on,trigger:h.trigger,needsRelease:h.needsRelease});
+   tgt[i].copy(a.target);touch[i]=a.contact;if(a.contact&&!was)tapSound(i,a.cls,.6);
+  }
+  p.reaction=ARM_PHYSICS.reaction(THREE,hands.map(h=>h.arm));
   const floor=hit(arm.target,V3(0,-1,0),2*PS);p.nearFloor=floor?floor.distance/PS:null;
  };
  p.physics=(dt,d,rt,now)=>{
   if(p.menu){vel.set(0,0,0);jumpReq=false;return}
-  if(ZIP.on){arm.reset();zipRide(dt);return}
-  if(arm.contact){jumpReq=false;return}
+  if(ZIP.on){for(const h of hands)h.arm.reset();zipRide(dt);return}
+  // Exactly one velocity integrator, even with two hands. Contact never skips gravity.
+  const drive=p.reaction;
+  if(drive&&drive.count){const target=drive.velocity.clone().multiplyScalar(1.15);vel.lerp(target,1-Math.exp(-dt*60))}
   vel.y-=9.8*PS*dt*(WTR.in?.1:1);
-  if(WTR.in&&p.ctrl.present){ // Rotational paddle: same estimated hand, not camera landmarks.
-   const delta=arm.desired.clone().sub(p.swimPrev||arm.desired);if(delta.length()<PS*.5)vel.addScaledVector(delta,-2/Math.max(dt,.001));vel.multiplyScalar(Math.exp(-dt*2));
-  }p.swimPrev=arm.desired.clone();
-  const b=p.ctrl.controls;if(p.assist&&b&&b.touch&&!b.click){vel.addScaledVector(forward,-b.y*PS*dt*10).addScaledVector(rt,b.x*PS*dt*10)}
-  const y=P.y,n=Math.max(1,Math.ceil(vel.length()*dt/(.04*PS)));for(let i=0;i<Math.min(n,48);i++){stepMove(dt/Math.min(n,48));wallFix()}sweepFloor(y);
-  const g=hit(P.clone().add(V3(0,.08,0)),DOWN,2*PS+.08);gPrev=!!(g&&P.y-1.1*CSC<=g.point.y+.03*PS);
-  if(jumpReq&&gPrev)vel.y=3.8*PS;jumpReq=false;const friction=gPrev?(SNOW(P)?.18:5.5):.25;vel.x*=Math.exp(-dt*friction);vel.z*=Math.exp(-dt*friction);vel.clampLength(0,6*PS);
+  for(const h of hands){const a=h.arm,local=a.desired.clone().sub(lastPosition);if(WTR.in&&h.present&&h.swimPrev){const delta=local.clone().sub(h.swimPrev);if(delta.length()<PS*.5)vel.addScaledVector(delta,-2/Math.max(dt,.001)/Math.max(1,hands.filter(x=>x.present).length))}h.swimPrev=local}
+  if(WTR.in)vel.multiplyScalar(Math.exp(-dt*2));
+  const b=p.ctrl.controls;if(p.assist&&b&&b.touch&&!b.click)vel.addScaledVector(forward,-b.y*PS*dt*10).addScaledVector(rt,b.x*PS*dt*10);
+  const grounded=()=>{const g=hit(P.clone().add(V3(0,.08,0)),DOWN,2*PS+.08),gap=g?P.y-1.1*CSC-g.point.y:Infinity;return !!(g&&g.n.y>.55&&gap>=-.02*PS&&gap<.035*PS&&vel.y<=.01*PS)};
+  if(jumpReq&&grounded()){vel.y=4.5*PS;for(const h of hands)h.arm.reset()}jumpReq=false;
+  const speed=Math.hypot(vel.x,vel.z);if(speed>8*PS){vel.x*=8*PS/speed;vel.z*=8*PS/speed}vel.y=Math.max(-10*PS,Math.min(6*PS,vel.y));
+  const y=P.y,n=Math.min(48,Math.max(1,Math.ceil(vel.length()*dt/(.04*PS))));for(let i=0;i<n;i++){stepMove(dt/n);wallFix()}sweepFloor(y);
+  gPrev=grounded();const friction=gPrev?(SNOW(P)?.18:7):.3;vel.x*=Math.exp(-dt*friction);vel.z*=Math.exp(-dt*friction);
+  p.grounded=gPrev;p.bodySpeed=vel.length()/PS;
+  if(drive&&drive.count)for(const h of hands)if(h.arm.driving)h.arm.travel+=Math.hypot(P.x-lastPosition.x,P.z-lastPosition.z)/PS;
   if(P.y<floorMin){P.copy(spawnPos());p.reset()}
  };
  p.afterPose=(fw,rt)=>{
-  if(!p.presenting)return;
-  if(P.distanceTo(lastPosition)>PS*2){p.reset();return}
-  arm.afterMove(P.clone().sub(lastPosition));tgt[1].copy(arm.target);touch[1]=arm.contact;
-  // The original IK clamps its reach; pin the actual wrist to the collision target
-  // after elbow solving, otherwise the visible skin can disagree with the anchor.
-  if(!p.wristRest)p.wristRest=LM.hR.position.clone();
-  LM.hR.position.copy(p.wristRest);LM.hR.updateMatrixWorld(true);
-  arm2(LM,'R',tgt[1],fw,rt,PS*1.32);
-  LM.hR.position.copy(LM.hR.parent.worldToLocal(tgt[1].clone()));LM.hR.updateMatrixWorld(true);
-  const q=p.ctrl.present?p.ctrl.quat:p.head;
-  handPose(LM,'R',V3(0,0,-1).applyQuaternion(q),V3(1,0,0).applyQuaternion(q),p.ctrl.trigger?[.65,.9,.9]:[.1,.1,.1]);
-  HO[1].d=V3(0,0,-1).applyQuaternion(q);HO[1].A=V3(1,0,0).applyQuaternion(q);
-  if(!p.radiusMeasured){p.handRadius=Math.max(.36,RIGHT_ARM.radius(pl,LM.hR)/PS*1.08);p.radiusMeasured=true}
-  HUD3.m.visible=false;
-  if(P.distanceTo(lastPosition)>PS*2)p.reset();
-  p.drawHUD();
+  if(!p.presenting)return;if(P.distanceTo(lastPosition)>PS*2){p.reset();return}
+  const shift=P.clone().sub(lastPosition);
+  RIGHT_ARM.visible(pl,p.hands.left.present,p.hands.right.present||!p.hands.left.present);
+  for(let i=0;i<hands.length;i++){
+   const h=hands[i],a=h.arm,k=i?'R':'L',wrist=LM['h'+k];a.afterMove(shift);tgt[i].copy(a.target);touch[i]=a.contact;
+   if(!h.wristRest)h.wristRest=wrist.position.clone();wrist.position.copy(h.wristRest);wrist.updateMatrixWorld(true);
+   arm2(LM,k,tgt[i],fw,rt,PS*1.32);wrist.position.copy(wrist.parent.worldToLocal(tgt[i].clone()));wrist.updateMatrixWorld(true);
+   const q=h.present?h.quat:p.head;handPose(LM,k,V3(0,0,-1).applyQuaternion(q),V3(1,0,0).applyQuaternion(q),h.trigger?[.65,.9,.9]:[.1,.1,.1]);
+   HO[i].d=V3(0,0,-1).applyQuaternion(q);HO[i].A=V3(1,0,0).applyQuaternion(q);
+   if(!h.radiusMeasured){h.radius=Math.max(.36,RIGHT_ARM.radius(pl,wrist)/PS*1.08);h.radiusMeasured=true}
+  }
+  p.handRadius=p.ctrl.radius;HUD3.m.visible=false;p.drawHUD();
  };
  p.drawHUD=()=>{
   const now=performance.now(),b=p.ctrl.controls;
-  const status=!p.ctrl.present?'SEM POSE':arm.contact?'NO CHAO - PUXE PARA TRAS / LEVANTE PARA SOLTAR':'NO AR - INCLINE O CONTROLE PARA BAIXO';
-  const deg=x=>Math.round((x||0)*57.3),diag=[p.mode+' | '+status,'Controle: '+deg(-arm.elev)+' graus (reto = '+deg(-arm.neutral)+') | mao-chao: '+(p.nearFloor==null?'longe':p.nearFloor.toFixed(2))+' | andou: '+arm.travel.toFixed(1),'Incline ~15 graus p/ baixo = mao no chao. Touchpad tambem anda.'];
+  const status=!p.ctrl.present?'SEM POSE':hands.some(h=>h.arm.contact)?'CONTATO - EMPURRE / LEVANTE PARA SOLTAR':p.ctrl.tracking==='measured'?'NO AR - APROXIME A MAO DA SUPERFICIE':'NO AR - GIRE O CONTROLE PARA BAIXO';
+  const diag=[p.mode+' | '+status,p.reason,'Vel: '+(p.bodySpeed||0).toFixed(2)+' | reto: '+Math.round(-(arm.neutral||0)*57.3)+' graus | piso: '+(p.nearFloor==null?'longe':p.nearFloor.toFixed(2))];
   const text=JSON.stringify([p.menu,p.choice,p.assist,diag,p.reason,b&&b.pressed]);
-  if(text!==lastText&&now-hudTime>100){lastText=text;hudTime=now;ctx.clearRect(0,0,768,448);ctx.fillStyle='rgba(9,22,16,.93)';ctx.fillRect(0,0,768,p.menu?448:150);ctx.textBaseline='middle';ctx.font='bold 25px sans-serif';ctx.fillStyle='#e6ffe9';ctx.fillText('GORILLA RUSH V45 - PICO G2 / GORILA 1.0.5',20,25);
+  if(text!==lastText&&now-hudTime>100){lastText=text;hudTime=now;ctx.clearRect(0,0,768,448);ctx.fillStyle='rgba(9,22,16,.93)';ctx.fillRect(0,0,768,p.menu?448:150);ctx.textBaseline='middle';ctx.font='bold 25px sans-serif';ctx.fillStyle='#e6ffe9';ctx.fillText('GORILLA RUSH V45 - PICO G2 / FISICA 1.0.6',20,25);
    ctx.font='20px sans-serif';if(p.menu){rows.forEach((r,i)=>{ctx.fillStyle=i===p.choice?'#ffcc66':'#e6ffe9';ctx.fillText((i===p.choice?'> ':'  ')+r+(i===2?(p.assist?'LIGADA':'DESLIGADA'):''),20,80+i*45)});ctx.font='16px sans-serif';ctx.fillStyle='#b9e4c4';ctx.fillText(p.reason.slice(0,86),20,330);ctx.fillText('Botoes: '+(b?b.pressed.join(','):'sem pose')+' | Touchpad cima/baixo: escolher',20,360);ctx.fillText('Gatilho: confirmar | Segure clique do touchpad: menu',20,390)}else{diag.forEach((t,i)=>{ctx.fillStyle=i===0?'#ffcc66':'#d4eadb';ctx.fillText(t,20,62+i*29)})}tex.needsUpdate=true;
   }
   const e=P.clone().add(V3(0,EYEUP,0)),f=V3(0,0,-1).applyQuaternion(p.head),u=V3(0,1,0).applyQuaternion(p.head);
   panel.position.copy(e).addScaledVector(f,1.8*PS).addScaledVector(u,p.menu?.1*PS:.65*PS);panel.quaternion.copy(p.head);panel.scale.setScalar(PS);panel.visible=true;
-  ray.visible=p.menu&&p.ctrl.present;if(ray.visible){ray.position.copy(LM.hR.getWorldPosition(V3()));ray.quaternion.copy(p.ctrl.quat);ray.scale.setScalar(1.5*PS);
+  ray.visible=p.menu&&p.ctrl.present;if(ray.visible){ray.position.copy(LM[p.ctrl.side==='left'?'hL':'hR'].getWorldPosition(V3()));ray.quaternion.copy(p.ctrl.quat);ray.scale.setScalar(1.5*PS);
    const rc=new THREE.Raycaster(ray.position,V3(0,0,-1).applyQuaternion(p.ctrl.quat));panel.updateMatrixWorld();const h=rc.intersectObject(panel)[0];if(h&&h.uv){const y=(1-h.uv.y)*448,i=Math.round((y-80)/45);if(i>=0&&i<rows.length&&p.choice!==i){p.choice=i;lastText=''}}
   }
  };
- function exit(){if(p.wristRest){LM.hR.position.copy(p.wristRest);LM.hR.updateMatrixWorld(true);p.wristRest=null}p.presenting=false;p.mode='flat';p.frame=null;p.session=null;p.display=null;p.source=null;p.ctrl.present=false;p.menu=false;p.reset();panel.visible=ray.visible=false;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);R.xr.enabled=false;vrView=false;rs();R.setAnimationLoop(frame);document.body.classList.remove('vr-presenting');p.refreshStart();document.getElementById('pico-status').textContent='VR encerrado. Clique em INICIAR VR para voltar.'}
+ function exit(){for(const h of hands){if(h.wristRest){const w=LM[h.side==='left'?'hL':'hR'];w.position.copy(h.wristRest);w.updateMatrixWorld(true);h.wristRest=null}h.present=false}if(p.armScales){LM.uL.scale.copy(p.armScales.left);LM.uR.scale.copy(p.armScales.right)}ready=false;RIGHT_ARM.visible(pl,true,true);p.presenting=false;p.mode='flat';p.frame=null;p.session=null;p.display=null;p.source=null;p.ctrl.present=false;p.menu=false;p.reset();panel.visible=ray.visible=false;rig.position.set(0,0,0);rig.quaternion.identity();rig.scale.setScalar(1);R.xr.enabled=false;vrView=false;rs();R.setAnimationLoop(frame);document.body.classList.remove('vr-presenting');p.refreshStart();document.getElementById('pico-status').textContent='VR encerrado. Clique em INICIAR VR para voltar.'}
  p.stop=()=>{if(p.session)p.session.end();else if(p.display)p.display.exitPresent()};
  p.render=()=>{
   if(!p.presenting)return false;
@@ -141,9 +148,9 @@ const PICO=(()=>{
     const loop=t=>{if(!p.presenting||!p.display||!p.display.isPresenting)return;p.display.requestAnimationFrame(loop);frame(t)};p.display.requestAnimationFrame(loop);
    }else throw Error('Este navegador nao expoe WebXR nem WebVR imersivo. Nao sera usado VR Box como substituto.');
    if(state!=='play'){solo=true;NET.mode='cas';NET.code='SOLO';NET.host=true;startGame();initAudio()}
-   vrView=false;vrOn=false;p.yaw=yw;p.reset();p.menu=false;document.body.classList.add('vr-presenting');label.textContent='VR ativo: '+p.mode+' | somente mao direita';
+   vrView=false;vrOn=false;p.yaw=yw;p.reset();p.menu=false;document.body.classList.add('vr-presenting');label.textContent='VR ativo: '+p.mode+' | fontes reais de controle';
    ['joy','fup','fdn','selb','xh'].forEach(id=>$(id).style.display='none');
-   if(!ready){RIGHT_ARM.strip(pl);LM.uR.scale.multiplyScalar(1.32);ready=true}
+   if(!ready){p.armScales={left:LM.uL.scale.clone(),right:LM.uR.scale.clone()};LM.uL.scale.multiplyScalar(1.32);LM.uR.scale.multiplyScalar(1.32);ready=true}
   }catch(e){label.textContent='Nao foi possivel entrar: '+(e.message||e);console.warn('VR entry',e);if(!p.presenting){p.display=null;R.xr.enabled=false;rs()}}finally{p.starting=false;p.refreshStart()}
  };
  addEventListener('vrdisplaypresentchange',()=>{if(p.mode==='webvr'&&p.display&&!p.display.isPresenting)exit()});
@@ -160,7 +167,7 @@ const PICO=(()=>{
   p.refreshStart();
  };
  document.getElementById('pico-vr').onclick=p.start;document.getElementById('pico-solo').onclick=()=>enter('solo');
- document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-gorila-6',userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,anchor:arm.plant&&arm.plant.toArray(),handRadius:arm.radius,target:arm.target.toArray(),desired:arm.desired.toArray(),floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+ document.getElementById('pico-diagnostic').onclick=()=>{const data={version:'v45-motion-7',hands:hands.map(h=>({side:h.side,present:h.present,tracking:h.tracking,source:h.source&&(h.source.id||(h.source.profiles||[]).join(',')),position:h.tracking==='measured'?h.position.toArray():null,rotation:h.raw.toArray(),buttons:h.controls,contact:h.arm.contact,velocity:h.arm.handVelocity.toArray(),reaction:h.arm.reaction.toArray(),anchor:h.arm.plant&&h.arm.plant.toArray()})),bodyVelocity:vel.toArray(),grounded:p.grounded,userAgent:navigator.userAgent,api:p.api,mode:p.mode,source:p.reason,present:p.ctrl.present,buttons:p.ctrl.controls,contact:arm.contact,anchor:arm.plant&&arm.plant.toArray(),handRadius:arm.radius,target:arm.target.toArray(),desired:arm.desired.toArray(),floor:p.nearFloor,travel:arm.travel,position:P.toArray(),scale:PS,head:p.head.toArray(),controller:p.ctrl.quat.toArray(),renderer:R.info.render};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Gorilla-v45-diagnostico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
  try{Object.assign(p.buttonMap,JSON.parse(localStorage.getItem('v45-buttons')||'{}'))}catch(e){}
  for(const k of ['padClick','padTrig','padApp']){const s=document.getElementById(k);s.value=p.buttonMap[k];s.onchange=p.configureButtons}
  p.detect();return p;
