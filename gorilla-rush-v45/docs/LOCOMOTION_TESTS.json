@@ -15,7 +15,7 @@
     "Left/right lateral motion"
   ],
   "results": {
-    "assistDefault": true,
+    "assistDefault": false,
     "left": {
       "delta": [
         0,
@@ -105,9 +105,9 @@
       "delta": [
         0,
         0,
-        -0.42243033028073673
+        -0.42243033028073534
       ],
-      "peak": 0.7013449269601214,
+      "peak": 0.701344926960211,
       "contact": 40,
       "tracking": [
         "measured"
@@ -117,15 +117,15 @@
       "delta": [
         0,
         0,
-        -0.8396472462991929
+        -0.8396472462990724
       ],
-      "peak": 7.2588347954233505,
+      "peak": 7.258834795423443,
       "contact": 8,
       "tracking": [
         "measured"
       ]
     },
-    "momentum": 0.3617888012554964,
+    "momentum": 0.3617888012555193,
     "idle": {
       "drift": 0,
       "feet": -1.1102230246251565e-16,
@@ -206,8 +206,95 @@
       }
     ],
     "touchpad": 1.0459603116007021,
+    "freeHands": [
+      {
+        "held": false,
+        "forward": 0.4634391242361525,
+        "momentum": 0.2957103378358844,
+        "released": true,
+        "feet": -1.1102230246251565e-16,
+        "speed": 1.5423882700857727e-8,
+        "grounded": true
+      },
+      {
+        "held": true,
+        "forward": 0.4634391242361525,
+        "momentum": 0.2957103378358844,
+        "released": true,
+        "feet": -1.1102230246251565e-16,
+        "speed": 1.5423882700857727e-8,
+        "grounded": true
+      }
+    ],
+    "heldWallRest": {
+      "feet": 0,
+      "grounded": true
+    },
+    "freeWrist": [
+      {
+        "held": false,
+        "strokes": [
+          {
+            "forward": 1.3161402669440925,
+            "released": true
+          },
+          {
+            "forward": 1.3558313651186524,
+            "released": true
+          },
+          {
+            "forward": 1.397370904227596,
+            "released": true
+          }
+        ],
+        "feet": 2.220446049250313e-16,
+        "speed": 0.000054963424663021296
+      },
+      {
+        "held": true,
+        "strokes": [
+          {
+            "forward": 1.3161402669440925,
+            "released": true
+          },
+          {
+            "forward": 1.3558313651186524,
+            "released": true
+          },
+          {
+            "forward": 1.397370904227596,
+            "released": true
+          }
+        ],
+        "feet": 2.220446049250313e-16,
+        "speed": 0.000054963424663021296
+      }
+    ],
+    "padIsolation": [
+      {
+        "assist": false,
+        "touched": false,
+        "drift": 0
+      },
+      {
+        "assist": false,
+        "touched": true,
+        "drift": 0
+      },
+      {
+        "assist": true,
+        "touched": false,
+        "drift": 0
+      },
+      {
+        "assist": true,
+        "touched": true,
+        "drift": 0
+      }
+    ],
+    "padDisabledDrift": 0,
     "legacyPosition": true,
-    "minSkinY": 0.03250957520819764,
+    "minSkinY": 0.032509575177557704,
     "maxHorizontal": 7.822040902139261
   },
   "errors": [],

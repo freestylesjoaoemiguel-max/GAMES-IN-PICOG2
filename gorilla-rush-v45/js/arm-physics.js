@@ -46,31 +46,31 @@
     // Preserve the calibrated, amplified 3DoF trajectory and anti-tremor release
     // from the newer main branch. Only true positional input bypasses estimation.
     down=downOf(filtered);downVel=lastDown==null?0:downVel+((down-lastDown)/dt-downVel)*(1-Math.exp(-dt*14));lastDown=down;
-    if(A.active&&!A.held&&Math.abs(downVel)<.3&&(learned<3||!A.contact)){learned+=dt;neutral=Math.max(NEUTRAL_MIN,Math.min(NEUTRAL_MAX,neutral+(elev-neutral)*(1-Math.exp(-dt/(learned<3?.7:NEUTRAL_TAU)))))}
+    if(A.active&&Math.abs(downVel)<.3&&(learned<3||!A.contact)){learned+=dt;neutral=Math.max(NEUTRAL_MIN,Math.min(NEUTRAL_MAX,neutral+(elev-neutral)*(1-Math.exp(-dt/(learned<3?.7:NEUTRAL_TAU)))))}
     A.elev=elev;A.neutral=neutral;
     if(!A.plant&&downVel<-.6)lift=Math.min(1,lift+dt*8);else lift=Math.max(0,lift-dt*(downVel>.3?10:1.5));
-    if(A.plant&&!A.held)peak=Math.max(peak,down);
-    A.desired.copy(shoulder).add(reachOffset(A.plant&&!A.held?peak:down,scale,localOffset)).addScaledVector(forward,.1*scale);
+    if(A.plant)peak=Math.max(peak,down);
+    A.desired.copy(shoulder).add(reachOffset(A.plant?peak:down,scale,localOffset)).addScaledVector(forward,.1*scale);
    }
    if(!A.active){const start=A.last||shoulder;A.reset();A.desired.copy(eye).addScaledVector(right,side*.22*scale).addScaledVector(up,-.32*scale).addScaledVector(forward,.6*scale);A.target.copy(solve(start,A.desired,A.radius).position);A.last=A.target.clone();return false}
    // Subtract body displacement: gravity/previous impulses cannot become a new hand stroke.
    const local=A.desired.clone().sub(position),delta=A.previousLocal?local.clone().sub(A.previousLocal):v();
    if(delta.length()>.65*scale){A.reset();delta.set(0,0,0)} // recenter/teleport, not a throw
    A.previousLocal=local;A.handVelocity.copy(delta).divideScalar(dt).clampLength(0,12*scale);
-   if(A.held&&!o.trigger){A.held=false;A.plant=null}
-   A.lifting=!A.held&&(o.handPosition?A.handVelocity.dot(A.normal)>.04*scale:!!A.plant&&down<peak-RELEASE);
+   A.lifting=(o.handPosition?A.handVelocity.dot(A.normal)>.04*scale:!!A.plant&&down<peak-RELEASE);
    const start=A.last||shoulder;
    if(A.plant){const away=A.desired.clone().sub(A.plant).dot(A.normal)>(o.handPosition?.04:AWAY)*scale,tooFar=A.desired.distanceTo(A.plant)>1.3*scale;
-    if(!solve(A.plant,A.plant,A.radius).contact||tooFar||(!A.held&&away)||A.lifting){A.plant=null;A.held=false;if(!o.handPosition){blocked=true;trough=down}}}
+    if(!solve(A.plant,A.plant,A.radius).contact||tooFar||away||A.lifting){A.plant=null;A.held=false;if(!o.handPosition){blocked=true;trough=down}}}
    if(!o.handPosition&&blocked){trough=Math.min(trough,down);if(down>trough+REARM)blocked=false}
    if(!A.plant){const r=solve(start,A.desired,A.radius);if(!r.contact)blocked=false;A.contact=r.contact&&A.grace===0&&!A.lifting&&(o.handPosition||!blocked);A.target.copy(r.position);if(r.contact)A.normal.copy(r.normal);A.cls=r.cls;if(A.contact){A.plant=A.target.clone();peak=down}}
    else{A.contact=true;A.target.copy(A.plant)}
-   if(A.contact&&o.trigger&&!o.needsRelease)A.held=true;
+   // Trigger closes fingers / operates menus and ziplines, never glues a palm.
+   A.held=!!(A.contact&&o.trigger&&!o.needsRelease);
    if(A.contact&&A.grace===0){
     A.reaction.copy(A.handVelocity).negate();
-    // Open palms only push into a surface or along it; lifting cannot suck the body back.
-    if(!A.held)A.reaction.addScaledVector(A.normal,-Math.min(0,A.reaction.dot(A.normal)));
-    else A.reaction.copy(A.target).sub(A.desired).divideScalar(dt);
+    // Contact is unilateral, regardless of trigger. A fixed visual plant must not
+    // turn accumulated body/gravity displacement into a spring or a hanging force.
+    A.reaction.addScaledVector(A.normal,-Math.min(0,A.reaction.dot(A.normal)));
     A.reaction.clampLength(0,8*scale);A.driving=A.reaction.length()>.04*scale;
     if(!A.driving)A.reaction.set(0,0,0);
    }
