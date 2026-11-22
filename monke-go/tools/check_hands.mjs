@@ -60,7 +60,9 @@ try{
  const walkStart=await page.evaluate('P.toArray()'),strokes=[];
  const aim=async angle=>{await page.evaluate(a=>{__xr.q=[Math.sin(a/2),0,0,Math.cos(a/2)]},angle);await settle()};
  for(let stroke=0;stroke<3;stroke++){
-  await page.waitForFunction('P.y<1.16&&!LOCO.pushing',{},{timeout:10000});const before=await page.evaluate('P.toArray()');
+  // Software WebGL in the combined Pages job can advance simulation much slower
+  // than wall time. Keep the actual landing assertion; allow a bounded 60s wait.
+  await page.waitForFunction('P.y<1.16&&!LOCO.pushing',{},{timeout:60000});const before=await page.evaluate('P.toArray()');
   for(let step=1;step<=8;step++)await aim(-.85*step/8);
   await page.waitForFunction('!!LOCO.groundPlant',{},{timeout:5000});
   for(let step=1;step<=12;step++)await aim(-.85-.75*step/12);
