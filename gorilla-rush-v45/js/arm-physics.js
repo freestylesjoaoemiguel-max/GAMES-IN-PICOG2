@@ -25,7 +25,7 @@
    return out.copy(heading).multiplyScalar(REACH*Math.cos(down)*scale).addScaledVector(up,(RETURN*lift-DROP*Math.sin(down))*scale);
   }
   const A={target:v(),desired:v(),handVelocity:v(),reaction:v(),velocity:v(),plant:null,contact:false,normal:v(),ready:false,grace:0,last:null,held:false,travel:0,radius:0,cls:0,driving:false};
-  A.reset=()=>{lastDown=null;downVel=0;lift=0;peak=0;trough=0;blocked=false;A.blocked=false;A.plant=null;A.last=null;A.lastBody=null;A.previousLocal=null;A.lifting=false;A.contact=false;A.held=false;A.ready=false;A.grace=.08;A.driving=false;A.handVelocity.set(0,0,0);A.reaction.set(0,0,0);A.velocity.set(0,0,0)};
+  A.reset=()=>{A.discontinuity=false;lastDown=null;downVel=0;lift=0;peak=0;trough=0;blocked=false;A.blocked=false;A.plant=null;A.last=null;A.lastBody=null;A.previousLocal=null;A.lifting=false;A.contact=false;A.held=false;A.ready=false;A.grace=.08;A.driving=false;A.handVelocity.set(0,0,0);A.reaction.set(0,0,0);A.velocity.set(0,0,0)};
   A.afterMove=function(shift){
    A.desired.add(shift);
    if(!A.contact){const r=solve(A.target,A.target.clone().add(shift),A.radius);A.target.copy(r.position);
@@ -34,9 +34,9 @@
   };
   A.update=function(o){
    const {position,eye,quat,forward,right,scale}=o,dt=Math.max(.001,Math.min(.05,o.dt)),side=o.side==='left'?-1:1;
-   A.radius=Math.max(.36,o.handRadius||0)*scale;A.active=o.present&&!o.paused;A.driving=false;A.reaction.set(0,0,0);
+   A.radius=Math.max(.36,o.handRadius||0)*scale;A.active=o.present&&!o.paused;A.discontinuity=false;A.driving=false;A.reaction.set(0,0,0);
    direction.set(0,0,-1).applyQuaternion(o.armQuat||quat).normalize();
-   if(A.ready&&(!o.handPosition&&direction.dot(previous)<Math.cos(1.2)||A.lastBody&&A.lastBody.distanceTo(position)>2*scale))A.reset();
+   if(A.ready&&(!o.handPosition&&direction.dot(previous)<Math.cos(1.2)||A.lastBody&&A.lastBody.distanceTo(position)>2*scale)){A.reset();A.discontinuity=true;}
    previous.copy(direction);
    if(!A.ready){filtered.copy(direction);A.ready=true}else filtered.lerp(direction,1-Math.exp(-dt*12)).normalize();
    A.grace=Math.max(0,A.grace-dt);
@@ -55,7 +55,7 @@
    if(!A.active){const start=A.last||shoulder;A.reset();A.desired.copy(eye).addScaledVector(right,side*.22*scale).addScaledVector(up,-.32*scale).addScaledVector(forward,.6*scale);A.target.copy(solve(start,A.desired,A.radius).position);A.last=A.target.clone();return false}
    // Subtract body displacement: gravity/previous impulses cannot become a new hand stroke.
    const local=A.desired.clone().sub(position),delta=A.previousLocal?local.clone().sub(A.previousLocal):v();
-   if(delta.length()>.65*scale){A.reset();delta.set(0,0,0)} // recenter/teleport, not a throw
+   if(delta.length()>.65*scale){A.reset();A.discontinuity=true;delta.set(0,0,0)} // recenter/teleport, not a throw
    A.previousLocal=local;A.handVelocity.copy(delta).divideScalar(dt).clampLength(0,12*scale);
    A.lifting=(o.handPosition?A.handVelocity.dot(A.normal)>.04*scale:!!A.plant&&down<peak-RELEASE);
    const start=A.last||shoulder;
