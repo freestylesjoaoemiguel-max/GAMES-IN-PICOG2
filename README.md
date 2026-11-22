@@ -109,10 +109,10 @@ js/main.js      renderização, entrada do controle, braços, locomoção
 
 ## MonkeGo / Gorilla Rush v45 — versão atual
 
-- **[Jogar no navegador (WebXR/WebVR) — v45 · física 1.0.8](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion-10)**
-- **[Baixar APK e pacote — compilações no GitHub](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/workflows/build-gorilla-v45.yml)**
+- **[Jogar agora — GMotion 1.0.8 · locomoção do ZIP (WebXR/WebVR)](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gorilla-rush-v45/?device=picog2&v=1.0.8-gmotion-10)**
+- **[Baixar APK e pacote GMotion 1.0.8 — compilação aprovada, code 10](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45042750368)**
 
-**Download:** abra a compilação da versão desejada com status aprovado e, em **Artifacts**, baixe `Gorilla-Rush-v45-project-screen-APK-reports` (é necessário entrar no GitHub; artefatos têm prazo de expiração).
+**Download da 1.0.8:** abra a compilação acima e, em **Artifacts**, baixe `Gorilla-Rush-v45-project-screen-APK-reports` (é necessário entrar no GitHub; artefatos têm prazo de expiração).
 **Confira a versão no headset:** o painel deve mostrar **FISICA 1.0.8** e **GMOTION / SO MAOS**. Se mostrar outra versão, feche a aba antiga e abra novamente o link acima após a publicação terminar. O parâmetro da URL, sozinho, não comprova a versão carregada.
 
 A versão atual usa o novo arquivo **Gorilla Rush v45** enviado pelo usuário, preservando os dois mapas e os recursos recebidos. Inclui o núcleo de locomoção portado do **Gorilla Movement** enviado pelo usuário: mão bloqueada empurra o corpo, apoio sustenta e soltura usa a média dos últimos 8 movimentos. O ZIP se identifica como Lights Out: Bear Facility, não como código oficial de Gorilla Tag. Colisão contínua e mapas preservados. Usa fontes esquerda/direita disponíveis, sem duplicar um controle. Posição medida quando fornecida; braço estimado por rotação no controle 3DoF. Painel distingue os dois tipos de entrada.
