@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    paths: ['.github/workflows/pages.yml', '.github/scripts/check-browser.sh']
+    paths: ['.github/workflows/pages.yml', '.github/scripts/check-browser.sh', 'opensaber/**']
   workflow_dispatch:
 permissions:
   contents: read
@@ -79,9 +79,23 @@ jobs:
           PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
           npm run build
           python3 tools/package_project.py
+      - name: Verify supplied OpenSaber export and test local training / controller fixtures
+        run: |
+          set -euo pipefail
+          python3 opensaber/tools/verify.py
+          python3 opensaber/tools/make_fixture.py
+          python3 -m http.server 5190 --bind 127.0.0.1 > .cache/opensaber-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5190/opensaber/ bash .github/scripts/check-browser.sh node opensaber/tools/check_browser.mjs
+          CONTROLLER_FIXTURE=1 PREVIEW_BASE_URL=http://127.0.0.1:5190/.cache/opensaber-fixture/ bash .github/scripts/check-browser.sh node opensaber/tools/check_browser.mjs
       - name: Preserve PicoVerso and add independent WebXR apps
         run: |
           set -euo pipefail
+          mkdir -p site/opensaber
+          cp opensaber/index.html opensaber/index.js opensaber/index.wasm opensaber/index.pck opensaber/index.audio.worklet.js opensaber/index.icon.png opensaber/web.js opensaber/web.css site/opensaber/
+          mkdir -p site/opensaber/docs
+          cp opensaber/docs/GODOT_LICENSE.txt site/opensaber/docs/
           mkdir -p site/sandlab
           cp -r sandlab/index.html sandlab/js sandlab/lib site/sandlab/
           mkdir -p site/pingpong

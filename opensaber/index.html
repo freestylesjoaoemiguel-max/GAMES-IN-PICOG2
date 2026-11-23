@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OpenSaber · G2 Web</title><link rel="icon" href="index.icon.png">
+<link rel="stylesheet" href="web.css">
+</head>
+<body>
+<canvas id="canvas" tabindex="0">Seu navegador precisa oferecer WebGL 2.</canvas>
+<div id="status" role="status"><h1>OpenSaber</h1><p>Carregando o jogo enviado · G2 Web 1.0.0</p><progress id="status-progress"></progress><p id="status-notice">Primeiro carregamento: aproximadamente 47 MB.</p></div>
+<section id="controls" aria-label="OpenSaber G2">
+ <header><strong>OpenSaber <small>G2 Web 1.0.0</small></strong><button id="collapse" aria-expanded="true" aria-controls="panel">Recolher</button></header>
+ <div id="panel">
+  <p id="xr-status" role="status">Verificando WebXR…</p>
+  <button id="enter-vr" class="primary" data-command="vr" disabled>INICIAR VR</button>
+  <label class="toggle"><input id="arm-model" type="checkbox" checked> Controle G2 / braço estimado 3DoF</label>
+  <p class="caption">Treino Pico Pulse · 52 s · música original incluída</p>
+  <div class="row"><button data-command="right" disabled>1 controle direito</button><button data-command="left" disabled>1 controle esquerdo</button><button data-command="both" disabled>2 controles</button></div>
+  <div class="row secondary"><button data-command="pause" disabled>Pausar</button><button data-command="resume" disabled>Continuar</button><button data-command="menu" disabled>Menu</button><button data-command="recenter" disabled>Recentrar</button></div>
+  <p id="game-status" role="status">Aguardando o jogo…</p>
+  <details><summary>Como jogar / limites</summary><p>Entre em VR, aponte o laser para a música <b>Pico Pulse</b>, selecione a dificuldade da sua mão e pressione <b>Start</b>. Corte os blocos com o sabre. Os blocos de treino aceitam qualquer direção de corte.</p><p>Gatilho: selecionar. Segure por 1,2 s durante a música para pausar. Não há uma segunda mão fictícia. Desmarque “braço estimado” somente para controles com posição real (6DoF).</p><p>O teste na tela usa o simulador original: botão direito do mouse gira a câmera; Alt + botão direito move a mão direita; Ctrl + botão direito move a esquerda; clique esquerdo seleciona.</p><p>Requer WebGL 2, WebAssembly e WebXR immersive-vr no navegador do headset. Um navegador antigo pode não oferecer esses recursos. Ainda não validado em PICO G2 físico; não há garantia de FPS. Importação online e servidor de músicas do APK não são garantidos na web.</p></details>
+ </div>
+</section>
+<noscript>Ative JavaScript para carregar o OpenSaber.</noscript>
+<script src="web.js"></script><script src="index.js"></script>
+<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","fileSizes":{"index.pck":11040192,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const engine = new Engine(GODOT_CONFIG);
+const statusOverlay = document.querySelector('#status');
+const progress = document.querySelector('#status-progress');
+const notice = document.querySelector('#status-notice');
+function fail(error) { notice.textContent = 'Não foi possível abrir: ' + (error.message || error); progress.hidden = true; console.error(error); }
+const missing = Engine.getMissingFeatures({threads:false});
+if (missing.length) fail('Recursos ausentes: ' + missing.join(', ') + '. Este export usa Godot 4.3 / WebGL 2.');
+else engine.startGame({onProgress(current,total) { if(total>0){progress.max=total;progress.value=current;} }}).then(()=>statusOverlay.remove()).catch(fail);
+</script>
+</body></html>

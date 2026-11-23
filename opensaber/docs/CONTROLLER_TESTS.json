@@ -1,0 +1,52 @@
+{
+  "publishedPackSha256": "986ac2f0debf99d9e82cde2f735979f15d458337134ff46c8bd08acee1417de1",
+  "passed": [
+    "Supplied Godot 4.3 engine/PCK boot from a subdirectory with web security enabled",
+    "No source: both hands hidden",
+    "Single unhanded source: right only, no phantom left",
+    "Explicit right source takes priority over unhanded source",
+    "xr-standard trigger rising edge",
+    "Held trigger has no repeated rising edge",
+    "Trigger release edge",
+    "Generic button_0 mapping",
+    "xr-standard touchpad can select",
+    "WebXR selectstart works without a pressed Gamepad button",
+    "WebXR selectend releases the correct source",
+    "3DoF orientation does not multiply head yaw twice",
+    "3DoF arm endpoint moves with controller rotation",
+    "6DoF keeps measured transform without arm model",
+    "Two controllers use distinct trackers",
+    "Pose loss hides hand and clears trigger",
+    "Left-only source stays left without duplication",
+    "Cube reuse returns to pool on every release"
+  ],
+  "errors": [],
+  "knownWarnings": [
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_width (scene/main/viewport.cpp:125)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_height (scene/main/viewport.cpp:135)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_width (scene/main/viewport.cpp:125)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_height (scene/main/viewport.cpp:135)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_width (scene/main/viewport.cpp:125)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_height (scene/main/viewport.cpp:135)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_width (scene/main/viewport.cpp:125)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_height (scene/main/viewport.cpp:135)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_width (scene/main/viewport.cpp:125)",
+    "USER ERROR: Viewport Texture must be set to use it.",
+    "   at: get_height (scene/main/viewport.cpp:135)"
+  ],
+  "limitations": [
+    "Headless software-GPU Chromium; not a Pico G2 performance measurement.",
+    "No physical headset, native compositor, controller hardware, audio quality or installation validation.",
+    "Controller fixture uses Godot XRServer sources, not an actual browser WebXR session.",
+    "Binary supplied scenes still emit unbound ViewportTexture startup warnings before binding."
+  ]
+}
