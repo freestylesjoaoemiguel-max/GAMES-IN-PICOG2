@@ -2,6 +2,13 @@
 
 Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo Meta Quest): mundos em 360°, personagens 3D que andam e conversam com IA, casas com interior, braços que seguem o controle, sons e música. Tudo roda no navegador, sem instalar nada.
 
+## OpenSaber — WebXR experimental para o G2
+
+- **[Abrir OpenSaber — G2 Web 1.0.0](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/opensaber/)**
+- Entre em **INICIAR VR**, escolha **Pico Pulse – Treino**, selecione **1 controle – DIREITA/ESQUERDA** e pressione **Play**. Gatilho seleciona; segurar por 1,2 s durante a música pausa. Faixa original de 52 s incluída.
+- Usa o OpenSaber enviado, com correções no pacote Godot e braço estimado para 3DoF; não duplica um controle em duas mãos. O ZIP já era um export web, não um projeto-fonte completo.
+- **Requer WebXR immersive-vr + WebGL 2 no navegador do headset.** Partida e controles simulados testados; **PICO G2 físico e desempenho ainda não validados**. Não há garantia de ausência de bugs ou lag. [Instruções, testes e limitações](opensaber/README.md).
+
 ## 🧪 SandLab VR — sandbox de mundo aberto (WebXR + APK)
 
 ### ▶ Jogar agora

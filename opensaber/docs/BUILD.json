@@ -1,0 +1,25 @@
+{
+  "source_zip_md5": "850a54660599b7b482f3557b328e5e8e",
+  "source_pck_sha256": "ae3e5a0780222015bad876119292947d54516a8629949ca01487d3842dd3840b",
+  "original_verified_entries": 388,
+  "output_entries": 394,
+  "pck_bytes": 11040192,
+  "pck_sha256": "986ac2f0debf99d9e82cde2f735979f15d458337134ff46c8bd08acee1417de1",
+  "wasm_sha256": "fe5cebc590758c10bc4469be5a591e28edbde5ec8f458f21baeb83db50d028b9",
+  "patches": [
+    "addons/stopwatch/public/StopwatchFactory.gd",
+    "game/BeepSaberMainMenu.gd",
+    "game/BeepSaber_Game.gd",
+    "game/LightSaber.gd",
+    "game/scripts/BeepSaberController.gd",
+    "game/scripts/GameState/Playing.gd",
+    "game/scripts/ScenePool/ScenePool.gd",
+    "game/scripts/UIRaycast/UIRaycast.gd",
+    "game/scripts/g2_perf.gd",
+    "game/scripts/song_uploader.gd",
+    "game/scripts/webxr/webxr_initializer.gd",
+    "game/ui/BeatSageUI/BeatSageUI.gd"
+  ],
+  "engine_rebuilt": false,
+  "physical_pico_g2_tested": false
+}
