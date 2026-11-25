@@ -10,6 +10,7 @@ var quality := "medio"
 var distance_timer := 0.0
 var mirror_view: SubViewport
 var mirror_camera: Camera3D
+var arm_modifiers:Array[SkeletonModifier3D]=[]
 
 func mirror_size() -> Vector2i:
  if quality == "baixo": return Vector2i(192,256)
@@ -26,8 +27,11 @@ func _process(delta: float) -> void:
  distance_timer = 0.0
  var playing: bool = is_instance_valid(game) and game.game_running
  var near := is_instance_valid(player) and player.global_position.distance_to(Vector3(-4*game.MAP_SCALE,1.55,-8.875*game.MAP_SCALE)) < 24.0
- var mode := SubViewport.UPDATE_WHEN_VISIBLE if playing and near and visible and not game.vr_hand_enabled else SubViewport.UPDATE_DISABLED
+ var mode := SubViewport.UPDATE_WHEN_VISIBLE if playing and near and visible else SubViewport.UPDATE_DISABLED
  if mirror_view.render_target_update_mode != mode: mirror_view.render_target_update_mode = mode
+ for modifier in arm_modifiers:
+  if is_instance_valid(game.g2_xr) and game.g2_xr.immersive:modifier.set_meta("g2_orientation",true)
+  elif modifier.has_meta("g2_orientation"):modifier.remove_meta("g2_orientation")
 
 func _ready() -> void:
  # A second version of the same rig is visible only to the mirror camera.
@@ -51,6 +55,7 @@ func _ready() -> void:
   mod.suffix = side
   mod.side = -1.0 if i == 0 else 1.0
   rig.add_child(mod)
+  arm_modifiers.append(mod)
 
  mirror_view = SubViewport.new()
  mirror_view.name = "MirrorView"

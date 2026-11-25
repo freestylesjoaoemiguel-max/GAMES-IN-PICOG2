@@ -2,6 +2,8 @@
 
 **1.0.1:** o corpo voltou ao movimento clássico v52 (gravidade 9,8 e impulsos por velocidade). A descrição do núcleo GMotion abaixo registra a 1.0.0, não o caminho ativo atual. Altura virtual 3DoF fixada na altura do avatar; orientação continua medida. Novas etiquetas e rotação remota exigem clientes atualizados.
 
+**1.0.2:** yaw do corpo acompanha a cabeça sem modificar o referencial WebXR. Identificação local visível no espelho/câmera; espelho novamente ativo em VR quando próximo/visível. Isso adiciona renderização e não foi medido no G2 físico. Testes de pixels GL não equivalem a validação do headset.
+
 ## Entrada recebida
 
 `GilaMobi-v52-codigo-fonte.zip`, Drive `18jvpQ-GywpUh_D2ToaoyKRhdvKUau470`, 36.136.433 bytes, MD5 `7f57c645cfba2d59979b729eec3f481b`. Inventário completo em `SUPPLIED_FILES.json`: 262 entradas no ZIP, 41.999.445 bytes descompactados. Não foi substituído por Metulas ou Gorilla Rush.

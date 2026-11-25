@@ -6,7 +6,9 @@ var passed: Array[String]=[]
 var failed: Array[String]=[]
 func check(ok: bool,label: String) -> void:
     if ok: passed.append(label)
-    else: failed.append(label)
+    else:
+        failed.append(label)
+        push_error("G2 regression: "+label)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
     var motion:=Motion.new()
@@ -103,6 +105,55 @@ func run() -> void:
     check(face_before.mesh.get_blend_shape_count()==morph_count,"Skin partition retains original facial blend shapes")
     check(rig.arm_meshes[0].get_active_material(0)==original_material and rig.arm_meshes[1].get_active_material(0)==original_material,"Partitioned arms preserve imported material overrides and textures")
     check(rig.arm_meshes.size()==2 and rig.arm_meshes[0].mesh.get_surface_count()>0 and rig.arm_meshes[1].mesh.get_surface_count()>0,"Original skinned arms split for independent visibility")
+    # Rotate only the measured HMD. Repeated attachment must not feed torso
+    # rotation back into the XR reference or rotate controller goals twice.
+    var original_target:Transform3D=game.targets[1].global_transform
+    var body_position:Vector3=game.player.global_position
+    var yaw_ok:=true
+    for angle in [-2.8,-1.2,0.0,1.2,2.8]:
+        rig.head.basis=Basis.from_euler(Vector3(.35,angle,.15))
+        var expected:Vector3=-rig.head.global_basis.z
+        expected.y=0;expected=expected.normalized()
+        for frame in 40: rig._attach_player()
+        yaw_ok=yaw_ok and (-game.player.global_basis.z).distance_to(expected)<.001
+        yaw_ok=yaw_ok and game.targets[1].global_transform.is_equal_approx(original_target)
+        yaw_ok=yaw_ok and game.player.global_position.is_equal_approx(body_position)
+        yaw_ok=yaw_ok and rig.origin.global_basis.is_equal_approx(Basis.IDENTITY)
+    check(yaw_ok,"Body follows HMD yaw left/right without reference feedback, translation or doubled controller rotation")
+    var last_yaw:float=game.player.rotation.y
+    rig.head.basis=Basis(Vector3.RIGHT,PI/2)
+    rig._attach_player()
+    check(is_equal_approx(last_yaw,game.player.rotation.y),"Looking vertically keeps stable torso yaw")
+    rig.head.basis=Basis.IDENTITY;rig._attach_player()
+    game.profile_name="Meu nome verde";rig._sync_identity()
+    var identity=rig.local_identity
+    check(identity.get_parent()==game.player and identity.vr_label.visible and identity.vr_label.modulate==Color("ff0000") and identity.name_label.modulate==Color("00ff00") and identity.name_label.text=="Meu nome verde" and identity.vr_label.position.y>identity.name_label.position.y,"Local avatar has red badge above saved green name")
+    check(identity.vr_label.layers==4 and (rig.head.cull_mask & 4)==0,"Local overhead label visible to external cameras, not pasted inside headset")
+    var mirror=game.get_node("Espelho")
+    game.player.global_position=Vector3(-4*game.MAP_SCALE,0,-8.875*game.MAP_SCALE+3)
+    mirror._process(.3)
+    check(mirror.mirror_view.render_target_update_mode==SubViewport.UPDATE_WHEN_VISIBLE and (mirror.mirror_camera.cull_mask & 4)!=0,"Mirror stays live near player in immersive VR and includes local identity")
+    game.player.global_position=body_position;rig._attach_player()
+    # Real GL readback, not just Label3D properties: isolate the identity layer.
+    var proof:=SubViewport.new();proof.size=Vector2i(512,256)
+    proof.world_3d=game.get_viewport().find_world_3d()
+    proof.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+    root.add_child(proof)
+    var camera:=Camera3D.new();camera.cull_mask=4;camera.fov=45
+    proof.add_child(camera)
+    camera.global_position=game.player.global_position+Vector3(0,2.3,2.5)
+    camera.look_at(game.player.global_position+Vector3(0,2.3,0));camera.make_current()
+    for frame in 4: await process_frame
+    await RenderingServer.frame_post_draw
+    var image:=proof.get_texture().get_image()
+    var reds:=0;var greens:=0
+    for y in image.get_height():
+        for x in image.get_width():
+            var pixel:=image.get_pixel(x,y)
+            if pixel.r>.6 and pixel.g<.2 and pixel.b<.2:reds+=1
+            if pixel.g>.6 and pixel.r<.2 and pixel.b<.2:greens+=1
+    check(reds>20 and greens>20,"Actual GL camera renders red VR badge pixels and green local name pixels")
+    proof.queue_free()
     rig.step_hands(1.0/72.0)
     check(not rig.arm_meshes[0].visible and not rig.arm_meshes[1].visible,"Missing hands hidden; no invisible support")
     t.name="right_hand"
@@ -115,12 +166,15 @@ func run() -> void:
     game.missing_parts=0
     rig.immersive=false
     game.camera=rig.flat_camera
+    game.load_map("sandbox")
     game.selected_map="sandbox"
     game.select_sandbox_role("grinner")
     check(game.active_character=="grinner" and game.skeleton.get_bone_count()>10,"Credited Grinner model and original role switch instantiate")
     # Real outgoing JSON -> incoming state dispatcher -> actual remote rig.
     rig.immersive=true
     rig._attach_player()
+    check(rig.local_identity.get_parent()==game.player and rig.local_identity.vr_label.visible and is_equal_approx(rig.local_identity.name_label.position.y,2.45),"Grinner rebuild recreates local identity at correct height")
+    check((game.sandbox_camera.lens.cull_mask & 4)!=0,"Sandbox recording camera includes complete local avatar and identity")
     for height in [0.0,1.6,2.8]:
         rig.head.position.y=height
         rig._attach_player()
@@ -152,6 +206,8 @@ func run() -> void:
     check(peer.name_label.text=="Nome verde" and peer.name_label.modulate==Color("00ff00") and peer.vr_label.position.y>peer.name_label.position.y,"Custom green name is below red VR badge")
     check(Presence.decode_rotation([0,0,0,0])==null and Presence.decode_rotation([NAN,0,0,1])==null and Presence.decode_rotation(["bad",0,0,1])==null,"Malformed remote orientations rejected")
     rig.immersive=false
+    rig._sync_identity()
+    check(not rig.local_identity.vr_label.visible and rig.local_identity.name_label.modulate==Color.WHITE,"Local identity clears VR colors on exit")
     var exit_packet:Dictionary=game.network.player_state();exit_packet["id"]="remote_fixture"
     game.network._on_message(exit_packet)
     check(not peer.vr_label.visible and peer.name_label.modulate==Color.WHITE and not peer.rotation_valid[0],"Leaving VR clears badge and returns legacy animation")

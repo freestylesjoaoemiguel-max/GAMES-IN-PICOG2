@@ -26,7 +26,7 @@ func _ready()->void:
  mesh_box(self,Vector3(.31,.19,.045),Vector3.ZERO,Color("222a32"))
  mesh_box(self,Vector3(.055,.055,.018),Vector3(-.105,.045,-.03),Color("93baca"))
  view=SubViewport.new();view.name="VisaoCamera";view.size=Vector2i(WIDTH,HEIGHT);view.world_3d=game.get_viewport().find_world_3d();view.render_target_update_mode=SubViewport.UPDATE_DISABLED;add_child(view)
- lens=Camera3D.new();lens.name="Lente";lens.fov=70;lens.near=.05;lens.far=150;lens.cull_mask=1;view.add_child(lens);lens.current=true
+ lens=Camera3D.new();lens.name="Lente";lens.fov=70;lens.near=.05;lens.far=150;lens.cull_mask=1|4;view.add_child(lens);lens.current=true
  var screen:=MeshInstance3D.new();var quad:=QuadMesh.new();quad.size=Vector2(.265,.15);screen.mesh=quad;screen.position=Vector3(0,0,.025)
  var display:=StandardMaterial3D.new();display.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED;display.albedo_texture=view.get_texture();screen.material_override=display;add_child(screen)
  if OS.get_name()=="Android" and Engine.has_singleton("GodotHandTracking"):

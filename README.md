@@ -2,16 +2,17 @@
 
 Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo Meta Quest): mundos em 360°, personagens 3D que andam e conversam com IA, casas com interior, braços que seguem o controle, sons e música. Tudo roda no navegador, sem instalar nada.
 
-## GilaMobi v52 — G2 Web 1.0.1 publicada
+## GilaMobi v52 — G2 Web 1.0.2 publicada
 
-- **[Jogar agora — GilaMobi v52 · correção 1.0.1](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gilamobi-v52/?v=1.0.1)**
+- **[Jogar agora — GilaMobi v52 · correção 1.0.2](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gilamobi-v52/?v=1.0.2)**
 - **Andar:** restaurado o movimento clássico v52 e corrigida a altura virtual que podia impedir contato com o piso. Bata a mão contra o chão inclinando o controle para baixo/para trás; levante e repita. Não precisa de touchpad nem de segurar o gatilho para andar.
-- **Nome e identificação:** escolha e salve seu nome no lobby antes de tocar **INICIAR VR**. Em VR, os jogadores com a versão atualizada veem **[VR PICO G2] em vermelho** acima do **seu nome em verde**.
+- **Corpo acompanha o olhar:** ao olhar para os lados, o corpo vira junto, sem duplicar a rotação da câmera nem andar automaticamente. O movimento por impulso das mãos foi mantido.
+- **Nome e identificação:** escolha e salve seu nome no lobby antes de tocar **INICIAR VR**. Em VR, os jogadores com a versão atualizada veem **[VR PICO G2] em vermelho** acima do **seu nome em verde**. Agora a identificação também aparece no **seu próprio avatar no espelho e na câmera**; o espelho permanece ativo em VR quando próximo e visível.
 - **Mãos em multiplayer:** orientação do controle transmitida aos personagens remotos, com rotação completa de **360°**, incluindo o giro do punho. A etiqueta identifica o modo VR, não autentica o modelo do aparelho.
 - **Menu:** segure o gatilho por **1,1 s**. Mapas e modelos do projeto recebido preservados; mãos/IK e braço **estimado 3DoF**, sem inventar um segundo controle. Requer **WebXR immersive-vr, WebGL2 e multiview** no navegador.
-- **[Baixar projeto completo e export Web — compilação final aprovada](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45655143379):** em **Artifacts**, baixe `GilaMobi-v52-WebXR-build-reports` (login no GitHub necessário; artefatos expiram).
-- **Validação:** 56 testes do motor e 27 verificações no navegador aprovados. **[Publicação no GitHub Pages concluída](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45657169000)**.
-- **Atualize:** feche a aba antiga, abra o link acima e confira **1.0.1 no painel**. Os outros jogadores também precisam atualizar para ver a etiqueta e o giro das mãos.
+- **[Baixar projeto completo e export Web — compilação final aprovada](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45713294180):** em **Artifacts**, baixe `GilaMobi-v52-WebXR-build-reports` (login no GitHub necessário; artefatos expiram).
+- **Validação:** 65 testes do motor e 35 verificações no navegador aprovados, incluindo giro corporal sem feedback e leitura de pixels vermelhos/verdes da identificação local.
+- **Atualize:** feche a aba antiga, abra o link acima e confira **1.0.2 no painel**. Os outros jogadores também precisam atualizar para ver a etiqueta e o giro das mãos.
 - **Não é APK nativo. Pico G2 físico, FPS e partida com dois headsets pela internet não validados.** Testes automatizados não garantem compatibilidade com o navegador instalado. [Instruções, fontes, testes e limitações](gilamobi-v52/README.md).
 - OpenSaber e Gorilla Rush continuam nos links anteriores, sem substituição.
 
