@@ -89,9 +89,20 @@ jobs:
           trap 'kill "$SERVER_PID"' EXIT
           PREVIEW_BASE_URL=http://127.0.0.1:5190/opensaber/ bash .github/scripts/check-browser.sh node opensaber/tools/check_browser.mjs
           CONTROLLER_FIXTURE=1 PREVIEW_BASE_URL=http://127.0.0.1:5190/.cache/opensaber-fixture/ bash .github/scripts/check-browser.sh node opensaber/tools/check_browser.mjs
+      - name: Verify and test independent GilaMobi v52 export
+        run: |
+          set -euo pipefail
+          python3 gilamobi-v52/tools/verify.py
+          npm ci --prefix gilamobi-v52/tests --ignore-scripts --no-audit --no-fund
+          python3 -m http.server 5192 --bind 127.0.0.1 --directory gilamobi-v52/web > /tmp/gilamobi-pages.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5192/ node gilamobi-v52/tests/browser.mjs
       - name: Preserve PicoVerso and add independent WebXR apps
         run: |
           set -euo pipefail
+          mkdir -p site/gilamobi-v52
+          cp -r gilamobi-v52/web/. site/gilamobi-v52/
           mkdir -p site/opensaber
           cp opensaber/index.html opensaber/index.js opensaber/index.wasm opensaber/index.pck opensaber/index.audio.worklet.js opensaber/index.icon.png opensaber/web.js opensaber/web.css site/opensaber/
           mkdir -p site/opensaber/docs
