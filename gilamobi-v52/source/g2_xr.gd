@@ -150,6 +150,9 @@ func _session_started() -> void:
     starting=false
     immersive=true
     get_viewport().use_xr=true
+    # Godot 4.4 Compatibility's scaled tonemap pass is not stereo-safe here.
+    # Keep the XR target at its runtime size (do not duplicate a mono frame).
+    get_viewport().scaling_3d_scale=1.0
     flat_camera=game.camera
     _attach_player()
     game.camera=head
@@ -165,6 +168,11 @@ func _session_ended() -> void:
     starting=false
     immersive=false
     get_viewport().use_xr=false
+    # 4.4 resets viewport view_count but can leave the render target stereo
+    # when the dimensions coincide. Recreate its mono target before drawing.
+    var size: Vector2i=get_viewport().get_visible_rect().size
+    RenderingServer.viewport_set_size(get_viewport().get_viewport_rid(),size.x+1,size.y)
+    RenderingServer.viewport_set_size(get_viewport().get_viewport_rid(),size.x,size.y)
     selected_sources.clear()
     if game.game_menu.get_parent()==ui_view: game.game_menu.reparent(game)
     if is_instance_valid(flat_camera):
@@ -179,6 +187,8 @@ func _session_ended() -> void:
     reset_tracking()
     game.game_menu.pause_game()
     if bridge!=null: bridge.immersive=false
+    game.set_graphics_quality(game.graphics_quality,false)
+    print("[G2] immersive-vr session ended")
 
 func _session_failed(message: String) -> void:
     starting=false
@@ -309,7 +319,7 @@ func _physics_process(dt: float) -> void:
         var id:=0 if i==0 else 2 if t.name==&"tracker_2" else 1
         pressed[i]=t.get_input("trigger_click")==true or t.get_input("button_0")==true or t.get_input("touchpad_click")==true or selected_sources.get(id,false)==true
         held_seconds[i]=held_seconds[i]+dt if pressed[i] else 0.0
-        if not pressed[i]: consumed[i]=false
+        if pressed[i] and not previous_pressed[i]: consumed[i]=false
         if held_seconds[i]>1.1 and not consumed[i]:
             consumed[i]=true
             toggle_menu()
@@ -337,6 +347,7 @@ func _physics_process(dt: float) -> void:
             bridge.map=game.selected_map
             bridge.position=JSON.stringify([game.player.position.x,game.player.position.y,game.player.position.z])
             bridge.fps=Engine.get_frames_per_second()
+            bridge.diagnostics=JSON.stringify({"menu":menu_open,"tracked":tracked,"arm_visible":[arm_meshes[0].visible,arm_meshes[1].visible],"role":game.active_character,"head":[head.global_position.x,head.global_position.y,head.global_position.z],"head_forward":[-head.global_basis.z.x,-head.global_basis.z.y,-head.global_basis.z.z],"hands":[[arms[0].target.x,arms[0].target.y,arms[0].target.z],[arms[1].target.x,arms[1].target.y,arms[1].target.z]],"running":game.game_running,"scale":get_viewport().scaling_3d_scale})
 
 func toggle_menu() -> void:
     _show_menu(not menu_open)
@@ -383,8 +394,8 @@ func _build_menu() -> void:
     ui_root.layer=40
     ui_view.add_child(ui_root)
     quick=PanelContainer.new()
-    quick.position=Vector2(0,720)
-    quick.size=Vector2(1280,180)
+    quick.position=Vector2(0,660)
+    quick.size=Vector2(1280,240)
     ui_root.add_child(quick)
     var column:=VBoxContainer.new()
     quick.add_child(column)
@@ -394,6 +405,9 @@ func _build_menu() -> void:
     var actions:=HBoxContainer.new()
     column.add_child(actions)
     for entry in [["Normal","normal"],["Grinner","grinner"],["Agarrar","grab"],["Motosserra","chainsaw"],["Soltar","release"],["Microfone","mic"],["Camera","camera"]]: _button(actions,entry[0],entry[1])
+    var tools:=HBoxContainer.new()
+    column.add_child(tools)
+    for entry in [["Gravar/parar","record"],["Dividir","split"],["Arrancar ESQ","tear_left"],["Arrancar DIR","tear_right"]]: _button(tools,entry[0],entry[1])
     status=Label.new()
     status.add_theme_font_size_override("font_size",18)
     column.add_child(status)

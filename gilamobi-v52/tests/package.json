@@ -1,0 +1,11 @@
+{
+  "name": "gilamobi-webxr-regression",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node browser.mjs"},
+  "devDependencies": {
+    "@playwright/test": "1.51.1",
+    "@sparticuz/chromium": "133.0.0",
+    "iwer": "2.8.0"
+  }
+}

@@ -68,7 +68,11 @@ func stop_recording()->void:
  if OS.get_name()=="Android":
   if native_plugin!=null:native_plugin.stopSandboxRecording();status=tr("Salvando vídeo...")
  elif writer!=null:
-  if writer.finish():status=tr("Vídeo salvo")
+  if writer.finish():
+   status=tr("Vídeo salvo")
+   if OS.has_feature("web"):
+    JavaScriptBridge.download_buffer(FileAccess.get_file_as_bytes(saved_path),saved_path.get_file(),"video/x-msvideo")
+    status="Download AVI solicitado ao navegador (sem audio)"
   else:status=writer.error;DirAccess.remove_absolute(ProjectSettings.globalize_path(saved_path))
   writer=null
 func retry_gallery()->void:

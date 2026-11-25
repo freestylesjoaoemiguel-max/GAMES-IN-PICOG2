@@ -166,7 +166,9 @@ func set_graphics_quality(quality: String, save := true) -> void:
  graphics_quality = quality
  # Only the 3D scene is downscaled; UI and touch coordinates are unchanged.
  var scale_3d := 0.60 if quality == "baixo" else (0.80 if quality == "medio" else 1.0)
- get_viewport().scaling_3d_scale = scale_3d
+ # 4.4 Compatibility post_copy uses a multiview shader with single-layer FBOs.
+ # Never apply that scaled post pass to the XR target. Flat mode is unchanged.
+ get_viewport().scaling_3d_scale = 1.0 if is_instance_valid(g2_xr) and g2_xr.immersive else scale_3d
  var mirror = get_node_or_null("Espelho")
  if is_instance_valid(mirror): mirror.set_graphics_quality(quality)
  if save:

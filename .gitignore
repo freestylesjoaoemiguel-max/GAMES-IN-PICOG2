@@ -67,3 +67,4 @@ __pycache__/
 /gilamobi-v52/source/.godot/
 /gilamobi-v52/downloads/
 /gilamobi-v52/build/
+/gilamobi-v52/tests/node_modules/

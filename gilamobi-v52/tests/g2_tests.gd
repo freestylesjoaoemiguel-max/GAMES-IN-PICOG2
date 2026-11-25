@@ -19,6 +19,21 @@ func run() -> void:
     motion.apply(one,Vector3.ZERO,0.02,1)
     check(motion.apply(none,Vector3.ZERO,0.02,1)==Vector3.ZERO,"Tracking reset cannot throw")
     check(motion.apply([Vector3(10,10,10)],Vector3.ZERO,0.01,1).length()<=8.001,"Bad correction capped at 8 m/s")
+    for hz in [30,60,72,90]:
+        for scale in [0.7,1.0,1.4]:
+            motion.reset()
+            var dt:=1.0/float(hz)
+            var correction: Array[Vector3]=[Vector3(0,0,-1)*dt*scale]
+            var velocity:=motion.apply(correction,Vector3.ZERO,dt,scale)
+            check(velocity.is_equal_approx(Vector3(0,0,-scale)),"Rate/scale invariant contact: %sHz x%s" % [hz,scale])
+    motion.reset()
+    motion.apply(one,Vector3.ZERO,0.02,1)
+    for i in 8: motion.record(Vector3(0,0,-1),0.02)
+    check(motion.apply(none,Vector3.ZERO,0.02,1).length()<=4.001,"Release speed is capped at 4 m/s")
+    motion.reset()
+    motion.apply(one,Vector3.ZERO,0.02,1)
+    for i in 8: motion.record(Vector3(0,0,-.001),0.02)
+    check(motion.apply(none,Vector3.ZERO,0.02,1)==Vector3.ZERO,"Subthreshold release cannot launch the player")
     var game=load("res://main.tscn").instantiate()
     root.add_child(game)
     await process_frame
@@ -48,6 +63,18 @@ func run() -> void:
     check(swept.contact and swept.position.y>=0.179,"Swept sphere cannot tunnel through thin floor")
     var overlap:=Motion.sweep(space,Vector3(200,0.1,0),Vector3(200,0.1,0),0.18,exclusions)
     check(overlap.position.y>=0.179,"Initial overlap depenetrates above sphere radius")
+    var wall:=StaticBody3D.new()
+    var wc:=CollisionShape3D.new()
+    var wb:=BoxShape3D.new();wb.size=Vector3(.1,8,8);wc.shape=wb
+    wall.add_child(wc);wall.position=Vector3(205,3,0);root.add_child(wall)
+    await physics_frame
+    await physics_frame
+    var wall_hit:=Motion.sweep(space,Vector3(203,1,0),Vector3(208,1,0),.18,exclusions)
+    check(wall_hit.contact and wall_hit.position.x<204.78,"Swept hand cannot cross thin vertical wall")
+    var slide:=Motion.sweep(space,Vector3(203,1,0),Vector3(208,1,2),.18,exclusions)
+    check(slide.contact and slide.position.x<204.78 and slide.position.z>1.5,"Diagonal wall stroke slides tangentially without penetration")
+    var air:=Motion.sweep(space,Vector3(200,3,0),Vector3(201,3,0),.18,exclusions)
+    check(not air.contact and air.position.is_equal_approx(Vector3(201,3,0)),"No surface in air cannot create artificial support")
     var rig=game.g2_xr
     check(rig.source_for(0)==null and rig.source_for(1)==null,"No controller source is invented")
     var t:=XRControllerTracker.new()

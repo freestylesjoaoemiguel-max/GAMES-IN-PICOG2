@@ -1,7 +1,7 @@
 name: Build GilaMobi v52 WebXR
 on:
   pull_request:
-    paths: ['gilamobi-v52/source/**', 'gilamobi-v52/tools/**', 'gilamobi-v52/tests/**', '.github/workflows/build-gilamobi-v52.yml']
+    paths: ['gilamobi-v52/source/**', 'gilamobi-v52/tools/**', 'gilamobi-v52/tests/**', 'gilamobi-v52/web/controls.*', 'gilamobi-v52/web/vendor/**', '.github/workflows/build-gilamobi-v52.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -23,6 +23,15 @@ jobs:
         run: |
           set -o pipefail
           bash gilamobi-v52/tools/build.sh 2>&1 | tee /tmp/gila-build.log
+      - name: Verify export and exercise browser stereo and controller lifecycle
+        run: |
+          set -euo pipefail
+          python3 gilamobi-v52/tools/verify.py
+          npm ci --prefix gilamobi-v52/tests --ignore-scripts --no-audit --no-fund
+          python3 -m http.server 5192 --bind 127.0.0.1 --directory gilamobi-v52/web > /tmp/gila-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5192/ node gilamobi-v52/tests/browser.mjs
       - name: Surface build errors
         if: failure()
         run: |
@@ -37,7 +46,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add gilamobi-v52/web gilamobi-v52/docs/BUILD.json
+          git add gilamobi-v52/web gilamobi-v52/docs/BUILD.json gilamobi-v52/docs/ENGINE_TESTS.json gilamobi-v52/docs/BROWSER_TESTS.json
           if ! git diff --cached --quiet; then
             git commit -m "Build GilaMobi v52 WebXR export with Godot 4.4.1"
             git push origin HEAD:arena/2eb20bb8-games-in-picog2
