@@ -94,6 +94,14 @@ func run() -> void:
     check(rig.arm_meshes.size()==2 and rig.arm_meshes[0].mesh.get_surface_count()>0 and rig.arm_meshes[1].mesh.get_surface_count()>0,"Original skinned arms split for independent visibility")
     rig.step_hands(1.0/72.0)
     check(not rig.arm_meshes[0].visible and not rig.arm_meshes[1].visible,"Missing hands hidden; no invisible support")
+    t.name="right_hand"
+    t.set_pose("default",Transform3D.IDENTITY,Vector3.ZERO,Vector3.ZERO,XRPose.XR_TRACKING_CONFIDENCE_HIGH)
+    XRServer.add_tracker(t)
+    game.missing_parts=4
+    rig.step_hands(1.0/72.0)
+    check(not rig.tracked[1] and not game.contact[1],"Severed original arm cannot provide invisible locomotion support")
+    XRServer.remove_tracker(t)
+    game.missing_parts=0
     rig.immersive=false
     game.camera=rig.flat_camera
     game.selected_map="sandbox"

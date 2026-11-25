@@ -257,6 +257,7 @@ func step_hands(dt: float) -> void:
     var scale: float=game.character_scale()
     for i in 2:
         var t:=source_for(i)
+        if game.active_character=="normal" and (game.missing_parts & (2 if i==0 else 4))!=0: t=null
         tracked[i]=t!=null
         game.previous_palm[i]=game.targets[i].global_position
         if is_instance_valid(arm_meshes[i]): arm_meshes[i].visible=tracked[i] and (game.missing_parts & (2 if i==0 else 4))==0
