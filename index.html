@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pico G2 · WebXR</title>
+<meta name="description" content="Jogos e ambientes 3D em WebXR para o Pico G2 / G2 4K, direto no navegador.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="xr-canvas" class="hidden"></canvas>
+<div id="bar2d" class="hidden"><button id="btn-back">← Voltar</button><button id="btn-menu2d">☰ Menu</button><span>Modo teste 2D: arraste = olhar · WASD = andar · clique = atirar · R = recarregar · Esc = menu</span></div>
+
+<main id="home">
+  <h1>Pico G2 · WebXR</h1>
+  <p class="sub">Roda direto no navegador do headset — nada para instalar.</p>
+
+  <section class="card">
+    <div class="badges"><span id="st-https" class="badge">…</span><span id="st-xr" class="badge">…</span><span id="st-astc" class="badge">…</span></div>
+    <button id="btn-vr" class="primary" disabled>ENTRAR EM VR</button>
+    <p id="vr-hint" class="hint"></p><p id="vr-err" class="bad-text"></p>
+    <button id="btn-2d" class="secondary">Modo teste 2D (sem VR)</button>
+  </section>
+
+  <section class="card">
+    <h2>O que jogar</h2>
+    <label class="opt"><input type="radio" name="mode" value="pegapega"> <b>🦍 Pega-Pega</b><small>Estilo Gorilla Tag: balance os braços para correr e pular. Sem arquivos externos.</small></label>
+    <label class="opt"><input type="radio" name="mode" value="fps"> <b>🔫 Operation Zero</b><small>Atirador em ondas: mire com o controle, gatilho atira, touchpad anda.</small></label>
+    <label class="opt"><input type="radio" name="mode" value="viewer"> <b>🌍 Ambientes (Metulas)</b><small>Visita os 7 ambientes 3D do seu Metulas.apk, lendo o arquivo só no seu aparelho.</small></label>
+    <div id="apk-box" style="display:none">
+      <p class="hint">Escolha o <b>Metulas.apk</b> (nenhum dado sai do seu aparelho; o arquivo não é enviado a lugar nenhum).</p>
+      <input id="apk-file" type="file">
+      <p id="apk-info" class="hint"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Controles (Pico G2)</h2>
+    <ul>
+      <li><b>Gatilho</b>: atirar / clicar nos menus (raio azul)</li>
+      <li><b>Touchpad/analógico</b>: andar (para onde o controle aponta)</li>
+      <li><b>Olhe para baixo</b>: aparece o botão ☰ MENU (trocar de jogo, configurar, mapear botões)</li>
+      <li><b>Pega-Pega</b>: mova o controle como um braço — encoste no chão/paredes e empurre; solte para lançar-se</li>
+    </ul>
+    <p class="hint">Os números dos botões do G2 no navegador variam; o menu <i>Mapear botões</i> e o diagnóstico abaixo mostram o que ele realmente envia.</p>
+  </section>
+
+  <section class="card">
+    <h2>Diagnóstico</h2>
+    <pre id="diag">…</pre>
+    <button id="btn-copy" class="secondary">Copiar diagnóstico</button>
+  </section>
+  <footer>Código aberto. Os ambientes pertencem aos seus autores: este site <b>não</b> contém nenhum arquivo do Metulas.</footer>
+</main>
+<script src="dist/app.js"></script>
+</body>
+</html>
