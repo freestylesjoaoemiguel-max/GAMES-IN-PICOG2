@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: gilamobi-build-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 jobs:
   build:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
@@ -59,3 +62,10 @@ jobs:
             gilamobi-v52/build/*.log
             gilamobi-v52/docs/
             gilamobi-v52/web/
+            gilamobi-v52/README.md
+            gilamobi-v52/source/
+            gilamobi-v52/reference/
+            gilamobi-v52/tools/
+            gilamobi-v52/tests/*.gd
+            gilamobi-v52/tests/*.mjs
+            gilamobi-v52/tests/*.json
