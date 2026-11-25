@@ -333,6 +333,13 @@ func after_body(shift: Vector3,dt: float) -> void:
     # Gravity/friction and momentum are handled by the original main.gd path.
     _attach_player()
 
+var profile_sent:=""
+func _process(_dt:float) -> void:
+    # The original lobby/profile editor can change the name outside XR too.
+    if bridge!=null and profile_sent!=game.profile_name:
+        profile_sent=game.profile_name
+        bridge.nickname=profile_sent
+
 func _physics_process(dt: float) -> void:
     if not immersive: return
     if not is_instance_valid(game.player): return
