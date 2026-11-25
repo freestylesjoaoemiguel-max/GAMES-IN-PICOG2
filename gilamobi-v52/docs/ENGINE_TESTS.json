@@ -32,10 +32,13 @@
     "No controller source is invented",
     "Unhanded controller mapped once to right",
     "Pose loss rejects stale tracker",
+    "Skin partition retains original facial blend shapes",
+    "Partitioned arms preserve imported material overrides and textures",
     "Original skinned arms split for independent visibility",
     "Missing hands hidden; no invisible support",
+    "Severed original arm cannot provide invisible locomotion support",
     "Credited Grinner model and original role switch instantiate"
   ],
   "physical_pico_g2_tested": false,
-  "runtime": "Godot 4.4.1 headless; actual source and physics engine"
+  "runtime": "Godot 4.4.1 Compatibility on Xvfb/Mesa; actual source, meshes and physics engine"
 }

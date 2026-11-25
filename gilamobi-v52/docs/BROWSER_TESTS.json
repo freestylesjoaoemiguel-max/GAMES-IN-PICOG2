@@ -7,6 +7,8 @@
     "Legacy base-layer path exercised through Layers polyfill",
     "Only connected right hand visible and active",
     "XR bypasses broken Godot 4.4 scaled multiview post pass",
+    "Estimated 3DoF stroke contacts actual floor and moves original player",
+    "Lifting estimated hand releases surface support",
     "Head orientation follows runtime pose",
     "Two real fixture sources enable both skinned arms",
     "Controller disconnect hides its arm",
@@ -19,7 +21,9 @@
     "Original Grinner tool commands and normal role switch execute",
     "No sources means no invented or supporting hands",
     "Ending session restores mono target without multiview framebuffer errors",
-    "Session can be started again and controller reconnected"
+    "Session can be started again and controller reconnected",
+    "Unsupported desktop runtime cannot enter fake VR",
+    "Original camera produces an actual browser-downloadable AVI"
   ],
   "failed": [],
   "warnings": [
