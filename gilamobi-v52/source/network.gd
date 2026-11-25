@@ -107,10 +107,7 @@ func _process(delta: float) -> void:
  if state == "joined" and infection!=null:infection.tick(delta)
  if state == "joined" and send_timer >= .125 and is_instance_valid(game.player):
   send_timer = 0.0
-  var p: Vector3 = game.player.global_position
-  var l: Vector3 = game.targets[0].global_position
-  var r: Vector3 = game.targets[1].global_position
-  _publish({"kind":"state", "character":game.active_character, "monster_mode":game.monster_mode, "ragdoll":game.ragdoll.positions() if is_instance_valid(game.ragdoll) else [], "rag_cut":game.ragdoll.cut_height if is_instance_valid(game.ragdoll) else -1.0,"rag_sever":game.ragdoll.severed_mask if is_instance_valid(game.ragdoll) else 0, "round":game.round_id, "nick":game.profile_name, "color":game.cosmetic_color, "accessory":game.cosmetic_accessory, "position":[p.x,p.y,p.z], "yaw":game.player.rotation.y, "left":[l.x,l.y,l.z], "right":[r.x,r.y,r.z], "face": game.voice_face.facial_level if is_instance_valid(game.voice_face) else 0.0, "grabs": game.serialize_grabs(), "damage":game.missing_parts, "dead":game.is_dead, "life":game.life_number})
+  _publish(player_state())
  if state == "joined":
   var now := Time.get_ticks_msec() / 1000.0
   for id in peer_seen.keys():
@@ -195,6 +192,14 @@ func send_chat(message:String)->bool:
  _publish(pending_chat.duplicate())
  if is_instance_valid(game) and game.has_method("show_local_chat"):game.show_local_chat(clean)
  return true
+
+func player_state() -> Dictionary:
+ var p: Vector3 = game.player.global_position
+ var l: Vector3 = game.targets[0].global_position
+ var r: Vector3 = game.targets[1].global_position
+ var packet:Dictionary={"kind":"state", "character":game.active_character, "monster_mode":game.monster_mode, "ragdoll":game.ragdoll.positions() if is_instance_valid(game.ragdoll) else [], "rag_cut":game.ragdoll.cut_height if is_instance_valid(game.ragdoll) else -1.0,"rag_sever":game.ragdoll.severed_mask if is_instance_valid(game.ragdoll) else 0, "round":game.round_id, "nick":game.profile_name, "color":game.cosmetic_color, "accessory":game.cosmetic_accessory, "position":[p.x,p.y,p.z], "yaw":game.player.rotation.y, "left":[l.x,l.y,l.z], "right":[r.x,r.y,r.z], "face": game.voice_face.facial_level if is_instance_valid(game.voice_face) else 0.0, "grabs": game.serialize_grabs(), "damage":game.missing_parts, "dead":game.is_dead, "life":game.life_number}
+ packet.merge(preload("res://g2_presence.gd").state(game))
+ return packet
 
 func _read_packet(p: PackedByteArray) -> void:
  if p.size() < 2: return
@@ -354,6 +359,7 @@ func _on_message(d: Dictionary) -> void:
   peer_seen[id] = now
   peers[id].set_state(character,pos,float(yaw),l,r)
   peers[id].set_nickname(d.get("nick","Jogador"))
+  peers[id].set_xr_state(d)
   peers[id].set_monster_mode(str(d.get("monster_mode","grab")))
   if infection!=null and mode=="create":infection.observe_state(id,d)
   var color=d.get("color",0);var accessory=d.get("accessory",0)

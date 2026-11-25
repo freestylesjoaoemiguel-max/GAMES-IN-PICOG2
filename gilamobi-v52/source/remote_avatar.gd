@@ -33,6 +33,11 @@ var cosmetic_color := -1
 var cosmetic_accessory := -1
 var nickname := "Jogador"
 var name_label: Label3D
+var vr_label: Label3D
+var pico_vr:=false
+var hand_rotations:=[Quaternion.IDENTITY,Quaternion.IDENTITY]
+var rotation_valid:=[false,false]
+var arm_modifiers:Array[SkeletonModifier3D]=[]
 var monster_mode:="grab"
 var split_life:=-1
 var chainsaw_visual:Node3D
@@ -41,6 +46,28 @@ var ragdoll_visual:Node3D
 func set_nickname(value:Variant) -> void:
  nickname=preload("res://profile_name.gd").clean(value)
  if is_instance_valid(name_label):name_label.text=nickname
+
+func set_xr_state(packet:Dictionary) -> void:
+ var flag=packet.get("vr_pico_g2",false)
+ pico_vr=typeof(flag)==TYPE_BOOL and flag
+ var mask=packet.get("xr_hands",0)
+ if typeof(mask) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(mask)):mask=0
+ mask=clampi(int(mask),0,3)
+ for i in 2:
+  var q=preload("res://g2_presence.gd").decode_rotation(packet.get("left_rot" if i==0 else "right_rot"))
+  rotation_valid[i]=pico_vr and (mask & (1<<i))!=0 and q!=null
+  if rotation_valid[i]:hand_rotations[i]=q
+  if i<arm_modifiers.size():
+   if rotation_valid[i]:arm_modifiers[i].set_meta("g2_orientation",true)
+   elif arm_modifiers[i].has_meta("g2_orientation"):arm_modifiers[i].remove_meta("g2_orientation")
+ _refresh_identity()
+
+func _refresh_identity() -> void:
+ if is_instance_valid(name_label):
+  name_label.modulate=Color("00ff00") if pico_vr else Color.WHITE
+ if is_instance_valid(vr_label):
+  vr_label.visible=pico_vr
+  vr_label.position=Vector3(0,(2.45 if character=="grinner" else 2.15)+.29,0)
 
 func set_cosmetics(color: int, accessory: int) -> void:
  if character!="normal": return
@@ -134,6 +161,14 @@ func configure(kind: String) -> void:
   name_label.modulate=Color.WHITE;name_label.outline_modulate=Color(0,0,0,.94);name_label.outline_size=10
   name_label.text=nickname;add_child(name_label)
  name_label.position=Vector3(0,2.45 if kind=="grinner" else 2.15,0)
+ if not is_instance_valid(vr_label):
+  vr_label=Label3D.new();vr_label.name="EtiquetaPicoVR";vr_label.text="[VR PICO G2]"
+  vr_label.billboard=BaseMaterial3D.BILLBOARD_ENABLED
+  vr_label.font_size=38;vr_label.pixel_size=.005
+  vr_label.modulate=Color("ff0000");vr_label.outline_modulate=Color(0,0,0,.94);vr_label.outline_size=10
+  add_child(vr_label)
+ _refresh_identity()
+ arm_modifiers.clear()
  cosmetic_color=-1;cosmetic_accessory=-1
  var old_cosmetic=get_node_or_null("AcessorioCosmetico")
  if old_cosmetic:old_cosmetic.free()
@@ -153,6 +188,8 @@ func configure(kind: String) -> void:
   var mod: SkeletonModifier3D = preload("res://arm_modifier.gd").new()
   mod.player = self; mod.target = goal; mod.suffix = side; mod.side = -1.0 if side == "L" else 1.0
   rig.add_child(mod)
+  arm_modifiers.append(mod)
+  if rotation_valid[arm_modifiers.size()-1]:mod.set_meta("g2_orientation",true)
 
 func set_monster_mode(mode:String)->void:
  if character!="grinner" or mode not in ["choose","grab","chainsaw"]:return
@@ -256,5 +293,9 @@ func _process(delta: float) -> void:
  var correction := global_position - desired_position if grab_visual_active else Vector3.ZERO
  goals[0].global_position=goals[0].global_position.lerp(desired_left+correction,t)
  goals[1].global_position=goals[1].global_position.lerp(desired_right+correction,t)
+ for i in 2:
+  if rotation_valid[i]:
+   var current:=goals[i].global_basis.orthonormalized().get_rotation_quaternion()
+   goals[i].global_basis=Basis(current.slerp(hand_rotations[i],t).normalized())
  update_detached_visuals()
  if is_instance_valid(face):preload("res://facial_animation.gd").apply(face,face_level)

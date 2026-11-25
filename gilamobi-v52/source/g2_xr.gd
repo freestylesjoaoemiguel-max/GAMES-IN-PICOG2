@@ -1,6 +1,6 @@
 extends Node3D
 # Real WebXR compositor integration. No Android/OpenXR device-name spoofing.
-const Arm = preload("res://g2_arm.gd")
+const Arm = preload("res://g2_classic_arm.gd")
 const Motion = preload("res://g2_motion.gd")
 var game: Node3D
 var xr: WebXRInterface
@@ -84,15 +84,30 @@ func _prepare_default() -> void:
     game.game_menu.vr_enabled=false
     game.selected_map="base"
     await game.game_menu.play()
-    if bridge!=null: bridge.ready=true
-    print("[G2] GilaMobi v52 WebXR 1.0.0 ready")
+    if bridge!=null:
+        bridge.ready=true
+        bridge.nickname=game.profile_name
+    print("[G2] GilaMobi v52 WebXR 1.0.1 ready")
 
 func _command(args: Array) -> void:
     if args.is_empty(): return
     command(str(args[0]))
 
 func command(action: String) -> void:
+    if action.begins_with("name:"):
+        var old:String=game.profile_name
+        game.profile_name=preload("res://profile_name.gd").clean(action.substr(5))
+        if game.save_custom_settings()!=OK:
+            game.profile_name=old
+            _notice("Nao foi possivel salvar o nome.")
+        else:
+            if bridge!=null: bridge.nickname=game.profile_name
+            _notice("Nome salvo: "+game.profile_name)
+        return
     match action:
+        "profile":
+            _show_menu(true)
+            game.game_menu.show_cosmetics()
         "vr": enter_vr()
         "menu": toggle_menu()
         "resume": close_menu()
@@ -213,7 +228,12 @@ func _attach_player() -> void:
         rig_ready=true
         reset_tracking()
     origin.global_transform=game.player.global_transform
-    origin.position.y += 1.36*game.character_scale() if xr and xr.reference_space_type=="local" else 0.0
+    if bridge==null or bridge.force3dof==true:
+        # G2 reports orientation, not a dependable floor/eye height. Anchor to
+        # the original avatar height instead of adding local height twice.
+        origin.global_position.y += 1.36*game.character_scale()-(origin.global_basis*head.position).y
+    elif xr and xr.reference_space_type=="local":
+        origin.position.y += 1.36*game.character_scale()
     if immersive:
         game.camera=head
         head.make_current()
@@ -251,7 +271,7 @@ func step_hands(dt: float) -> void:
     if not immersive: return
     _attach_player()
     game.vr_hand_enabled=true
-    var corrections: Array[Vector3]=[]
+    var pushed:=false
     var space:=get_world_3d().direct_space_state
     var exclusions: Array[RID]=[game.player.get_rid()]
     var scale: float=game.character_scale()
@@ -282,15 +302,24 @@ func step_hands(dt: float) -> void:
         game.targets[i].global_transform=Transform3D(a.orientation,a.target)
         game.vr_hand_offsets[i]=head.global_transform.affine_inverse()*a.desired/scale
         game.contact[i]=a.contact and not menu_open
-        if game.contact[i]: corrections.append(a.target-a.desired)
+        if not menu_open and game.game_running:
+            var impulse:Vector3=a.impulse(dt)
+            if not impulse.is_zero_approx():
+                game.player.velocity+=impulse
+                var horizontal:=Vector2(game.player.velocity.x,game.player.velocity.z).limit_length(game.MAX_HORIZONTAL_SPEED)
+                game.player.velocity.x=horizontal.x
+                game.player.velocity.z=horizontal.y
+                game.player.velocity.y=minf(game.player.velocity.y,game.MAX_UP_SPEED)
+                pushed=true
     game.vr_hand_tracked=tracked.duplicate()
     game.vr_hand_can_push=[tracked[0] and arms[0].grace<=0,tracked[1] and arms[1].grace<=0]
     game.have_previous_palm=true
     if menu_open:
         motion.reset()
         return
-    game.player.velocity=motion.apply(corrections,game.player.velocity,dt,scale)
-    game.hand_push_applied=not corrections.is_empty() or motion.released
+    # Original v52 impulses: no planted-contact averaging or release launcher.
+    motion.reset()
+    game.hand_push_applied=pushed
 
 func after_body(shift: Vector3,dt: float) -> void:
     if not immersive or menu_open: return
@@ -301,7 +330,7 @@ func after_body(shift: Vector3,dt: float) -> void:
         arms[i].after_move(shift,space,exclusions,game.character_scale())
         game.targets[i].global_transform=Transform3D(arms[i].orientation,arms[i].target)
         game.hand_visual[i]=game.player.to_local(arms[i].target)
-    motion.record(shift,dt)
+    # Gravity/friction and momentum are handled by the original main.gd path.
     _attach_player()
 
 func _physics_process(dt: float) -> void:
@@ -339,7 +368,7 @@ func _physics_process(dt: float) -> void:
     status_timer+=dt
     if status_timer>0.25:
         status_timer=0
-        var text: String="G2 Web 1.0.0 | "+("ESQ " if tracked[0] else "")+("DIR " if tracked[1] else "")
+        var text: String="G2 Web 1.0.1 | "+("ESQ " if tracked[0] else "")+("DIR " if tracked[1] else "")
         text += " | BRACO ESTIMADO 3DoF" if bridge==null or bridge.force3dof==true else " | POSE 6DoF"
         status.text=text+"\nGatilho longo: menu. Gesto contra a superficie: impulso. Levante para soltar."
         if bridge!=null:
@@ -348,6 +377,8 @@ func _physics_process(dt: float) -> void:
             bridge.map=game.selected_map
             bridge.position=JSON.stringify([game.player.position.x,game.player.position.y,game.player.position.z])
             bridge.fps=Engine.get_frames_per_second()
+            bridge.nickname=game.profile_name
+            bridge.presence=JSON.stringify(preload("res://g2_presence.gd").state(game))
             bridge.diagnostics=JSON.stringify({"menu":menu_open,"tracked":tracked,"arm_visible":[arm_meshes[0].visible,arm_meshes[1].visible],"role":game.active_character,"head":[head.global_position.x,head.global_position.y,head.global_position.z],"head_forward":[-head.global_basis.z.x,-head.global_basis.z.y,-head.global_basis.z.z],"hands":[[arms[0].target.x,arms[0].target.y,arms[0].target.z],[arms[1].target.x,arms[1].target.y,arms[1].target.z]],"running":game.game_running,"scale":get_viewport().scaling_3d_scale})
 
 func toggle_menu() -> void:
@@ -408,7 +439,7 @@ func _build_menu() -> void:
     for entry in [["Normal","normal"],["Grinner","grinner"],["Agarrar","grab"],["Motosserra","chainsaw"],["Soltar","release"],["Microfone","mic"],["Camera","camera"]]: _button(actions,entry[0],entry[1])
     var tools:=HBoxContainer.new()
     column.add_child(tools)
-    for entry in [["Gravar/parar","record"],["Dividir","split"],["Arrancar ESQ","tear_left"],["Arrancar DIR","tear_right"]]: _button(tools,entry[0],entry[1])
+    for entry in [["Nome","profile"],["Gravar/parar","record"],["Dividir","split"],["Arrancar ESQ","tear_left"],["Arrancar DIR","tear_right"]]: _button(tools,entry[0],entry[1])
     status=Label.new()
     status.add_theme_font_size_override("font_size",18)
     column.add_child(status)

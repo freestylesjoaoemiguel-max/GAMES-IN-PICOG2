@@ -844,7 +844,7 @@ func _physics_process(delta: float) -> void:
  update_chainsaw(delta)
  check_grabs(delta)
  if follow_monster(delta): return
- if not player.is_on_floor() and not (g2_xr.immersive and g2_xr.motion.supported): player.velocity.y -= (preload("res://g2_motion.gd").GRAVITY if g2_xr.immersive else 9.8) * delta
+ if not player.is_on_floor(): player.velocity.y -= 9.8 * delta
  if control_mode=="simples" and not vr_hand_enabled:
   var wish:Vector3=player.global_basis*Vector3(move_input.x,0,move_input.y)
   player.velocity.x=move_toward(player.velocity.x,wish.x*4.0,18.0*delta)

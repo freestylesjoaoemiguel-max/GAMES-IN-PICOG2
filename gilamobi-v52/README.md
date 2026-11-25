@@ -1,4 +1,4 @@
-# GilaMobi v52 — porte WebXR para avaliação no Pico G2
+# GilaMobi v52 — G2 Web 1.0.1
 
 Este é o **projeto Godot enviado**, com seus mapas, personagens e sistemas, não uma troca de nome em outro jogo. A versão web fica separada de OpenSaber, Gorilla Rush e MonkeGo.
 
@@ -13,11 +13,17 @@ Este é o **projeto Godot enviado**, com seus mapas, personagens e sistemas, nã
 - **Não testado num Pico G2 físico.** Firmware/navegador/versão do seu aparelho ainda não foram informados. Não há garantia de FPS, conforto, autonomia, instalação nem compatibilidade específica com o navegador instalado. Veja `docs/COMPATIBILITY.md`.
 - **Não é APK VR nativo.** A rota escolhida foi WebXR/GitHub Pages; o projeto Android original dependia de template/plugin nativo não fornecido por completo.
 
+## Correção 1.0.1
+
+Movimento clássico do v52 restaurado, mantendo as mãos seguindo o controle. Corrigida a altura virtual 3DoF que podia impedir contato com o piso. O lobby permite escolher o nome; em VR os clientes atualizados mostram **[VR PICO G2] em vermelho** acima do **nome verde**, e recebem o giro completo das mãos. Veja `docs/CHANGELOG.md`.
+
+Reabra o jogo com `?v=1.0.1` e confira **1.0.1 no painel**. Os outros jogadores também precisam atualizar para ver a etiqueta e a rotação; versões antigas não conhecem esses campos. A versão anterior está preservada no histórico/artefato indicado no changelog.
+
 ## Como usar
 
 1. Abra o link HTTPS no navegador do headset e aguarde “projeto v52 carregado”. A tela inicial comum é apenas uma prévia, não VR.
 2. Aponte o controle à frente, numa posição confortável, e clique **INICIAR VR**. Aceite a solicitação do navegador.
-3. Deixe **Braço estimado 3DoF** marcado no G2. Incline para baixo até encostar na superfície; continue o gesto para empurrar o corpo. Levante para soltar a mão. Não é preciso usar o touchpad ou manter o gatilho apertado para locomover.
+3. Escolha e salve seu nome no lobby. Deixe **Braço estimado 3DoF** marcado no G2. Dê uma batida inclinando o controle para baixo e para trás contra o chão; levante e repita. O impulso vem do movimento da mão contra a superfície, como no v52 original. Não é preciso usar o touchpad ou manter o gatilho apertado para locomover.
 4. Segure o gatilho por **1,1 segundo** para abrir/fechar o painel; aponte o raio e clique para selecionar. “Calibrar” redefine a posição neutra do gesto. “Recentrar” redefine a referência da cabeça.
 5. No painel: mapas Base/Backrooms/Sandbox, personagem Normal/Grinner no Sandbox, agarrar/motosserra, soltar/dividir/arrancar, microfone, câmera e gravação. “Menu original” permite acessar os outros recursos recebidos. Campos de texto têm teclado no painel VR.
 6. Somente fontes conectadas controlam braços. Esquerda/direita são respeitadas; controle sem indicação de mão (`tracker_2`) é atribuído uma vez à direita. Sem controle, não é inventada uma mão de apoio.
@@ -58,7 +64,7 @@ No headset, use HTTPS; `localhost` no headset não é seu PC. O workflow **Build
 
 ## Evidências e arquivos
 
-**Compilação aprovada:** [GitHub Actions 45530833066](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45530833066). Foram aprovados **37 testes do motor** e **22 verificações no navegador**. Os testes incluem gesto estimado contra o piso real, soltura, raio no menu e download AVI, além de entrada/saída/reentrada em sessão.
+**Registro da compilação anterior 1.0.0:** [GitHub Actions 45530833066](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45530833066). Foram aprovados **37 testes do motor** e **22 verificações no navegador**. Os testes incluem gesto estimado contra o piso real, soltura, raio no menu e download AVI, além de entrada/saída/reentrada em sessão.
 
 **Download do projeto completo:** nessa compilação, abra **Artifacts → GilaMobi-v52-WebXR-build-reports** (aproximadamente 68 MB). O ZIP inclui fontes modificadas, referências recebidas, export Web, ferramentas, testes, instruções e relatórios. É necessário entrar no GitHub; artefatos têm prazo de expiração. O projeto também permanece versionado nesta pasta do repositório.
 

@@ -1,5 +1,7 @@
 extends SceneTree
 const Motion=preload("res://g2_motion.gd")
+const Classic=preload("res://g2_classic_arm.gd")
+const Presence=preload("res://g2_presence.gd")
 var passed: Array[String]=[]
 var failed: Array[String]=[]
 func check(ok: bool,label: String) -> void:
@@ -34,6 +36,13 @@ func run() -> void:
     motion.apply(one,Vector3.ZERO,0.02,1)
     for i in 8: motion.record(Vector3(0,0,-.001),0.02)
     check(motion.apply(none,Vector3.ZERO,0.02,1)==Vector3.ZERO,"Subthreshold release cannot launch the player")
+    for hz in [10,30,60,72,90]:
+        var dt:=1.0/float(hz)
+        var impulse:=Classic.reaction(Vector3(0,-1,1)*dt,Vector3.UP,dt)
+        check(impulse.is_equal_approx(Vector3(0,1.15,-1.15)),"Original v52 velocity impulse at %s Hz"%hz)
+    check(Classic.reaction(Vector3(0,-.001,0),Vector3.UP,.02)==Vector3.ZERO,"Classic threshold ignores stationary/jitter contact")
+    check(Classic.reaction(Vector3(0,1,0),Vector3.UP,.02)==Vector3.ZERO,"Lifting never launches body downward")
+    check(Classic.reaction(Vector3(0,-10,10),Vector3.UP,.02).length()<=5.001,"Original v52 individual impulse capped at 5 m/s")
     var game=load("res://main.tscn").instantiate()
     root.add_child(game)
     await process_frame
@@ -109,6 +118,42 @@ func run() -> void:
     game.selected_map="sandbox"
     game.select_sandbox_role("grinner")
     check(game.active_character=="grinner" and game.skeleton.get_bone_count()>10,"Credited Grinner model and original role switch instantiate")
+    # Real outgoing JSON -> incoming state dispatcher -> actual remote rig.
+    rig.immersive=true
+    rig._attach_player()
+    for height in [0.0,1.6,2.8]:
+        rig.head.position.y=height
+        rig._attach_player()
+        check(is_equal_approx(rig.head.global_position.y-game.player.global_position.y,1.36*game.character_scale()),"3DoF avatar height independent of runtime floor offset %s"%height)
+    rig.head.position.y=0
+    rig._attach_player()
+    rig.tracked=[true,false]
+    game.profile_name="Nome verde"
+    game.network.state="joined";game.network.mode="sandbox";game.network.uid="self_fixture"
+    for axis in [Vector3.RIGHT,Vector3.UP,Vector3.FORWARD]:
+        var ok:=true
+        for degrees in range(0,361,45):
+            var q:=Quaternion(axis,deg_to_rad(float(degrees)))
+            game.targets[0].global_basis=Basis(q)
+            var packet:Dictionary=game.network.player_state()
+            packet["id"]="remote_fixture"
+            game.network._on_message(JSON.parse_string(JSON.stringify(packet)))
+            var remote=game.network.peers["remote_fixture"]
+            remote._process(1.0)
+            var received:Quaternion=remote.goals[0].global_basis.get_rotation_quaternion()
+            ok=ok and absf(received.dot(q))>.9999 and remote.rotation_valid[0] and not remote.rotation_valid[1]
+        check(ok,"Remote full 360-degree rotation roundtrip axis %s"%axis)
+    var peer=game.network.peers["remote_fixture"]
+    check(peer.vr_label.visible and peer.vr_label.text=="[VR PICO G2]" and peer.vr_label.modulate==Color("ff0000"),"Remote VR badge exact text and red color")
+    check(peer.name_label.text=="Nome verde" and peer.name_label.modulate==Color("00ff00") and peer.vr_label.position.y>peer.name_label.position.y,"Custom green name is below red VR badge")
+    check(Presence.decode_rotation([0,0,0,0])==null and Presence.decode_rotation([NAN,0,0,1])==null and Presence.decode_rotation(["bad",0,0,1])==null,"Malformed remote orientations rejected")
+    rig.immersive=false
+    var exit_packet:Dictionary=game.network.player_state();exit_packet["id"]="remote_fixture"
+    game.network._on_message(exit_packet)
+    check(not peer.vr_label.visible and peer.name_label.modulate==Color.WHITE and not peer.rotation_valid[0],"Leaving VR clears badge and returns legacy animation")
+    peer.set_xr_state({})
+    check(not peer.pico_vr,"Old clients without XR fields remain compatible")
+    game.network.state="idle"
     var result={"passed":passed,"failed":failed,"physical_pico_g2_tested":false,"runtime":"Godot 4.4.1 Compatibility on Xvfb/Mesa; actual source, meshes and physics engine"}
     print("G2_TEST_RESULT "+JSON.stringify(result))
     var file:=FileAccess.open("res://../docs/ENGINE_TESTS.json",FileAccess.WRITE)
