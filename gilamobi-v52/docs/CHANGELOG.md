@@ -1,3 +1,14 @@
+# v52-g2web-1.0.2 — corpo acompanha o olhar e identificação local
+
+- Corrigido corpo imóvel ao olhar para os lados: torso/cápsula e yaw enviado pela rede acompanham a direção horizontal real da cabeça. Referencial WebXR independente do corpo, sem realimentação/giro acumulado da câmera. Olhar não produz caminhada automática, nem inclina o corpo ao olhar para cima/baixo; mãos mantêm suas poses mundiais.
+- A 1.0.1 criava etiquetas somente nos avatares remotos. Agora o próprio personagem também tem `[VR PICO G2]` vermelho acima do nome verde durante VR, com nome salvo, troca de personagem e saída de VR sincronizados.
+- Identificação local na camada do avatar completo: visível no espelho e na câmera de gravação, não colada dentro dos olhos. Espelho deixa de ser desligado em VR; mantém limites de distância/visibilidade/resolução. Câmera Sandbox agora inclui avatar local completo e nome. Há custo adicional de renderização do espelho; FPS físico ainda não medido.
+- Novas regressões: yaw esquerda/direita por vários frames sem feedback, poses das mãos preservadas, nenhum deslocamento artificial, polos verticais, reconstrução Grinner, saída e cores da identidade local; leitura de pixels GL verifica vermelho/verde realmente renderizados.
+- Cache PCK/controles em 1.0.2. Rollback 1.0.1 preservado no commit `36c4828` e compilação `45655143379`. Jogos independentes e mudanças externas no repositório preservados.
+- Ainda sem teste em Pico G2 físico ou dois headsets pela internet. Outros jogadores devem reabrir a versão atualizada.
+
+---
+
 # v52-g2web-1.0.1 — movimento clássico e presença VR
 
 - Após relato de impossibilidade de andar no G2, o caminho VR voltou aos **impulsos por velocidade do v52 recebido**: velocidade de mão limitada a 6 m/s × escala, reação 1,15, limiar 0,22 m/s, impulso individual máximo 5 m/s, intervalo 0,22 s, limites corporais originais 7 m/s horizontal e 4,8 m/s vertical, gravidade 9,8. A média GMotion/apoio plantado/impulso de soltura da 1.0.0 não controla mais o corpo. Mantidas as colisões por esfera para não atravessar o mapa.

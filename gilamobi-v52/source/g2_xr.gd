@@ -36,6 +36,32 @@ var key_target: LineEdit
 var keyboard: PanelContainer
 var last_ui_pos := Vector2.ZERO
 var ui_mouse_down := false
+# Tracking reference never inherits the yaw we derive from the headset.
+# Otherwise each frame adds head yaw again and the world spins indefinitely.
+var reference_basis := Basis.IDENTITY
+var local_identity:Node3D
+
+func _sync_identity() -> void:
+    if not is_instance_valid(game.player): return
+    if not is_instance_valid(local_identity) or local_identity.get_parent()!=game.player:
+        if is_instance_valid(local_identity): local_identity.queue_free()
+        local_identity=preload("res://g2_identity.gd").new()
+        local_identity.name="IdentidadeLocalVR"
+        game.player.add_child(local_identity)
+    local_identity.update_identity(game.profile_name,immersive,game.active_character=="grinner")
+
+func _follow_head() -> void:
+    var forward:Vector3=-head.global_basis.z
+    forward.y=0
+    # At the vertical poles yaw is undefined: keep the last stable heading.
+    if forward.length_squared()<.0001: return
+    var yaw:=atan2(-forward.x,-forward.z)
+    # Targets are children of the body; do not rotate measured world-space
+    # controller poses a second time when rotating the torso/capsule.
+    var poses:Array[Transform3D]=[]
+    for target in game.targets: poses.append(target.global_transform)
+    game.player.global_rotation=Vector3(0,yaw,0)
+    for i in game.targets.size(): game.targets[i].global_transform=poses[i]
 
 func _ready() -> void:
     origin=XROrigin3D.new()
@@ -87,7 +113,7 @@ func _prepare_default() -> void:
     if bridge!=null:
         bridge.ready=true
         bridge.nickname=game.profile_name
-    print("[G2] GilaMobi v52 WebXR 1.0.1 ready")
+    print("[G2] GilaMobi v52 WebXR 1.0.2 ready")
 
 func _command(args: Array) -> void:
     if args.is_empty(): return
@@ -169,6 +195,7 @@ func _session_started() -> void:
     # Keep the XR target at its runtime size (do not duplicate a mono frame).
     get_viewport().scaling_3d_scale=1.0
     flat_camera=game.camera
+    reference_basis=game.player.global_basis.orthonormalized()
     _attach_player()
     game.camera=head
     head.make_current()
@@ -227,7 +254,7 @@ func _attach_player() -> void:
         for modifier in game.arm_iks: modifier.set_meta("g2_orientation",true)
         rig_ready=true
         reset_tracking()
-    origin.global_transform=game.player.global_transform
+    origin.global_transform=Transform3D(reference_basis,game.player.global_position)
     if bridge==null or bridge.force3dof==true:
         # G2 reports orientation, not a dependable floor/eye height. Anchor to
         # the original avatar height instead of adding local height twice.
@@ -235,9 +262,11 @@ func _attach_player() -> void:
     elif xr and xr.reference_space_type=="local":
         origin.position.y += 1.36*game.character_scale()
     if immersive:
+        _follow_head()
         game.camera=head
         head.make_current()
         game.ui.visible=false
+    _sync_identity()
 
 func reset_tracking() -> void:
     motion.reset()
@@ -335,6 +364,7 @@ func after_body(shift: Vector3,dt: float) -> void:
 
 var profile_sent:=""
 func _process(_dt:float) -> void:
+    _sync_identity()
     # The original lobby/profile editor can change the name outside XR too.
     if bridge!=null and profile_sent!=game.profile_name:
         profile_sent=game.profile_name
@@ -375,7 +405,7 @@ func _physics_process(dt: float) -> void:
     status_timer+=dt
     if status_timer>0.25:
         status_timer=0
-        var text: String="G2 Web 1.0.1 | "+("ESQ " if tracked[0] else "")+("DIR " if tracked[1] else "")
+        var text: String="G2 Web 1.0.2 | "+("ESQ " if tracked[0] else "")+("DIR " if tracked[1] else "")
         text += " | BRACO ESTIMADO 3DoF" if bridge==null or bridge.force3dof==true else " | POSE 6DoF"
         status.text=text+"\nGatilho longo: menu. Gesto contra a superficie: impulso. Levante para soltar."
         if bridge!=null:
@@ -386,7 +416,7 @@ func _physics_process(dt: float) -> void:
             bridge.fps=Engine.get_frames_per_second()
             bridge.nickname=game.profile_name
             bridge.presence=JSON.stringify(preload("res://g2_presence.gd").state(game))
-            bridge.diagnostics=JSON.stringify({"menu":menu_open,"tracked":tracked,"arm_visible":[arm_meshes[0].visible,arm_meshes[1].visible],"role":game.active_character,"head":[head.global_position.x,head.global_position.y,head.global_position.z],"head_forward":[-head.global_basis.z.x,-head.global_basis.z.y,-head.global_basis.z.z],"hands":[[arms[0].target.x,arms[0].target.y,arms[0].target.z],[arms[1].target.x,arms[1].target.y,arms[1].target.z]],"running":game.game_running,"scale":get_viewport().scaling_3d_scale})
+            bridge.diagnostics=JSON.stringify({"body_yaw":game.player.global_rotation.y,"identity":{"name":local_identity.name_label.text,"green":local_identity.name_label.modulate==Color("00ff00"),"badge":local_identity.vr_label.text,"visible":local_identity.vr_label.visible,"red":local_identity.vr_label.modulate==Color("ff0000"),"layers":local_identity.vr_label.layers},"mirror_active":game.get_node("Espelho").mirror_view.render_target_update_mode!=SubViewport.UPDATE_DISABLED,"menu":menu_open,"tracked":tracked,"arm_visible":[arm_meshes[0].visible,arm_meshes[1].visible],"role":game.active_character,"head":[head.global_position.x,head.global_position.y,head.global_position.z],"head_forward":[-head.global_basis.z.x,-head.global_basis.z.y,-head.global_basis.z.z],"hands":[[arms[0].target.x,arms[0].target.y,arms[0].target.z],[arms[1].target.x,arms[1].target.y,arms[1].target.z]],"running":game.game_running,"scale":get_viewport().scaling_3d_scale})
 
 func toggle_menu() -> void:
     _show_menu(not menu_open)

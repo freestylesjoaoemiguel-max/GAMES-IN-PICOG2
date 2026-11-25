@@ -56,6 +56,19 @@ try {
  await page.evaluate(()=>device.quaternion.set(0,Math.sin(.25),0,Math.cos(.25)));
  await wait(()=>Math.abs(JSON.parse(gila.diagnostics).head_forward[0])>.35);
  check(true,'Head orientation follows runtime pose');
+ const torsoStart=await page.evaluate(()=>JSON.parse(gila.position));
+ for(const angle of [-1.2,.8,2.8,-2.8,0]){
+  await page.evaluate(a=>device.quaternion.set(0,Math.sin(a/2),0,Math.cos(a/2)),angle);
+  await page.waitForTimeout(800);
+  const pose=await diag();
+  check(Math.abs(Math.atan2(Math.sin(pose.body_yaw-angle),Math.cos(pose.body_yaw-angle)))<.025&&Math.abs(pose.head_forward[0]+Math.sin(angle))<.025,'Torso follows real XR head yaw without spinning feedback: '+angle);
+ }
+ const torsoEnd=await page.evaluate(()=>JSON.parse(gila.position));
+ check(Math.hypot(torsoEnd[0]-torsoStart[0],torsoEnd[2]-torsoStart[2])<.02,'Looking around rotates body without artificial walking');
+ d=await diag();
+ check(d.identity.visible&&d.identity.red&&d.identity.green&&d.identity.badge==='[VR PICO G2]'&&d.identity.name==='Pico verde'&&d.identity.layers===4,'Actual local avatar identity: red badge and saved green name for mirror/camera');
+ await cmd('name:Nome em VR');await wait(()=>JSON.parse(gila.diagnostics).identity.name==='Nome em VR');
+ check((await diag()).identity.green,'Changing name during VR updates local green label');
  await page.evaluate(()=>device.controllers.left.connected=true);await wait(()=>gila.tracked===2);
  check((await diag()).arm_visible.every(Boolean),'Two real fixture sources enable both skinned arms');
  await page.evaluate(()=>device.controllers.right.connected=false);await wait(()=>gila.tracked===1&&!JSON.parse(gila.diagnostics).tracked[1]);
