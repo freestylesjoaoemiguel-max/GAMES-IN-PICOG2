@@ -107,7 +107,7 @@ func run() -> void:
     game.selected_map="sandbox"
     game.select_sandbox_role("grinner")
     check(game.active_character=="grinner" and game.skeleton.get_bone_count()>10,"Credited Grinner model and original role switch instantiate")
-    var result={"passed":passed,"failed":failed,"physical_pico_g2_tested":false,"runtime":"Godot 4.4.1 headless; actual source and physics engine"}
+    var result={"passed":passed,"failed":failed,"physical_pico_g2_tested":false,"runtime":"Godot 4.4.1 Compatibility on Xvfb/Mesa; actual source, meshes and physics engine"}
     print("G2_TEST_RESULT "+JSON.stringify(result))
     var file:=FileAccess.open("res://../docs/ENGINE_TESTS.json",FileAccess.WRITE)
     if file: file.store_string(JSON.stringify(result,"  "))

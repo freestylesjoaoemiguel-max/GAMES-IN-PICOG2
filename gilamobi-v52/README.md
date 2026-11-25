@@ -41,7 +41,7 @@ Limitações importantes:
 
 ## Compilar e testar
 
-Requisitos: **Godot 4.4.1 oficial + templates de exportação 4.4.1**, Python 3, Bash/coreutils. Para testes de navegador: Node 22 e npm.
+Requisitos: **Godot 4.4.1 oficial + templates de exportação 4.4.1**, Python 3, Bash/coreutils. No CI Linux, Xvfb/Mesa permite testar os buffers de morph no renderizador GL real (o renderizador Dummy não os implementa). Para testes de navegador: Node 22 e npm.
 
 ```bash
 GODOT=/caminho/para/godot bash gilamobi-v52/tools/build.sh
@@ -52,7 +52,7 @@ python3 -m http.server 5192 --bind 0.0.0.0 --directory gilamobi-v52/web
 PREVIEW_BASE_URL=http://127.0.0.1:5192/ node gilamobi-v52/tests/browser.mjs
 ```
 
-No headset, use HTTPS; `localhost` no headset não é seu PC. O workflow **Build GilaMobi v52 WebXR** faz importação, regressões no motor, export, verificação e regressões no navegador. O workflow Pages publica **apenas `web/`**, nunca fontes, emulador ou plugins Android.
+No headset, use HTTPS; `localhost` no headset não é seu PC. O workflow **Build GilaMobi v52 WebXR** faz importação, regressões no motor com GL/Xvfb, export, verificação e regressões no navegador. O workflow Pages publica **apenas `web/`**, nunca fontes, emulador ou plugins Android.
 
 `tools/preview_source.py` é somente um acelerador local de regressão: repacota scripts com assets já importados num diretório `.cache`. **Não é usado para gerar a versão publicada**, que deve passar pela exportação do motor.
 

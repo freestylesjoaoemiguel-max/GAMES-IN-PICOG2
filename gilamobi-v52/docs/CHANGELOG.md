@@ -29,7 +29,7 @@
 - Gravação Web termina o AVI original e solicita download via JavaScriptBridge; não finge usar encoder/galeria Android.
 
 ## Build/testes
-- Importação, testes headless e export via CI com versão fixa do motor.
+- Importação, testes do motor com GL/Xvfb e export via CI com versão fixa do motor.
 - Testes de variação de frequência/escala, impulsos, paredes/piso finos, sobreposição, mapas/rigs, perda de pose e braços ausentes.
 - Browser fixture usa WebXRInterface do próprio jogo, não bypass de locomotion em JS. Emulador restrito a testes.
 - Verificação de hashes fonte/export e proteção para não publicar o runtime IWER de testes.
