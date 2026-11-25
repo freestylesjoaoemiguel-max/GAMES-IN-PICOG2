@@ -1,0 +1,5 @@
+plugins { id 'java' }
+repositories { google(); mavenCentral() }
+configurations { bundles }
+dependencies { bundles 'com.google.mediapipe:tasks-vision:0.10.21' }
+tasks.register('fetchDeps', Copy) { from configurations.bundles; into 'resolved' }

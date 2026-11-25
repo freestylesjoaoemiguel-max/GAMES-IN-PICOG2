@@ -1,0 +1,35 @@
+{
+  "runtime": "Godot export + Chromium software WebGL2 + IWER 2.8.0 stereo fixture (NOT a headset)",
+  "base": "http://127.0.0.1:5192/",
+  "passed": [
+    "Actual v52 PCK and WASM boot in WebGL2",
+    "Button requests real immersive-vr API",
+    "Legacy base-layer path exercised through Layers polyfill",
+    "Only connected right hand visible and active",
+    "XR bypasses broken Godot 4.4 scaled multiview post pass",
+    "Estimated 3DoF stroke contacts actual floor and moves original player",
+    "Lifting estimated hand releases surface support",
+    "Head orientation follows runtime pose",
+    "Two real fixture sources enable both skinned arms",
+    "Controller disconnect hides its arm",
+    "Long trigger opens menu, release does not close it",
+    "Controller ray clicks actual world-space menu button",
+    "Original map switches inside immersive session: backrooms",
+    "Original map switches inside immersive session: sandbox",
+    "Original map switches inside immersive session: base",
+    "Grinner role rebuild retains XR and connected arm",
+    "Original Grinner tool commands and normal role switch execute",
+    "No sources means no invented or supporting hands",
+    "Ending session restores mono target without multiview framebuffer errors",
+    "Session can be started again and controller reconnected",
+    "Unsupported desktop runtime cannot enter fake VR",
+    "Original camera produces an actual browser-downloadable AVI"
+  ],
+  "failed": [],
+  "warnings": [
+    "texture-array layers are supported...questionably in the polyfill at the moment. Use at your own risk.",
+    "WebGL: INVALID_OPERATION: texParameter: no texture bound to target"
+  ],
+  "physical_pico_g2_tested": false,
+  "performance_benchmark": false
+}

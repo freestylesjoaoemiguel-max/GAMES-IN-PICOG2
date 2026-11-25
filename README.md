@@ -2,6 +2,14 @@
 
 Jogo de realidade virtual feito para o **Pico G2** e o controle de 3DoF (estilo Meta Quest): mundos em 360°, personagens 3D que andam e conversam com IA, casas com interior, braços que seguem o controle, sons e música. Tudo roda no navegador, sem instalar nada.
 
+## GilaMobi v52 — projeto enviado, porte WebXR separado
+
+- **[Abrir GilaMobi v52 — G2 Web 1.0.0](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gilamobi-v52/)**
+- Aguarde carregar e toque **INICIAR VR**. Incline o controle para apoiar/empurrar; levante para soltar. Gatilho por **1,1 s** abre o menu.
+- Mapas e modelos do projeto recebido, mãos/IK e braço **estimado 3DoF**, sem inventar um segundo controle. Requer **WebXR immersive-vr, WebGL2 e multiview** no navegador.
+- **Não é APK nativo. Pico G2 físico e FPS não validados.** Compilação e testes automatizados não garantem compatibilidade com o navegador instalado. [Projeto completo, build, testes e limitações](gilamobi-v52/README.md).
+- OpenSaber e Gorilla Rush continuam nos links anteriores, sem substituição.
+
 ## OpenSaber — WebXR experimental para o G2
 
 - **[Abrir OpenSaber — G2 Web 1.0.0](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/opensaber/)**
