@@ -87,7 +87,7 @@ func run() -> void:
     check(rig.source_for(1)==null,"Pose loss rejects stale tracker")
     XRServer.remove_tracker(t)
     var face_before: MeshInstance3D=game.skeleton.get_node("Gilla")
-    var morph_count:=face_before.mesh.get_blend_shape_count()
+    var morph_count: int=face_before.mesh.get_blend_shape_count()
     rig.immersive=true
     rig._attach_player()
     check(face_before.mesh.get_blend_shape_count()==morph_count,"Skin partition retains original facial blend shapes")

@@ -34,6 +34,16 @@ try {
  let d=await diag();check(!d.tracked[0]&&d.tracked[1]&&!d.arm_visible[0]&&d.arm_visible[1],'Only connected right hand visible and active');
  check(d.scale===1,'XR bypasses broken Godot 4.4 scaled multiview post pass');
  await page.waitForTimeout(1000);await page.screenshot({path:CACHE+'/stereo.png'});
+ const beforeStroke=await page.evaluate(()=>JSON.parse(gila.position));let touched=false;
+ for(const angle of [.25,.36,.44,.52,.60]){
+  await page.evaluate(a=>device.controllers.right.quaternion.set(-Math.sin(a/2),0,0,Math.cos(a/2)),angle);
+  await page.waitForTimeout(300);touched=touched||await page.evaluate(()=>gila.contacts>0);
+ }
+ const afterStroke=await page.evaluate(()=>JSON.parse(gila.position));
+ check(touched&&Math.abs(afterStroke[2]-beforeStroke[2])>.03,'Estimated 3DoF stroke contacts actual floor and moves original player');
+ await page.evaluate(()=>device.controllers.right.quaternion.set(0,0,0,1));await page.waitForTimeout(500);
+ check(await page.evaluate(()=>gila.contacts===0),'Lifting estimated hand releases surface support');
+ await cmd('base');await page.waitForTimeout(2200);
  await page.evaluate(()=>device.quaternion.set(0,Math.sin(.25),0,Math.cos(.25)));
  await wait(()=>Math.abs(JSON.parse(gila.diagnostics).head_forward[0])>.35);
  check(true,'Head orientation follows runtime pose');
