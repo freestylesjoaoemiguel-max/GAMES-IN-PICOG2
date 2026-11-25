@@ -1,0 +1,141 @@
+# Builds PICO-VR-Operation-Zero.apk (Android / Pico G2 / G2 4K) and publishes it as a workflow artifact.
+#
+# The game is a native Android project (Java + OpenGL ES 3.0, own engine). Unity is NOT used, so no
+# Unity license / UNITY_* secrets are required. Everything needed is public: JDK, Android SDK, Gradle.
+name: Build APK
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      APK_NAME: PICO-VR-Operation-Zero.apk
+      PACKAGE: com.joaolimz.operationzero
+      VERSION_NAME: 1.0.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK (preinstalled on the runner)
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+          SDKM=$(ls "$SDK"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | sort -V | tail -1)
+          echo "sdkmanager: $SDKM"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" --install "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          ls "$SDK/platforms" "$SDK/build-tools"
+
+      - name: Set up Gradle (cache)
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Unit + simulation tests (JVM)
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon testDebugUnitTest
+
+      - name: Build release APK (Gradle)
+        id: gradle
+        continue-on-error: true
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Fallback build without Gradle (aapt + dx + apksigner)
+        if: steps.gradle.outcome != 'success'
+        run: |
+          echo "::warning::Gradle build failed - using the manual toolchain fallback"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq aapt dalvik-exchange zipalign apksigner
+          for m in app pegapega vrweb; do
+            MODULE=$m tools/build-apk-manual.sh "$ANDROID_HOME/platforms/android-34/android.jar" build-manual/$m
+            mkdir -p $m/build/outputs/apk/release
+            cp build-manual/$m/*.apk $m/build/outputs/apk/release/
+          done
+
+      - name: Validate APKs
+        run: |
+          BT="$ANDROID_HOME/build-tools/34.0.0"
+          validate() {
+            APK=$1; PKG=$2; NET=${3:-no}
+            test -f "$APK" || { echo "APK not found: $APK"; ls -R */build/outputs || true; exit 1; }
+            "$BT/apksigner" verify --verbose "$APK"
+            "$BT/aapt2" dump badging "$APK" | tee badging.txt
+            grep -q "package: name='$PKG'" badging.txt
+            grep -q "versionName='$VERSION_NAME'" badging.txt
+            if [ "$NET" = "no" ]; then ! grep -q "android.permission.INTERNET" badging.txt; fi   # the games must stay fully offline
+            unzip -l "$APK" | grep -q classes.dex
+            SIZE=$(stat -c%s "$APK"); echo "APK size: $SIZE bytes"; test "$SIZE" -gt 50000
+            sha256sum "$APK" | tee "$APK.sha256"
+            {
+              echo "### $(basename $APK)"
+              echo "- package: \`$PKG\` / versionName \`$VERSION_NAME\` / size $SIZE bytes"
+              echo "- sha256: \`$(cut -d' ' -f1 "$APK.sha256")\`"
+              echo ""
+            } >> "$GITHUB_STEP_SUMMARY"
+          }
+          validate app/build/outputs/apk/release/$APK_NAME $PACKAGE
+          validate pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk com.joaolimz.pegapega
+          validate vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk com.joaolimz.vrweb net
+
+      - name: Upload APK artifact
+        id: upload
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 14
+          name: PICO-VR-APKs
+          path: |
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk.sha256
+            pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk
+            pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk.sha256
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk.sha256
+          if-no-files-found: error
+
+      - name: Artifact upload status
+        if: steps.upload.outcome != 'success'
+        run: |
+          echo "::warning::The APK was built and validated, but uploading the artifact failed (usually the account's Actions artifact storage quota is full). Delete old artifacts in Settings > Actions or wait for the quota to be recalculated, then re-run; or push a tag v* to publish it as a GitHub Release."
+          echo "**Artifact upload failed** (storage quota?). The APK itself was built and validated - see the log above." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload test reports
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 7
+          name: test-reports
+          path: |
+            app/build/reports/tests/
+            pegapega/build/reports/tests/
+            vrweb/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: Publish GitHub Release (tags v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk
+            app/build/outputs/apk/release/PICO-VR-Operation-Zero.apk.sha256
+            pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk
+            pegapega/build/outputs/apk/release/PICO-VR-Pega-Pega.apk.sha256
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk
+            vrweb/build/outputs/apk/release/PICO-VR-Navegador.apk.sha256

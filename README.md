@@ -141,3 +141,8 @@ A versão atual usa o novo arquivo **Gorilla Rush v45** enviado pelo usuário, p
 
 **APK = jogo em tela/WebView + botão para abrir o navegador VR, não porte VR nativo PICO.**
 Gráficos baixos por padrão. Os testes automatizados usam poses simuladas; PICO G2 físico, instalação Android e FPS ainda não validados.
+
+## PICO VR (WebXR + APKs nativos)
+
+* **Versão WebXR (sem instalar APK)** — Pega-Pega, Operation Zero e visualizador de ambientes direto no navegador do Pico: [`webxr/`](webxr/README.md). Site publicado em `https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/` pela branch `gh-pages` (workflow `pages-webxr.yml`; ative em *Settings → Pages* se ainda não estiver).
+* **APKs nativos** (Operation Zero, Pega-Pega, Navegador/Discord web): módulos `app/`, `pegapega/`, `vrweb/`, APKs prontos em `release/` — documentação em [`README-PICO-VR.md`](README-PICO-VR.md).

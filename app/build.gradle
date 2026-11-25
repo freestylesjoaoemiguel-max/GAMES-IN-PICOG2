@@ -1,0 +1,56 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.joaolimz.operationzero'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.joaolimz.operationzero'
+        // Pico G2 / G2 4K run Android 8.x (API 26/27)
+        minSdk 24
+        targetSdk 29
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    buildTypes {
+        release {
+            // Sideloaded APK: signed with the debug key so it installs directly via ADB.
+            // Replace with your own keystore for distribution (see README).
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+// Rename the release APK to the required artifact name.
+android.applicationVariants.configureEach { variant ->
+    variant.outputs.configureEach {
+        if (variant.buildType.name == 'release') {
+            outputFileName = 'PICO-VR-Operation-Zero.apk'
+        } else {
+            outputFileName = "PICO-VR-Operation-Zero-${variant.buildType.name}.apk"
+        }
+    }
+}
