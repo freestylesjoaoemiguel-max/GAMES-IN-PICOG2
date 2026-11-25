@@ -59,7 +59,7 @@ static func sweep(space: PhysicsDirectSpaceState3D, from: Vector3, to: Vector3, 
         var overlap := space.get_rest_info(q)
         if overlap.is_empty(): break
         normal = overlap.normal
-        var depth := radius + 0.004 - (pos - overlap.point).dot(normal)
+        var depth: float = radius + 0.004 - (pos - overlap.point).dot(normal)
         if depth <= 0.0: break
         pos += normal * depth
         touched = true

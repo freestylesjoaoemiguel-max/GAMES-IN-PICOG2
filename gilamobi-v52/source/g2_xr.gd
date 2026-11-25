@@ -259,7 +259,7 @@ func step_hands(dt: float) -> void:
             game.held[i]={}
             continue
         var raw: Transform3D=t.get_pose("default").get_adjusted_transform()
-        var force_arm:=true if bridge==null else bridge.force3dof==true
+        var force_arm: bool=true if bridge==null else bridge.force3dof==true
         arms[i].valid=true
         arms[i].update(dt,origin.global_transform,head.global_position,raw,force_arm,-1.0 if i==0 else 1.0,scale,space,exclusions)
         if arms[i].discontinuity:
