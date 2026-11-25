@@ -27,11 +27,15 @@ try {
  });
  await page.goto(base);await wait(()=>window.gila?.ready);
  check(true,'Actual v52 PCK and WASM boot in WebGL2');
+ await page.locator('#g2-name').fill('Pico verde');await page.locator('#g2-save-name').click();
+ await wait(()=>gila.nickname==='Pico verde');
+ check(true,'Lobby input saves custom player name through Godot profile settings');
  await page.getByText('INICIAR VR',{exact:true}).click();
  await wait(()=>gila.immersive&&gila.tracked===1);
  check(await page.evaluate(()=>requestArgs[0]==='immersive-vr'),'Button requests real immersive-vr API');
  check(await page.evaluate(()=>gila.layersPolyfilled),'Legacy base-layer path exercised through Layers polyfill');
  let d=await diag();check(!d.tracked[0]&&d.tracked[1]&&!d.arm_visible[0]&&d.arm_visible[1],'Only connected right hand visible and active');
+ check(await page.evaluate(()=>JSON.parse(gila.presence).vr_pico_g2===true),'VR session publishes Pico identity');
  check(d.scale===1,'XR bypasses broken Godot 4.4 scaled multiview post pass');
  await page.waitForTimeout(1000);await page.screenshot({path:CACHE+'/stereo.png'});
  const beforeStroke=await page.evaluate(()=>JSON.parse(gila.position));let touched=false;
@@ -43,6 +47,11 @@ try {
  check(touched&&Math.abs(afterStroke[2]-beforeStroke[2])>.03,'Estimated 3DoF stroke contacts actual floor and moves original player');
  await page.evaluate(()=>device.controllers.right.quaternion.set(0,0,0,1));await page.waitForTimeout(500);
  check(await page.evaluate(()=>gila.contacts===0),'Lifting estimated hand releases surface support');
+ for(const height of [0,1.6,2.8]){
+  await page.evaluate(h=>device.position.y=h,height);await page.waitForTimeout(450);
+  check(await page.evaluate(()=>Math.abs(JSON.parse(gila.diagnostics).head[1]-JSON.parse(gila.position)[1]-1.36)<.03),'3DoF eye anchor handles runtime height '+height);
+ }
+ await page.evaluate(()=>device.position.y=1.6);
  await cmd('base');await page.waitForTimeout(2200);
  await page.evaluate(()=>device.quaternion.set(0,Math.sin(.25),0,Math.cos(.25)));
  await wait(()=>Math.abs(JSON.parse(gila.diagnostics).head_forward[0])>.35);

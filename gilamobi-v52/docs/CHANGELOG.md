@@ -1,3 +1,17 @@
+# v52-g2web-1.0.1 — movimento clássico e presença VR
+
+- Após relato de impossibilidade de andar no G2, o caminho VR voltou aos **impulsos por velocidade do v52 recebido**: velocidade de mão limitada a 6 m/s × escala, reação 1,15, limiar 0,22 m/s, impulso individual máximo 5 m/s, intervalo 0,22 s, limites corporais originais 7 m/s horizontal e 4,8 m/s vertical, gravidade 9,8. A média GMotion/apoio plantado/impulso de soltura da 1.0.0 não controla mais o corpo. Mantidas as colisões por esfera para não atravessar o mapa.
+- Posição da cabeça no modo **estimado 3DoF** ancorada na altura do personagem (1,36 m × escala); offsets de altura diferentes em `local`/`local-floor` não afastam a mão do chão. Rotação continua vindo do controle/cabeça reais; não é tracking posicional 6DoF.
+- A mão acompanha todos os eixos do controle. Novo pacote transmite quaternion mundial e máscara das mãos rastreadas; receptor interpola a orientação e aplica ao IK. Antes a rede transmitia apenas posição, perdendo o giro do pulso.
+- Ao entrar em sessão imersiva, os outros clientes **atualizados** mostram `[VR PICO G2]` vermelho, acima do nome escolhido em verde. Ao sair, a etiqueta é removida. Isso indica o modo do software, não autenticação do modelo físico do aparelho.
+- Campo de nome no lobby Web, salvo antes de iniciar VR; opção **Nome** no painel VR abre o editor/teclado original. Nome limitado e higienizado pelo validador recebido.
+- Pacotes antigos continuam aceitos sem etiqueta/rotação inventadas. Outros jogadores precisam atualizar/reabrir o jogo para exibir os campos novos.
+- Cache do PCK e dos controles versionado em 1.0.1. A 1.0.0 continua recuperável no commit `6257ffb` e no artefato da compilação `45531181134`; os arquivos de referência de movimento anteriores não foram apagados.
+- Testes ampliados: movimento clássico em diferentes frequências, alturas 0/1,6/2,8 m do runtime, nome no lobby, mensagens reais de estado de ida/volta para o avatar remoto, giro 360° em três eixos, cores/ordem das etiquetas, saída de VR e rejeição de quaternions inválidos.
+- **Ainda sem teste físico no G2 e sem ensaio de dois headsets pela internet.** O teste de rede usa o serializador e o receptor reais em fixture local; não comprova disponibilidade do broker público.
+
+---
+
 # v52-g2web-1.0.0
 
 ## Projeto/proveniência
