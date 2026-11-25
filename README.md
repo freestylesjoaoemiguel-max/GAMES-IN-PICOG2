@@ -144,5 +144,5 @@ Gráficos baixos por padrão. Os testes automatizados usam poses simuladas; PICO
 
 ## PICO VR (WebXR + APKs nativos)
 
-* **Versão WebXR (sem instalar APK)** — Pega-Pega, Operation Zero e visualizador de ambientes direto no navegador do Pico: [`webxr/`](webxr/README.md). Site publicado em `https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/` pela branch `gh-pages` (workflow `pages-webxr.yml`; ative em *Settings → Pages* se ainda não estiver).
+* **Versão WebXR (sem instalar APK)** — Pega-Pega, Operation Zero e visualizador de ambientes direto no navegador do Pico: [`webxr/`](webxr/README.md). Site publicado pelo workflow *Deploy GitHub Pages* em `https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/pico-vr/`.
 * **APKs nativos** (Operation Zero, Pega-Pega, Navegador/Discord web): módulos `app/`, `pegapega/`, `vrweb/`, APKs prontos em `release/` — documentação em [`README-PICO-VR.md`](README-PICO-VR.md).

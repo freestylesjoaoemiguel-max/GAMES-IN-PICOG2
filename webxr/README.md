@@ -10,15 +10,15 @@ Nada para instalar: abra uma página **HTTPS** no **Navegador do Pico**, toque e
 
 > O Metulas **não é um jogo**: é um *lançador/shell* de ambientes. Por isso aqui ele vira um **visitante de ambientes** (dá para andar, voar, trocar de ambiente), não um jogo.
 
-## 1. Colocar o site no ar (uma vez, 1 minuto)
+## 1. Onde abrir
 
-O repositório é público e o workflow `.github/workflows/pages-webxr.yml` publica o site na branch `gh-pages` a cada push que mexe em `webxr/`.
+O workflow **Deploy GitHub Pages** da `main` testa, compila e publica este site junto com os outros apps. Endereço:
 
-1. GitHub → **Settings → Pages** → *Build and deployment* → **Source: Deploy from a branch** → **Branch: `gh-pages` / `(root)`** → Save.
-2. Aguarde ~1 min. O endereço fica: **`https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/`**
-3. No Pico: Navegador → digite o endereço (ou gere um QR code do endereço e abra pelo celular → "enviar para o headset").
+**`https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/pico-vr/`**
 
-Alternativas sem GitHub Pages: arraste a pasta de `release/pico-g2-webxr-site.zip` (descompactada) para <https://app.netlify.com/drop>, ou use qualquer hospedagem estática com HTTPS. WebXR **só funciona em HTTPS** (ou `localhost`; com ADB: `adb reverse tcp:8080 tcp:8080` e abra `http://localhost:8080` no headset).
+No Pico: Navegador → digite o endereço (ou gere um QR code e abra pelo celular → enviar para o headset).
+
+Sem GitHub Pages: descompacte `release/pico-g2-webxr-site.zip` e hospede a pasta em qualquer HTTPS estático (ex.: <https://app.netlify.com/drop>). WebXR **só funciona em HTTPS** (ou `localhost`; com ADB: `adb reverse tcp:8080 tcp:8080` e abra `http://localhost:8080` no headset).
 
 ## 2. Como usar no Pico G2
 

@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    paths: ['.github/workflows/pages.yml', '.github/scripts/check-browser.sh', 'opensaber/**']
+    paths: ['.github/workflows/pages.yml', '.github/scripts/check-browser.sh', 'opensaber/**', 'webxr/**']
   workflow_dispatch:
 permissions:
   contents: read
@@ -23,6 +23,7 @@ jobs:
           cache-dependency-path: |
             discord-vr-g2/package-lock.json
             pulse-saber-g2/package-lock.json
+            webxr/package-lock.json
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -98,6 +99,15 @@ jobs:
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
           PREVIEW_BASE_URL=http://127.0.0.1:5192/ node gilamobi-v52/tests/browser.mjs
+      - name: Test and build Pico G2 WebXR (Pega-Pega, Operation Zero, ambientes) - never blocks the other apps
+        id: picovr
+        continue-on-error: true
+        working-directory: webxr
+        run: |
+          set -euo pipefail
+          npm ci --no-audit --no-fund
+          npm test
+          npm run build
       - name: Preserve PicoVerso and add independent WebXR apps
         run: |
           set -euo pipefail
@@ -116,6 +126,14 @@ jobs:
           mkdir -p site/discord-vr-g2
           cp -r index.html js lib site/
           cp -r discord-vr-g2/build/webxr/. site/discord-vr-g2/
+          if [ "${{ steps.picovr.outcome }}" = "success" ]; then
+            mkdir -p site/pico-vr
+            cp webxr/index.html site/pico-vr/
+            cp -r webxr/css webxr/dist site/pico-vr/
+            rm -f site/pico-vr/dist/*.map
+          else
+            echo "::warning::Pico VR WebXR build failed - site published without /pico-vr/"
+          fi
           touch site/.nojekyll
           (cd discord-vr-g2/build/webxr && zip -qr ../Discord-VR-G2-WebXR.zip .)
           cp discord-vr-g2/build/Discord-VR-G2-WebXR.zip site/discord-vr-g2/downloads/
