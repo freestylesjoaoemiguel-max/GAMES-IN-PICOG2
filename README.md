@@ -19,6 +19,12 @@ foram criados neste projeto, nada vem de Boneworks/Bonelab ou de outros jogos.
 *Imagens geradas a partir da fila de renderização real do jogo por um rasterizador de teste em CPU
 (sem texto/HUD textual e sem a textura de detalhe); não são capturas do headset.*
 
+## ⭐ Versão WebXR (sem instalar APK): [`webxr/`](webxr/README.md)
+
+Tudo roda **direto no navegador do Pico** (página HTTPS + WebXR): **Pega-Pega** (estilo Gorilla Tag), **Operation Zero** (FPS em ondas)
+e visualizador de **ambientes 3D** (carrega o *seu* `Metulas.apk` localmente, nada é enviado/publicado).
+Site publicado pelo GitHub Pages: `https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/` (veja [webxr/README.md](webxr/README.md) para ativar).
+
 ## Jogos neste repositório
 
 | Jogo | Descrição | APK |
