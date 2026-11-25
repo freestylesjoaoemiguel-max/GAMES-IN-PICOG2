@@ -1,6 +1,6 @@
 {
   "godot": "4.4.1.stable",
-  "version": "v52-g2web-1.0.1",
+  "version": "v52-g2web-1.0.2",
   "files": {
     "controls.css": {
       "bytes": 1334,
@@ -8,7 +8,7 @@
     },
     "controls.js": {
       "bytes": 4950,
-      "sha256": "e2f5f8ea4651c97c7bd74a86ff1467a638bddbb8e7cefdf95bdb0bcef6c12b33"
+      "sha256": "2c7ecd087a823f005017c1543433878f0cb277cdd4337519ad46685eba14216e"
     },
     "game.apple-touch-icon.png": {
       "bytes": 42322,
@@ -24,7 +24,7 @@
     },
     "game.html": {
       "bytes": 5392,
-      "sha256": "467812b870dc60da9f778c65f614281b6cf451ac60b2fda61ccc99096e550dc4"
+      "sha256": "05ddf7a8ab1520066c5f577446f4e30d4314481d7f213ebb50e332fa2e272437"
     },
     "game.icon.png": {
       "bytes": 51332,
@@ -35,8 +35,8 @@
       "sha256": "19eb180d568bb8e17bcf4c72ca034ed3af44deeb90304deefee4e665562dfe31"
     },
     "game.pck": {
-      "bytes": 23577504,
-      "sha256": "6a94ccb04d134e1eefa288ebf80dd895ff7fec9be0aa755de69bdeabac0fdd5e"
+      "bytes": 23586048,
+      "sha256": "c27a2cd68b4035b257da7fe11cc5389c5360d38701209924a30e6ca8b2ff6359"
     },
     "game.png": {
       "bytes": 21443,
@@ -48,7 +48,7 @@
     },
     "index.html": {
       "bytes": 5522,
-      "sha256": "7cdff50d002fc7e35b9a1eff5b2957966cf8f866ef0873d1d9c5c89b6e95bf26"
+      "sha256": "77613dafdf1f5e95f76bee42dd8a2d9e6ebb7172157adb5d213366f1e1acda89"
     },
     "licenses/CREDITOS-MODELO.txt": {
       "bytes": 365,
@@ -94,10 +94,11 @@
     "source/facial_animation.gd": "fe2f0d0fc07350c68c9afd7f48655999087554576b0d17777a340fcb9b565dee",
     "source/g2_arm.gd": "7d1d45634316dfebd343b519cc2880587ccb03fa49d32d97bd001b7187d32148",
     "source/g2_classic_arm.gd": "9833d97a7b01e837c3db2e3af75474e252e643f805c856ead481e84e22a76c50",
+    "source/g2_identity.gd": "2e2d4e1bc93131e35c5e03c307ed71a029294316f4219e7bf5bb1c5d671c2127",
     "source/g2_motion.gd": "c548d560d613e6bfb44a54071d5c7e72d0be5eeda280c11ef3a6f69b3f2ca841",
     "source/g2_presence.gd": "dce3b05189bfa329e2f154dc8097514281520882bb896c915c028869c99c93f7",
     "source/g2_skin.gd": "75cd24153848aa29786d86c95a76ebbadb8ba7cb3b9a5d5062c39554041a37c7",
-    "source/g2_xr.gd": "e8ae384b3fa74fd47e9f9f5e841a2e0997f5339d3ea0e25a18d0bef166389bed",
+    "source/g2_xr.gd": "0e4e1c125a0cfeff0cf0e365f0eec13741cd9b5669e111ce31c6ba66e9692f4d",
     "source/gore_effect.gd": "cc9f2ed81322abb02957e1f8b0c2dc4abdd69d29505a1415638ad98f8f4e72ab",
     "source/grinner_prototipo.gd": "0d858ef50c3912cb956ddb510e89ecbd5eaca17f64a82172a2db63e2cfb3a50b",
     "source/hand_overlay.gd": "b0f5e9f7b47326ef1dc5c0ddc71a9602c4f2e96a89032aa7c872a62fe7d8c37f",
@@ -108,7 +109,7 @@
     "source/main.gd": "5ecf191928d8e412338e5f715fc0bfca0016675d02734cfe8054f9a9f945fde1",
     "source/main.tscn": "be5ac54bef9c193ca9d827bf0e6a8378c42efb087773f5f9ad9bd768b1dfb1ac",
     "source/menu.gd": "8b5e0fb349f58b3dedfc6cd862635fa6e3fafcfff28b910f90a8352a350e293d",
-    "source/mirror.gd": "40d46829e2caffd51ceebcfaa2d27351ecf1d42facae2f17edef660d5862bfdc",
+    "source/mirror.gd": "2bf3e15876b0fff7bedee2a0364ac93247423159f0f53a39d2d74448c3320cb4",
     "source/monster_model.gd": "922ba4584417960e65756a0a12967b9092cbcae9c2496d10ed88f05699119fac",
     "source/network.gd": "411cd8e146950af6b56fde1b8ba384c8d14e047f8dee29a1e89ff7cb5e6cfd10",
     "source/profile_name.gd": "aa0fc8a2f08f055dfc25453638a083c9d6335518a238d9f7bc76825261cbe5e8",
@@ -118,7 +119,7 @@
     "source/ragdoll_body.gd": "c2094cc0e14df2806a38fee71d4da3c1005a03c0b9a364c55eb57f67f4bd8645",
     "source/remote_avatar.gd": "2b497762cdab2e7ad4673cd3d0b29d69ae35a8ff191f50798257249a580cc1b7",
     "source/sandbox_builder.gd": "01b72290810eda7ac424ff87bf9b7cea142d512c2e189af4410d63beda9f3500",
-    "source/sandbox_camera.gd": "558e7840d37b5cbd22cea0a5e7cd814c866a2d27a400a0280277f1baec866618",
+    "source/sandbox_camera.gd": "c8bd7341ce2cd7bbd1fec37660441a14d6eea2c4e982f0b681b3f84d1db128f8",
     "source/sandbox_npc.gd": "bc99fba0cc91148c9c9dbb9a4c06fee7c1e2fbab36ab7e4bb973b6fceb5b7277",
     "source/saw_split_visual.gd": "5bee3fcbe751261091ec728feafc016caaca6400f30d77f43e6ea08445eb01c7",
     "source/split_visual.gd": "e03860becd6aadba4a9819098f8e5ea49e881f62b7374f5e0159dd9d94454eb4",

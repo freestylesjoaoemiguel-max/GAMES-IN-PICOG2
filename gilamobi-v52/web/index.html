@@ -96,7 +96,7 @@ body {
 	</head>
 	<body>
 <script src="vendor/webxr-layers-polyfill.js"></script>
-<script src="controls.js?v=1.0.1"></script>
+<script src="controls.js?v=1.0.2"></script>
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
 		</canvas>
@@ -113,7 +113,7 @@ body {
 
 		<script src="game.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"game","experimentalVK":false,"fileSizes":{"game.pck":23577504,"game.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"game","experimentalVK":false,"fileSizes":{"game.pck":23586048,"game.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -201,7 +201,7 @@ const engine = new Engine(GODOT_CONFIG);
 		}
 	} else {
 		setStatusMode('progress');
-		engine.startGame({'mainPack':'game.pck?v=1.0.1',
+		engine.startGame({'mainPack':'game.pck?v=1.0.2',
 			'onProgress': function (current, total) {
 				if (current > 0 && total > 0) {
 					statusProgress.value = current;
