@@ -88,9 +88,11 @@ func run() -> void:
     XRServer.remove_tracker(t)
     var face_before: MeshInstance3D=game.skeleton.get_node("Gilla")
     var morph_count: int=face_before.mesh.get_blend_shape_count()
+    var original_material: Material=face_before.get_active_material(0)
     rig.immersive=true
     rig._attach_player()
     check(face_before.mesh.get_blend_shape_count()==morph_count,"Skin partition retains original facial blend shapes")
+    check(rig.arm_meshes[0].get_active_material(0)==original_material and rig.arm_meshes[1].get_active_material(0)==original_material,"Partitioned arms preserve imported material overrides and textures")
     check(rig.arm_meshes.size()==2 and rig.arm_meshes[0].mesh.get_surface_count()>0 and rig.arm_meshes[1].mesh.get_surface_count()>0,"Original skinned arms split for independent visibility")
     rig.step_hands(1.0/72.0)
     check(not rig.arm_meshes[0].visible and not rig.arm_meshes[1].visible,"Missing hands hidden; no invisible support")

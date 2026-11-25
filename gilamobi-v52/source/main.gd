@@ -106,6 +106,9 @@ func set_cosmetics(color: int, accessory: int) -> Error:
  var saved:=save_custom_settings()
  if is_instance_valid(player) and active_character=="normal":
   preload("res://cosmetics.gd").paint(skeleton.get_node("Gilla"),cosmetic_color)
+  if is_instance_valid(g2_xr):
+   for arm in g2_xr.arm_meshes:
+    if is_instance_valid(arm):preload("res://cosmetics.gd").paint(arm,cosmetic_color)
   var mirror_avatar=player.get_node_or_null("PersonagemNoEspelho")
   if mirror_avatar:
    preload("res://cosmetics.gd").paint(mirror_avatar.get_node("Gilla_Rig/Skeleton3D/Gilla"),cosmetic_color)

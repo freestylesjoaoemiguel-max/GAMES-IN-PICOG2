@@ -11,6 +11,7 @@ static func split(mesh: MeshInstance3D, rig: Skeleton3D) -> Dictionary:
         for index in source.get_blend_shape_count():
             part.add_blend_shape(source.get_blend_shape_name(index))
     var selected := [{},{}]
+    var overrides: Array[Array]=[[],[],[]]
     for side in 2:
         var root := rig.find_bone("upperarm_"+("L" if side==0 else "R"))
         for bind in skin.get_bind_count():
@@ -54,11 +55,15 @@ static func split(mesh: MeshInstance3D, rig: Skeleton3D) -> Dictionary:
             copy[Mesh.ARRAY_INDEX]=kept[part]
             parts[part].add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,copy,source.surface_get_blend_shape_arrays(surface),{},Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS if count==8 else 0)
             parts[part].surface_set_material(parts[part].get_surface_count()-1,source.surface_get_material(surface))
+            overrides[part].append(mesh.get_surface_override_material(surface))
     var arms: Array[MeshInstance3D]=[]
     for side in 2:
         var clone:=MeshInstance3D.new()
         clone.name="G2ArmLeft" if side==0 else "G2ArmRight"
         clone.mesh=parts[side]
+        clone.material_override=mesh.material_override
+        clone.material_overlay=mesh.material_overlay
+        for surface in overrides[side].size(): clone.set_surface_override_material(surface,overrides[side][surface])
         clone.skin=skin
         clone.skeleton=mesh.skeleton
         clone.transform=mesh.transform
@@ -66,4 +71,5 @@ static func split(mesh: MeshInstance3D, rig: Skeleton3D) -> Dictionary:
         mesh.get_parent().add_child(clone)
         arms.append(clone)
     mesh.mesh=parts[2]
+    for surface in overrides[2].size(): mesh.set_surface_override_material(surface,overrides[2][surface])
     return {"arms":arms,"original":source,"radius":0.18}
