@@ -6,7 +6,9 @@ const browser=await playwright.launch({executablePath:await chromium.executableP
 
 const base=process.env.PREVIEW_BASE_URL||'http://127.0.0.1:5177/',passed=[],errors=[];
 try{
- const page=await browser.newPage({viewport:{width:1024,height:768}});page.on('pageerror',e=>errors.push(e.stack||e.message));
+ // Preserve the 4:3 projection but reduce software-GPU work in CI. No runtime
+ // resolution, physics thresholds, gesture assertions or pixel-readback checks change.
+ const page=await browser.newPage({viewport:{width:640,height:480}});page.on('pageerror',e=>errors.push(e.stack||e.message));
  await page.goto(base);await page.waitForFunction('pl&&mapDone');await page.click('#solo');await page.waitForFunction("state==='play'");
  // Browser integration fixture: real game/render/skin, mocked XRFrame, not a physical immersive session.
  await page.evaluate(()=>{
