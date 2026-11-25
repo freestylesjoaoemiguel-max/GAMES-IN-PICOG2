@@ -1,0 +1,5 @@
+Hand tracking uses MediaPipe Tasks Vision 0.10.21 and the MediaPipe Hand Landmarker model.
+MediaPipe code: Copyright Google LLC and MediaPipe Authors, Apache License 2.0.
+https://github.com/google-ai-edge/mediapipe/blob/master/LICENSE
+https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker
+The camera test uses CameraServerExtension, MIT license, with license in addons/CameraServerExtension/LICENSE.

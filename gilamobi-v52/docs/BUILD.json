@@ -7,8 +7,8 @@
       "sha256": "8660db30b222c1d44bfc93eadbf611a9f137025d65a09d80a370e2e65999cc24"
     },
     "controls.js": {
-      "bytes": 3184,
-      "sha256": "7552367a57cdbc736700b51a386800f83ca51fb7d1451c4a3f75e8e501ba39fc"
+      "bytes": 4006,
+      "sha256": "ed6e0d7bf989c655bfe142f5f24fe049642d9d2620bf677ceb861cd2a75b0294"
     },
     "game.apple-touch-icon.png": {
       "bytes": 42322,
@@ -24,7 +24,7 @@
     },
     "game.html": {
       "bytes": 5392,
-      "sha256": "2620e63c26b41e6f6fa878ff6fbaae2d39ffa6d23c972ef11dbe56df1150a9f0"
+      "sha256": "2db20c18bb84ad4261807d61222c600c7b4e3f502f705a74b219d42d3058b41f"
     },
     "game.icon.png": {
       "bytes": 51332,
@@ -35,8 +35,8 @@
       "sha256": "19eb180d568bb8e17bcf4c72ca034ed3af44deeb90304deefee4e665562dfe31"
     },
     "game.pck": {
-      "bytes": 23547568,
-      "sha256": "4c909dc503af0cf90ce411e53a7f332f06cdd2f705721d2f66c99a533ec6b4fb"
+      "bytes": 23551840,
+      "sha256": "0528663441e529daee388c873b98ea8326673fbe4af766c7f7456dc439b916fd"
     },
     "game.png": {
       "bytes": 21443,
@@ -47,9 +47,86 @@
       "sha256": "e4a43dbae28662b2a68f6136857a94db6695430901515800b9883f6327cb7116"
     },
     "index.html": {
-      "bytes": 5428,
-      "sha256": "715024ec2bd99b4283f5e7ddf24644265d8d97749d486dddc5107f8c4467ad0b"
+      "bytes": 5484,
+      "sha256": "36d90bf4e3364f9be6dab8106b3ece0de387bfacb6764912d1b33449973141c8"
+    },
+    "licenses/CREDITOS-MODELO.txt": {
+      "bytes": 365,
+      "sha256": "51bd1c57edf703d4b2d3fe118073742f74e95c52291cd59f0c1b3d93e5f475ea"
+    },
+    "licenses/GODOT_LICENSE.txt": {
+      "bytes": 1149,
+      "sha256": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80"
+    },
+    "licenses/LICENSE.txt": {
+      "bytes": 7870,
+      "sha256": "14c6f6c236c933309f864914d0b6e089766f3fdeb3c2530f35e6633b7ac9492a"
+    },
+    "licenses/THIRD_PARTY_HAND_TRACKING.txt": {
+      "bytes": 416,
+      "sha256": "37f0a510b2b5457df49afcb0d57e60db2dcfc7d7c456e5f52848d2aa8f5ec4ff"
+    },
+    "vendor/NOTICE.md": {
+      "bytes": 1001,
+      "sha256": "dfbe29f4c0166051bc60b494c304a9fda32f4668348a28c0a3e4365b1b57fbd8"
+    },
+    "vendor/webxr-layers-LICENSE.txt": {
+      "bytes": 11357,
+      "sha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd"
+    },
+    "vendor/webxr-layers-polyfill.js": {
+      "bytes": 128235,
+      "sha256": "45f7c65b2c5583e9036915933309c8467b4d9379016b419f26f2f5368e92bf9a"
     }
+  },
+  "source_hashes": {
+    "source/GrinnerPrototipo.tscn": "7e18ceaed5c26519ffde364057fd0c9ac8fb9fd36772d2a294d7bd2ebbe0f548",
+    "source/arm_modifier.gd": "e730307d9ce1a5bcf7f339d2334cfc327a422ac5beccdafafae3eadf00b42a70",
+    "source/avi_writer.gd": "d5780c736f5f127d9abe023fdabb054e0c5b356f33cf4bc240de431791abcdfa",
+    "source/backrooms_builder.gd": "d9e8e4f58388477471b15e34eccba9539bf8446696efbc8c668b1c2811064239",
+    "source/base_builder.gd": "8be36dc5ad159a5c5e3fca2c0f370c96b28261a5b2fc0f401412126d670aa9f5",
+    "source/camera_test.gd": "e1c10cddd0aff717e1740d52e328b30038fb77208bd6fc3d2d9b7924a2d2738e",
+    "source/chainsaw_visual.gd": "075c31049b65f45ec58c4a4033aa317ff60391cc3bf4fe24d377acf3a886d8fa",
+    "source/chat_bubble.gd": "9953a38bdfe73a53ea98df0a2ec08657011cc4af1136a4408589fa258cbb069f",
+    "source/chat_text.gd": "d5436b71ff10b19ae68dd001b22232873b861c7436d92e1fb5b4347cf8e0ac2b",
+    "source/cosmetics.gd": "18e606e1c87e7000daf929929bd9e261f8c4e37b79b000273bccf96eae733cda",
+    "source/export_presets.cfg": "1aaf0813814a34740f7b388e17bcf4547acd0ceae943f7ac88a5ba971147b4dc",
+    "source/facial_animation.gd": "fe2f0d0fc07350c68c9afd7f48655999087554576b0d17777a340fcb9b565dee",
+    "source/g2_arm.gd": "7d1d45634316dfebd343b519cc2880587ccb03fa49d32d97bd001b7187d32148",
+    "source/g2_motion.gd": "c548d560d613e6bfb44a54071d5c7e72d0be5eeda280c11ef3a6f69b3f2ca841",
+    "source/g2_skin.gd": "1d072899a3d34b053f536db631dc3259a389973f03edd3eb10f65208213652e8",
+    "source/g2_xr.gd": "1159c502faf268f8742adfa60095cef5c7da6b161b17043bae6a00848c160e8d",
+    "source/gore_effect.gd": "cc9f2ed81322abb02957e1f8b0c2dc4abdd69d29505a1415638ad98f8f4e72ab",
+    "source/grinner_prototipo.gd": "0d858ef50c3912cb956ddb510e89ecbd5eaca17f64a82172a2db63e2cfb3a50b",
+    "source/hand_overlay.gd": "b0f5e9f7b47326ef1dc5c0ddc71a9602c4f2e96a89032aa7c872a62fe7d8c37f",
+    "source/i18n.gd": "a216cb5fc8d20d7f488aebc98cdd78fee7c7d8a5b6241c0fa04e9eeb02440eb4",
+    "source/infection_round.gd": "77d06bef3c9cc8dc6ecc9aa054a65de4524659b363a9ea6c22cf75ced5fd2d39",
+    "source/injury_visual.gd": "541b942090c8b573f4b62d5a44d8e895bc77d5ced9185bb8598352c8fef044ad",
+    "source/intro.gd": "14c49ab0c2b827bbd18935f099250690a90986fe63382cb4e597e92bd4ce7873",
+    "source/main.gd": "f299b34e63b855cda9805bb994f29125738ba23949349595f62bcbdaef92bac2",
+    "source/main.tscn": "be5ac54bef9c193ca9d827bf0e6a8378c42efb087773f5f9ad9bd768b1dfb1ac",
+    "source/menu.gd": "8b5e0fb349f58b3dedfc6cd862635fa6e3fafcfff28b910f90a8352a350e293d",
+    "source/mirror.gd": "40d46829e2caffd51ceebcfaa2d27351ecf1d42facae2f17edef660d5862bfdc",
+    "source/monster_model.gd": "922ba4584417960e65756a0a12967b9092cbcae9c2496d10ed88f05699119fac",
+    "source/network.gd": "bef41c5f0af22817ce1692b09c1b776a16dad5530082bfa43c27acfa8e41644b",
+    "source/profile_name.gd": "aa0fc8a2f08f055dfc25453638a083c9d6335518a238d9f7bc76825261cbe5e8",
+    "source/project.godot": "c7b9e74ae18c24b6527756ad282b2a18883317e8024814bf8d0292936503909d",
+    "source/public_directory.gd": "ad0219a6035fcef6fa95d90a14e36c3df56e70943e68001327939462abb0ca15",
+    "source/ragdoll.gd": "2619586e554600a4785291cc5433b29047eb90acf977716082edfcd51e64a9fd",
+    "source/ragdoll_body.gd": "c2094cc0e14df2806a38fee71d4da3c1005a03c0b9a364c55eb57f67f4bd8645",
+    "source/remote_avatar.gd": "d57f708d0ab31f640a38102fc2c08b628d1a9f43a6bbef1ac3357444596c6f66",
+    "source/sandbox_builder.gd": "01b72290810eda7ac424ff87bf9b7cea142d512c2e189af4410d63beda9f3500",
+    "source/sandbox_camera.gd": "ba84aef2d500206bcb2e1ac612cacde76aedb4864213b6a5d76736fdee17bd3c",
+    "source/sandbox_npc.gd": "bc99fba0cc91148c9c9dbb9a4c06fee7c1e2fbab36ab7e4bb973b6fceb5b7277",
+    "source/saw_split_visual.gd": "5bee3fcbe751261091ec728feafc016caaca6400f30d77f43e6ea08445eb01c7",
+    "source/split_visual.gd": "e03860becd6aadba4a9819098f8e5ea49e881f62b7374f5e0159dd9d94454eb4",
+    "source/touch_controls.gd": "7eee6b10c72eabaae4fd4aebc696f66c3e9b3d4973805f130eeea5baff6c6ce3",
+    "source/voice_codec.gd": "e746c1da4c4be5eb54b8ff069abafff0d8ececcce170ccc8c06b4b78a3894f8f",
+    "source/voice_face.gd": "829ed18b1b87ec5adf092fa662bc72ef0a3374715701e194c9689f8a0b085ae5",
+    "source/vr_box.gd": "86229750c0c4edb0223cd9250c263be325baed48a9fd1748912c75f69a213aa4",
+    "source/vr_hand_control.gd": "8172e1c7809ba06fba09bcdce708b52beaaff2085d45d1796a22e0e30d73851d",
+    "source/vr_hud.gd": "f30b3fbc6f755bdbf88c39acfc87f6d64dfc8ebc36f5b1e758b9f9cebf93df12",
+    "source/vr_icon.gd": "4848f54445b46915e85de4cfda72f93a326b3c4c4b0ecf3048e6baff82f0a2b2"
   },
   "physical_pico_g2_tested": false,
   "native_android_vr_apk": false

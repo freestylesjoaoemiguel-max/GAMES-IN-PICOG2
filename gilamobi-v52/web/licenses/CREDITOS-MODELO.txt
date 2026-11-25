@@ -1,0 +1,5 @@
+Modelo do monstro: “Grinner from gilla”, por reduxlethalape.
+Fonte: https://sketchfab.com/3d-models/grinner-from-gilla-ab23e1c30c8447e49537deae7ccc6353
+Licença: Creative Commons Atribuição 4.0 Internacional (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Alterações: modelo adaptado ao esqueleto, às mãos e à visão em primeira pessoa do jogo.
