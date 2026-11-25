@@ -33,12 +33,20 @@ func _ready()->void:
   var p=Engine.get_singleton("GodotHandTracking")
   if p.has_method("startSandboxRecording") and p.has_method("sandboxRecordingState"):native_plugin=p
 func in_reach()->bool:return true
+func camera_hand()->int:
+ if is_instance_valid(game.g2_xr) and game.g2_xr.immersive:
+  if game.g2_xr.tracked[1]:return 1
+  if game.g2_xr.tracked[0]:return 0
+  return -1
+ return 1
 func pickup_or_drop()->void:
+ var hand:=camera_hand()
+ if hand<0 and not held:status="Conecte um controle para pegar a camera";return
  if held:
   held=false;status=tr("Câmera parada no ar")
  else:
   spawned=true;visible=true;held=true
-  if is_instance_valid(game.targets[1]):global_position=game.targets[1].global_position
+  if is_instance_valid(game.targets[hand]):global_position=game.targets[hand].global_position
   global_basis=game.camera.global_basis.orthonormalized()
   view.render_target_update_mode=SubViewport.UPDATE_ALWAYS;status=tr("Câmera na mão")
 func toggle_record()->void:
@@ -83,8 +91,10 @@ func _process(delta:float)->void:
  if not game.game_running:
   if recording:stop_recording()
   return
- if held and is_instance_valid(game.targets[1]):
-  global_position=game.targets[1].global_position;global_basis=game.camera.global_basis.orthonormalized()
+ var hand:=camera_hand()
+ if held and hand<0:held=false;status="Controle desconectado; camera parada"
+ if held and is_instance_valid(game.targets[hand]):
+  global_position=game.targets[hand].global_position;global_basis=game.camera.global_basis.orthonormalized()
  if is_instance_valid(lens):lens.global_transform=global_transform.translated_local(Vector3(0,0,-.10))
  if native_plugin!=null:
   var native_status:String=native_plugin.sandboxRecordingState()

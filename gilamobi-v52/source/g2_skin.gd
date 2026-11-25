@@ -5,8 +5,12 @@ static func split(mesh: MeshInstance3D, rig: Skeleton3D) -> Dictionary:
     var source := mesh.mesh as ArrayMesh
     var skin := mesh.skin
     var parts: Array[ArrayMesh] = [ArrayMesh.new(),ArrayMesh.new(),ArrayMesh.new()]
+    # Keep facial morph targets; partitioning must not remove voice expressions.
+    for part in parts:
+        part.blend_shape_mode=source.blend_shape_mode
+        for index in source.get_blend_shape_count():
+            part.add_blend_shape(source.get_blend_shape_name(index))
     var selected := [{},{}]
-    var radii := [0.08,0.08]
     for side in 2:
         var root := rig.find_bone("upperarm_"+("L" if side==0 else "R"))
         for bind in skin.get_bind_count():
@@ -48,7 +52,7 @@ static func split(mesh: MeshInstance3D, rig: Skeleton3D) -> Dictionary:
             if kept[part].is_empty(): continue
             var copy:=arrays.duplicate()
             copy[Mesh.ARRAY_INDEX]=kept[part]
-            parts[part].add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,copy,[],{},Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS if count==8 else 0)
+            parts[part].add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,copy,source.surface_get_blend_shape_arrays(surface),{},Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS if count==8 else 0)
             parts[part].surface_set_material(parts[part].get_surface_count()-1,source.surface_get_material(surface))
     var arms: Array[MeshInstance3D]=[]
     for side in 2:

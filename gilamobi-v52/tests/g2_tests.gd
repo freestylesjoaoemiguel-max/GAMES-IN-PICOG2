@@ -86,8 +86,11 @@ func run() -> void:
     t.invalidate_pose("default")
     check(rig.source_for(1)==null,"Pose loss rejects stale tracker")
     XRServer.remove_tracker(t)
+    var face_before: MeshInstance3D=game.skeleton.get_node("Gilla")
+    var morph_count:=face_before.mesh.get_blend_shape_count()
     rig.immersive=true
     rig._attach_player()
+    check(face_before.mesh.get_blend_shape_count()==morph_count,"Skin partition retains original facial blend shapes")
     check(rig.arm_meshes.size()==2 and rig.arm_meshes[0].mesh.get_surface_count()>0 and rig.arm_meshes[1].mesh.get_surface_count()>0,"Original skinned arms split for independent visibility")
     rig.step_hands(1.0/72.0)
     check(not rig.arm_meshes[0].visible and not rig.arm_meshes[1].visible,"Missing hands hidden; no invisible support")

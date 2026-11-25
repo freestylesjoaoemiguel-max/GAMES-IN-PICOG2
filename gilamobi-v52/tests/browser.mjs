@@ -75,6 +75,18 @@ try {
  check(true,'Session can be started again and controller reconnected');
  await page.evaluate(()=>session.end());await wait(()=>!gila.immersive);
  await page.screenshot({path:CACHE+'/after-exit.png'});
+ await page.close();
+ page=await browser.newPage({viewport:{width:480,height:360},acceptDownloads:true});
+ page.on('pageerror',e=>failed.push('Flat page exception: '+e.message));
+ page.on('console',m=>{messages.push(m.text());if(/SCRIPT ERROR|Parse Error/.test(m.text()))failed.push(m.text());});
+ await page.goto(base);await wait(()=>window.gila?.ready);
+ check(await page.locator('#g2-vr').isDisabled(),'Unsupported desktop runtime cannot enter fake VR');
+ await cmd('sandbox');await page.waitForTimeout(2200);
+ await cmd('camera');await cmd('record');await page.waitForTimeout(1600);
+ const download=page.waitForEvent('download',{timeout:15000});await cmd('record');
+ const file=await download;await file.saveAs(CACHE+'/camera.avi');
+ const avi=fs.readFileSync(CACHE+'/camera.avi');
+ check(avi.length>1000&&avi.toString('ascii',0,4)==='RIFF'&&avi.toString('ascii',8,12)==='AVI ','Original camera produces an actual browser-downloadable AVI');
 } catch(e){failed.push(e.stack||String(e));}
 finally {await browser.close();}
 const result={runtime:'Godot export + Chromium software WebGL2 + IWER 2.8.0 stereo fixture (NOT a headset)',base,passed,failed,warnings:[...new Set(warnings)],physical_pico_g2_tested:false,performance_benchmark:false};
