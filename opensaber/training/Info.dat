@@ -1,0 +1,51 @@
+{
+  "_version": "2.0.0",
+  "_songName": "Pico Pulse - Treino",
+  "_songSubName": "G2 Web 1.0.0",
+  "_songAuthorName": "Sintese original",
+  "_levelAuthorName": "Adaptacao Web G2",
+  "_beatsPerMinute": 100,
+  "_previewStartTime": 6,
+  "_previewDuration": 10,
+  "_songFilename": "pulse.ogg",
+  "_coverImageFilename": "cover.png",
+  "_environmentName": "DefaultEnvironment",
+  "_songTimeOffset": 0,
+  "_difficultyBeatmapSets": [
+    {
+      "_beatmapCharacteristicName": "Standard",
+      "_difficultyBeatmaps": [
+        {
+          "_difficulty": "Easy",
+          "_difficultyRank": 1,
+          "_beatmapFilename": "Right.dat",
+          "_noteJumpMovementSpeed": 6,
+          "_noteJumpStartBeatOffset": 0,
+          "_customData": {
+            "_difficultyLabel": "1 controle - DIREITA"
+          }
+        },
+        {
+          "_difficulty": "Normal",
+          "_difficultyRank": 3,
+          "_beatmapFilename": "Left.dat",
+          "_noteJumpMovementSpeed": 6,
+          "_noteJumpStartBeatOffset": 0,
+          "_customData": {
+            "_difficultyLabel": "1 controle - ESQUERDA"
+          }
+        },
+        {
+          "_difficulty": "Hard",
+          "_difficultyRank": 5,
+          "_beatmapFilename": "Both.dat",
+          "_noteJumpMovementSpeed": 6,
+          "_noteJumpStartBeatOffset": 0,
+          "_customData": {
+            "_difficultyLabel": "2 controles"
+          }
+        }
+      ]
+    }
+  ]
+}

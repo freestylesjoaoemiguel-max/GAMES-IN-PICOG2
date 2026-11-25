@@ -1,0 +1,16 @@
+{
+  "driveFile": "1EXzcK1RDot5FTe49oqlknTC_yc4SP3xe",
+  "name": "Gorilla Movement copy (1).zip",
+  "size": 16087,
+  "md5": "887b7e9eb6f9f675aabbcd8c00d9c5cd",
+  "sha256": "33f123001db49898cf15a58160af04ccc93f9db9119d2a66aeca1fe4ea0fad5e",
+  "description": "User-provided Lights Out: Bear Facility Gorilla Movement; not identified as official Gorilla Tag code. Original reference files unchanged. No license file supplied.",
+  "files": {
+    "test.mjs": "8a9632004e32bc04de81f4c373b31db0d99c275569e3e5fc4d779b1272f02865",
+    "gmotion.js": "b5de83e138b8332a33f533ca6d7963a33d0a5666a6f4531da5fcea778e47db3a",
+    "README.md": "19e3d38ad06de50b071e7df94e485a5ffd5e1169e12693b40c969fd7dd5228f5",
+    "vr-example.js": "b05adaa54076543c1f380f28a9671ef94568ff1e08ec0911574ceca48d63314e",
+    "HOW-TO-USE-IN-YOUR-GAME.md": "37c1a487ad02be9a8b253321203150eb9f1d43e05f66a2f84b9ab202da923e0b",
+    "package.json": "924c6e6c68fe139535ffd5f6cc419d0936819d08f725deb5c6fc980257f8aebb"
+  }
+}

@@ -1,0 +1,146 @@
+name: Deploy GitHub Pages
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths: ['.github/workflows/pages.yml', '.github/scripts/check-browser.sh', 'opensaber/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: github-pages-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            discord-vr-g2/package-lock.json
+            pulse-saber-g2/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build native APKs on GitHub for direct Pages downloads
+        run: bash pulse-saber-g2/tools/bootstrap_android.sh
+      - name: Install and test Pulse Saber G2
+        working-directory: pulse-saber-g2
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test
+          npm run build
+          python3 -m http.server 5176 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5176/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
+      - name: Install and test Discord VR G2
+        working-directory: discord-vr-g2
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test
+          node tools/build_web.mjs
+      - name: Test WebXR from a subdirectory
+        working-directory: discord-vr-g2
+        run: |
+          set -euo pipefail
+          python3 -m http.server 5174 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5174/webxr/ bash ../.github/scripts/check-browser.sh node tools/check_browser.mjs
+      - name: Build and test MonkeGo (screen APK + browser VR)
+        run: |
+          set -euo pipefail
+          bash monke-go/tools/bootstrap_android.sh
+          cd monke-go
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test
+          npm run build
+          python3 -m http.server 5177 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5177/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
+      - name: Build and test new Gorilla Rush v45 without replacing MonkeGo
+        run: |
+          set -euo pipefail
+          bash gorilla-rush-v45/tools/bootstrap_android.sh
+          cd gorilla-rush-v45
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test | tee docs/NODE_TESTS.txt
+          npm run build
+          python3 -m http.server 5180 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
+          npm run build
+          python3 tools/package_project.py
+      - name: Verify supplied OpenSaber export and test local training / controller fixtures
+        run: |
+          set -euo pipefail
+          python3 opensaber/tools/verify.py
+          python3 opensaber/tools/make_fixture.py
+          python3 -m http.server 5190 --bind 127.0.0.1 > .cache/opensaber-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5190/opensaber/ bash .github/scripts/check-browser.sh node opensaber/tools/check_browser.mjs
+          CONTROLLER_FIXTURE=1 PREVIEW_BASE_URL=http://127.0.0.1:5190/.cache/opensaber-fixture/ bash .github/scripts/check-browser.sh node opensaber/tools/check_browser.mjs
+      - name: Verify and test independent GilaMobi v52 export
+        run: |
+          set -euo pipefail
+          python3 gilamobi-v52/tools/verify.py
+          npm ci --prefix gilamobi-v52/tests --ignore-scripts --no-audit --no-fund
+          python3 -m http.server 5192 --bind 127.0.0.1 --directory gilamobi-v52/web > /tmp/gilamobi-pages.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5192/ node gilamobi-v52/tests/browser.mjs
+      - name: Preserve PicoVerso and add independent WebXR apps
+        run: |
+          set -euo pipefail
+          mkdir -p site/gilamobi-v52
+          cp -r gilamobi-v52/web/. site/gilamobi-v52/
+          mkdir -p site/opensaber
+          cp opensaber/index.html opensaber/index.js opensaber/index.wasm opensaber/index.pck opensaber/index.audio.worklet.js opensaber/index.icon.png opensaber/web.js opensaber/web.css site/opensaber/
+          mkdir -p site/opensaber/docs
+          cp opensaber/docs/GODOT_LICENSE.txt site/opensaber/docs/
+          mkdir -p site/sandlab
+          cp -r sandlab/index.html sandlab/js sandlab/lib site/sandlab/
+          mkdir -p site/pingpong
+          cp -r pingpong/index.html pingpong/js pingpong/lib site/pingpong/
+          mkdir -p site/gorilla-rush-v45
+          cp -r gorilla-rush-v45/build/webxr/. site/gorilla-rush-v45/
+          mkdir -p site/discord-vr-g2
+          cp -r index.html js lib site/
+          cp -r discord-vr-g2/build/webxr/. site/discord-vr-g2/
+          touch site/.nojekyll
+          (cd discord-vr-g2/build/webxr && zip -qr ../Discord-VR-G2-WebXR.zip .)
+          cp discord-vr-g2/build/Discord-VR-G2-WebXR.zip site/discord-vr-g2/downloads/
+          mkdir -p site/pulse-saber-g2
+          cp -r pulse-saber-g2/build/webxr/. site/pulse-saber-g2/
+          (cd pulse-saber-g2/build/webxr && zip -qr ../Pulse-Saber-G2-WebXR.zip .)
+          cp pulse-saber-g2/build/Pulse-Saber-G2-WebXR.zip site/pulse-saber-g2/downloads/
+          mkdir -p site/monke-go
+          cp -r monke-go/build/webxr/. site/monke-go/
+          (cd monke-go/build/webxr && zip -qr ../MonkeGo-WebXR.zip .)
+          cp monke-go/build/MonkeGo-WebXR.zip site/monke-go/downloads/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.d.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - id: d
+        uses: actions/deploy-pages@v4

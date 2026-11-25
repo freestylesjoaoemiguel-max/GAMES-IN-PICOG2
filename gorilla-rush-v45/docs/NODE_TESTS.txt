@@ -1,0 +1,272 @@
+
+> gorilla-rush-v45-pico-g2@1.0.8 test
+> node --test tests/*.test.cjs
+
+TAP version 13
+# Subtest: all six supplied ZIP reference files retain their recorded SHA256
+ok 1 - all six supplied ZIP reference files retain their recorded SHA256
+  ---
+  duration_ms: 3.362278
+  type: 'test'
+  ...
+# Subtest: ZIP parameters: eight samples, threshold .4, gain 1.1, capped throw 4, gravity 5
+ok 2 - ZIP parameters: eight samples, threshold .4, gain 1.1, capped throw 4, gravity 5
+  ---
+  duration_ms: 1.403301
+  type: 'test'
+  ...
+# Subtest: both contacting followers are averaged even if one is stationary; absent one has no vote
+ok 3 - both contacting followers are averaged even if one is stationary; absent one has no vote
+  ---
+  duration_ms: 1.003473
+  type: 'test'
+  ...
+# Subtest: history stores effective body displacement, not commanded hand speed
+ok 4 - history stores effective body displacement, not commanded hand speed
+  ---
+  duration_ms: 0.827723
+  type: 'test'
+  ...
+# Subtest: release applies the ZIP capped throw once, then leaves flight velocity alone
+ok 5 - release applies the ZIP capped throw once, then leaves flight velocity alone
+  ---
+  duration_ms: 0.884898
+  type: 'test'
+  ...
+# Subtest: reset removes old support and launch history after teleport/loss/menu
+ok 6 - reset removes old support and launch history after teleport/loss/menu
+  ---
+  duration_ms: 0.298249
+  type: 'test'
+  ...
+# Subtest: unchanged supplied update sections 9-11 match the port with a deterministic collision/body backend
+ok 7 - unchanged supplied update sections 9-11 match the port with a deterministic collision/body backend
+  ---
+  duration_ms: 85.964775
+  type: 'test'
+  ...
+# Subtest: all 68 decoded source payloads match recorded hashes
+ok 8 - all 68 decoded source payloads match recorded hashes
+  ---
+  duration_ms: 99.004993
+  type: 'test'
+  ...
+# Subtest: contact strokes transfer horizontal displacement at both miniature and metre scale
+ok 9 - contact strokes transfer horizontal displacement at both miniature and metre scale
+  ---
+  duration_ms: 32.656388
+  type: 'test'
+  ...
+# Subtest: open-hand lift releases; free air cannot move the body
+ok 10 - open-hand lift releases; free air cannot move the body
+  ---
+  duration_ms: 8.059447
+  type: 'test'
+  ...
+# Subtest: 360 degree roll leaves estimated position unchanged and support active
+ok 11 - 360 degree roll leaves estimated position unchanged and support active
+  ---
+  duration_ms: 16.392158
+  type: 'test'
+  ...
+# Subtest: pose loss and menu cancel support without an old throw
+ok 12 - pose loss and menu cancel support without an old throw
+  ---
+  duration_ms: 5.701333
+  type: 'test'
+  ...
+# Subtest: collision-clamped body movement determines launch velocity
+ok 13 - collision-clamped body movement determines launch velocity
+  ---
+  duration_ms: 2.603963
+  type: 'test'
+  ...
+# Subtest: no floor means no motion or phantom downward magnet
+ok 14 - no floor means no motion or phantom downward magnet
+  ---
+  duration_ms: 1.818039
+  type: 'test'
+  ...
+# Subtest: large pointing jump is not a real stroke
+ok 15 - large pointing jump is not a real stroke
+  ---
+  duration_ms: 4.057699
+  type: 'test'
+  ...
+# Subtest: normalized orientation rejects invalid and zero values
+ok 16 - normalized orientation rejects invalid and zero values
+  ---
+  duration_ms: 2.229593
+  type: 'test'
+  ...
+# Subtest: WebXR controller routing uses source identity and right hand
+ok 17 - WebXR controller routing uses source identity and right hand
+  ---
+  duration_ms: 0.946811
+  type: 'test'
+  ...
+# Subtest: XR standard and configurable legacy buttons are not interchangeable
+ok 18 - XR standard and configurable legacy buttons are not interchangeable
+  ---
+  duration_ms: 0.900738
+  type: 'test'
+  ...
+# Subtest: lifting an overlapping sphere cannot stick under double-sided floor
+ok 19 - lifting an overlapping sphere cannot stick under double-sided floor
+  ---
+  duration_ms: 0.376639
+  type: 'test'
+  ...
+# Subtest: fast sphere sweep stops on floor at all supported sizes
+ok 20 - fast sphere sweep stops on floor at all supported sizes
+  ---
+  duration_ms: 0.48783
+  type: 'test'
+  ...
+# Subtest: sphere catches finite triangle edges and vertices missed by a centre ray
+ok 21 - sphere catches finite triangle edges and vertices missed by a centre ray
+  ---
+  duration_ms: 0.443457
+  type: 'test'
+  ...
+# Subtest: floor/wall corner cannot tunnel and sliding preserves nonpenetration
+ok 22 - floor/wall corner cannot tunnel and sliding preserves nonpenetration
+  ---
+  duration_ms: 0.412459
+  type: 'test'
+  ...
+# Subtest: inclined surface supports a swept hand at real radius
+ok 23 - inclined surface supports a swept hand at real radius
+  ---
+  duration_ms: 0.448788
+  type: 'test'
+  ...
+# Subtest: post-physics gravity shift is swept instead of moving hand under floor
+ok 24 - post-physics gravity shift is swept instead of moving hand under floor
+  ---
+  duration_ms: 0.827673
+  type: 'test'
+  ...
+# Subtest: world anchor stays fixed during push and body-blocked correction
+ok 25 - world anchor stays fixed during push and body-blocked correction
+  ---
+  duration_ms: 4.327429
+  type: 'test'
+  ...
+# Subtest: trigger never creates contact in free air and lifting releases a contacting hand
+ok 26 - trigger never creates contact in free air and lifting releases a contacting hand
+  ---
+  duration_ms: 4.691638
+  type: 'test'
+  ...
+# Subtest: world removal clears support without retaining a floating anchor
+ok 27 - world removal clears support without retaining a floating anchor
+  ---
+  duration_ms: 4.063924
+  type: 'test'
+  ...
+# Subtest: startup, blocked body and large controller jump never bypass hand collision
+ok 28 - startup, blocked body and large controller jump never bypass hand collision
+  ---
+  duration_ms: 1.7138
+  type: 'test'
+  ...
+# Subtest: Gorilla-style small wrist strokes (under 50 deg) walk forward despite sensor jitter
+ok 29 - Gorilla-style small wrist strokes (under 50 deg) walk forward despite sensor jitter
+  ---
+  duration_ms: 19.339832
+  type: 'test'
+  ...
+# Subtest: level controller keeps the hand just above the floor; ~13 deg down touches it
+ok 30 - level controller keeps the hand just above the floor; ~13 deg down touches it
+  ---
+  duration_ms: 2.078004
+  type: 'test'
+  ...
+# Subtest: real-hand tremor (2-3 deg at 9 Hz) at rest neither flickers contact nor lifts the body
+ok 31 - real-hand tremor (2-3 deg at 9 Hz) at rest neither flickers contact nor lifts the body
+  ---
+  duration_ms: 30.021292
+  type: 'test'
+  ...
+# Subtest: swinging back after a push never drags the body backwards
+ok 32 - swinging back after a push never drags the body backwards
+  ---
+  duration_ms: 1.347272
+  type: 'test'
+  ...
+# Subtest: auto-neutral: relaxed hold reported 20 deg up or 25 deg down still walks and rests in the air
+ok 33 - auto-neutral: relaxed hold reported 20 deg up or 25 deg down still walks and rests in the air
+  ---
+  duration_ms: 12.299391
+  type: 'test'
+  ...
+# Subtest: named left/right and anonymous single sources never duplicate a controller
+ok 34 - named left/right and anonymous single sources never duplicate a controller
+  ---
+  duration_ms: 1.402677
+  type: 'test'
+  ...
+# Subtest: position validation rejects nonfinite/emulated/unavailable poses but accepts measured origin
+ok 35 - position validation rejects nonfinite/emulated/unavailable poses but accepts measured origin
+  ---
+  duration_ms: 0.439023
+  type: 'test'
+  ...
+# Subtest: measured translation, not quaternion rotation, drives a contacting hand
+ok 36 - measured translation, not quaternion rotation, drives a contacting hand
+  ---
+  duration_ms: 0.950685
+  type: 'test'
+  ...
+# Subtest: faster equal-distance measured strokes produce greater reaction velocity
+ok 37 - faster equal-distance measured strokes produce greater reaction velocity
+  ---
+  duration_ms: 1.950177
+  type: 'test'
+  ...
+# Subtest: body motion is not synthetic controller velocity; ZIP follower supplies support correction
+ok 38 - body motion is not synthetic controller velocity; ZIP follower supplies support correction
+  ---
+  duration_ms: 0.850035
+  type: 'test'
+  ...
+# Subtest: two equal hand reactions are averaged, not doubled
+ok 39 - two equal hand reactions are averaged, not doubled
+  ---
+  duration_ms: 0.482883
+  type: 'test'
+  ...
+# Subtest: tracked-pose recenter suppresses launch instead of treating teleport as a fast push
+ok 40 - tracked-pose recenter suppresses launch instead of treating teleport as a fast push
+  ---
+  duration_ms: 0.503819
+  type: 'test'
+  ...
+# Subtest: ZIP support correction is identical with and without trigger and settles after moving body
+ok 41 - ZIP support correction is identical with and without trigger and settles after moving body
+  ---
+  duration_ms: 1.356962
+  type: 'test'
+  ...
+# Subtest: 3DoF return stroke releases even while trigger is held
+ok 42 - 3DoF return stroke releases even while trigger is held
+  ---
+  duration_ms: 3.859543
+  type: 'test'
+  ...
+# Subtest: touchpad respects explicit no-touch and radial movement deadzone
+ok 43 - touchpad respects explicit no-touch and radial movement deadzone
+  ---
+  duration_ms: 0.890952
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 693.601089

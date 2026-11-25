@@ -1,0 +1,16 @@
+export const LANES=[-.65,0,.65],ROWS=[1.15,1.8];
+export const WINDOWS={easy:.2,normal:.16,expert:.13};
+export const DIRECTIONS=[[0,1],[0,-1],[-1,0],[1,0]];
+export function segmentDistance(px,py,ax,ay,bx,by){const x=bx-ax,y=by-ay,d=x*x+y*y;const t=d?Math.max(0,Math.min(1,((px-ax)*x+(py-ay)*y)/d)):0;return Math.hypot(px-ax-t*x,py-ay-t*y);}
+export class RhythmGame{
+ constructor(chart,{difficulty='normal',assist=true,practice=false}={}){this.difficulty=difficulty in WINDOWS?difficulty:'normal';this.assist=assist;this.practice=practice;this.duration=chart.duration;this.notes=chart.charts[this.difficulty].map((n,i)=>({...n,id:i,judged:false}));this.total=this.notes.filter(n=>n.kind==='note').length;this.state='ready';this.score=0;this.combo=0;this.bestCombo=0;this.hits=0;this.misses=0;this.health=100;this.earned=0;this.time=0;this.events=[];}
+ start(){if(this.state==='ready')this.state='playing';}
+ pause(){if(this.state==='playing')this.state='paused';}
+ resume(){if(this.state==='paused')this.state='playing';}
+ update(time){if(this.state!=='playing')return;this.time=time;const w=WINDOWS[this.difficulty];for(const n of this.notes){if(!n.judged&&time>n.t+w){n.judged=true;if(n.kind==='note'){this.combo=0;this.misses++;this.health=Math.max(0,this.health-7);this.events.push({type:'miss',note:n});}}}if(time>=this.duration||(!this.practice&&this.health<=0))this.state='results';}
+ cut(ax,ay,bx,by,time,forced=false){if(this.state!=='playing')return null;const w=WINDOWS[this.difficulty];const dx=bx-ax,dy=by-ay,travel=Math.hypot(dx,dy);if(travel>1.6||(!forced&&travel<.025))return null;let candidate=null;for(const n of this.notes){if(n.judged||Math.abs(n.t-time)>w)continue;if(segmentDistance(LANES[n.lane],ROWS[n.row],ax,ay,bx,by)>.24)continue;if(!candidate||Math.abs(n.t-time)<Math.abs(candidate.t-time))candidate=n;}if(!candidate)return null;const n=candidate;if(n.kind==='bomb'){n.judged=true;this.combo=0;this.health=Math.max(0,this.health-15);this.events.push({type:'bomb',note:n});return 'bomb';}const dir=DIRECTIONS[n.dir];if(!this.assist&&(forced||travel<.025||(dx*dir[0]+dy*dir[1])/travel<.45)){this.events.push({type:'direction',note:n});return null;}n.judged=true;const quality=Math.max(0,1-Math.abs(n.t-time)/w);const points=Math.round(70+30*quality);this.combo++;this.bestCombo=Math.max(this.bestCombo,this.combo);this.hits++;this.health=Math.min(100,this.health+2);this.earned+=points;this.score+=points*Math.min(8,1+Math.floor(this.combo/8));const grade=quality>.7?'PERFEITO':quality>.35?'ÓTIMO':'BOM';this.events.push({type:'hit',note:n,grade,points});return grade;}
+ get accuracy(){return this.total?this.earned/(this.total*100)*100:0;}
+ get rank(){return this.accuracy>=95?'S':this.accuracy>=85?'A':this.accuracy>=70?'B':this.accuracy>=50?'C':'D';}
+ drain(){return this.events.splice(0);}
+}
+export function safeSettings(value={}){return{difficulty:['easy','normal','expert'].includes(value.difficulty)?value.difficulty:'normal',quality:['low','medium','high'].includes(value.quality)?value.quality:'medium',assist:value.assist!==false,practice:value.practice===true,volume:Number.isFinite(+value.volume)?Math.max(0,Math.min(1,+value.volume)):.7,offset:Number.isFinite(+value.offset)?Math.max(-200,Math.min(200,+value.offset)):0,reduced:value.reduced===true};}

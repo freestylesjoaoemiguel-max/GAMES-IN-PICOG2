@@ -1,0 +1,59 @@
+name: Build MonkeGo APK and WebXR
+on:
+  push:
+    paths: ['monke-go/**', '.github/workflows/build-monke-go.yml']
+  pull_request:
+    paths: ['monke-go/**', '.github/workflows/build-monke-go.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: monke-go/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile signed screen-mode APK (not native PICO VR)
+        run: bash monke-go/tools/bootstrap_android.sh
+      - name: Test controller input and export actual supplied game
+        working-directory: monke-go
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test | tee docs/NODE_TESTS.txt
+          npm run build
+      - name: Browser regression from exported subdirectory (simulated WebVR)
+        working-directory: monke-go
+        run: |
+          set -euo pipefail
+          python3 -m http.server 5177 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5177/webxr/ npm run test:browser
+          (cd build/webxr && zip -qr ../MonkeGo-WebXR.zip .)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MonkeGo-PicoG2-APK-screen-mode
+          path: |
+            monke-go/downloads/MonkeGo-PicoG2.apk
+            monke-go/downloads/MonkeGo-PicoG2.apk.sha256
+            monke-go/docs/ANDROID_BUILD.txt
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MonkeGo-WebXR-and-test-reports
+          path: |
+            monke-go/build/MonkeGo-WebXR.zip
+            monke-go/docs/BROWSER_TESTS.json
+            monke-go/docs/HAND_TESTS.json
+            monke-go/docs/NODE_TESTS.txt
+            monke-go/docs/preview-*.png
+          if-no-files-found: error

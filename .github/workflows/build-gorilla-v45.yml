@@ -1,0 +1,53 @@
+name: Build Gorilla Rush v45 browser and screen APK
+on:
+  push:
+    paths: ['gorilla-rush-v45/**', '.github/workflows/build-gorilla-v45.yml']
+  pull_request:
+    paths: ['gorilla-rush-v45/**', '.github/workflows/build-gorilla-v45.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: gorilla-rush-v45/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build signed screen APK (not native PICO VR)
+        run: bash gorilla-rush-v45/tools/bootstrap_android.sh
+      - name: Test supplied payloads and estimated arm physics
+        working-directory: gorilla-rush-v45
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm test | tee docs/NODE_TESTS.txt
+          npm run build
+      - name: Execute real v45 frame with simulated VR display and poses
+        working-directory: gorilla-rush-v45
+        run: |
+          set -euo pipefail
+          python3 -m http.server 5180 --bind 127.0.0.1 --directory build > build/http.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID"' EXIT
+          PREVIEW_BASE_URL=http://127.0.0.1:5180/webxr/ bash ../.github/scripts/check-browser.sh npm run test:browser
+          npm run build
+          python3 tools/package_project.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Gorilla-Rush-v45-project-screen-APK-reports
+          path: |
+            gorilla-rush-v45/downloads/
+            gorilla-rush-v45/docs/ANDROID_BUILD.txt
+            gorilla-rush-v45/docs/NODE_TESTS.txt
+            gorilla-rush-v45/docs/BROWSER_TESTS.json
+            gorilla-rush-v45/docs/ENTRY_TESTS.json
+            gorilla-rush-v45/docs/LOCOMOTION_TESTS.json
+          if-no-files-found: error

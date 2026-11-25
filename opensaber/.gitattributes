@@ -1,0 +1,4 @@
+# Godot web: binários não devem sofrer conversão de fim de linha
+*.wasm binary
+*.pck  binary
+*.png  binary

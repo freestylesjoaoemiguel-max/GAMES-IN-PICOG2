@@ -1,0 +1,200 @@
+<!doctype html><html lang="pt-BR"><head><meta name="color-scheme" content="only light"><style>:root{color-scheme:only light}html{background:#fff}</style><meta charset="utf-8"><title>Gorilla Rush v45 • PICO G2 • física 1.0.8</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body,input,select,button,option,#hud,#st{text-transform:uppercase}input::placeholder{text-transform:uppercase}
+@font-face{font-family:GT;src:url(assets/f2d9e989667641bffae5.otf)}
+:root{--bg:#0b1410;--fg:#eafff2;--ac:#e07b22;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:GT,system-ui,sans-serif;overflow:hidden;touch-action:none}
+#bg{position:fixed;inset:0;background:#0b1410;overflow:hidden}.bgl{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.6s ease-in-out}.bgl.on{opacity:1}
+#c{position:fixed;inset:0;width:100%;height:100%}#uw{position:fixed;inset:0;background:rgba(10,95,200,.42);display:none;pointer-events:none}
+#cam{position:fixed;right:8px;bottom:8px;width:30vw;max-width:200px;overflow:hidden;display:none;background:#000}
+#cam video{width:100%;display:block}#cam.vr{opacity:.02;pointer-events:none;width:64px}#ov{position:absolute;inset:0;width:100%;height:100%}
+#hud{position:fixed;top:calc(6px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;font-size:18px;text-shadow:0 1px 4px #000;display:none;pointer-events:none}
+#hud small{display:block;font-size:13px;opacity:.9}
+#lobby{position:fixed;inset:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:linear-gradient(90deg,#000a,#0000 45%,#000a);overflow:auto}
+#logo{width:min(38vw,380px);align-self:flex-start}
+#menu{display:flex;flex-direction:column;gap:8px;width:min(46vw,340px);max-height:100%;overflow:auto;padding:10px;background:#000a;border-radius:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.sw{width:30px;height:30px;border-radius:50%;border:3px solid #fff5}
+input,select{font-family:GT,system-ui,sans-serif;font-size:16px;padding:9px;border-radius:10px;border:2px solid var(--ac);background:#0b1410;color:var(--fg);min-width:0;width:100%;box-sizing:border-box}
+input[type=color]{width:44px;height:38px;padding:0;border:0;background:none}
+button{font-family:GT,system-ui,sans-serif;background:var(--ac);color:#04210f;border:0;border-radius:12px;padding:11px 14px;font-size:16px;flex:1}
+button:disabled{opacity:.5}#st{font-size:13px;text-align:center;opacity:.9;min-height:1.2em}
+section{display:flex;flex-direction:column;gap:7px;padding:10px;background:#ffffff14;border-radius:10px}h3{margin:0;font-size:12px;letter-spacing:3px;opacity:.7}
+.row2{display:flex;gap:7px;align-items:center}.big{padding:14px;font-size:19px}#menu button{flex:none;width:100%}#menu .row2 button{width:auto}
+@media (orientation:portrait){#lobby{flex-direction:column;justify-content:flex-start}#logo{width:70vw;align-self:center}#menu{width:92vw;margin-top:auto}}
+input[type=range]{padding:0;border:0;background:none;accent-color:var(--ac)}
+#menu .tabs{display:flex;gap:6px}#menu .tabs button{flex:1;width:auto;padding:9px 4px;font-size:14px;background:#ffffff1a;color:var(--fg)}#menu .tabs button.on{background:var(--ac);color:#04210f}
+.pane{display:none}.pane.on{display:flex}.hint{font-size:12px;opacity:.7;text-align:center}.hint.small{font-size:10px;opacity:.5}.lb{flex:0 0 64px;font-size:13px}
+#micq{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#000c;z-index:30;padding:10px}#micq.on{display:flex}#micq .pk2{background:#0b1410;border:2px solid var(--ac);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;width:min(90vw,340px);text-align:center}
+#pick{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#000c;z-index:20;padding:10px}#pick.on{display:flex}.pk{display:flex;flex-direction:column;gap:8px;width:min(86vw,340px);padding:14px;background:#0b1410;border:2px solid var(--ac);border-radius:14px;text-align:center}.pk button{width:100%;flex:none}.pk .sub{font-size:12px;opacity:.75;margin-top:-4px}
+#hud2{position:fixed;top:calc(6px + env(safe-area-inset-top,0px));left:50%;right:0;text-align:center;font-size:18px;text-shadow:0 1px 4px #000;display:none;pointer-events:none;z-index:15}#hud2 small{display:block;font-size:13px;opacity:.9}
+body.vr #hud{right:50%}body.vr #mic{left:25%}
+#mic2{position:fixed;left:75%;bottom:calc(8px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:none;z-index:15;pointer-events:none;background:#000a;color:#fff;border-radius:10px;padding:5px 12px;font-size:14px;font-family:GT,system-ui,sans-serif}
+#mic{position:fixed;left:50%;bottom:calc(8px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:none;z-index:15;pointer-events:none;background:#000a;color:#fff;border-radius:10px;padding:5px 12px;font-size:14px;font-family:GT,system-ui,sans-serif}
+#xh{position:fixed;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;display:none;pointer-events:none;z-index:16}#xh:before,#xh:after{content:'';position:absolute;background:#fff;box-shadow:0 0 3px #000}#xh:before{left:10px;top:0;width:2px;height:22px}#xh:after{top:10px;left:0;height:2px;width:22px}#selb{position:fixed;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));display:none;z-index:16;width:auto;flex:none;padding:16px 22px;font-size:18px;opacity:.9}#joy{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:130px;height:130px;border-radius:50%;background:#ffffff22;border:2px solid #fff6;display:none;z-index:16;touch-action:none}#jk{position:absolute;left:45px;top:45px;width:40px;height:40px;border-radius:50%;background:#ffffffaa;pointer-events:none}#fup,#fdn{position:fixed;right:calc(14px + env(safe-area-inset-right,0px));display:none;z-index:16;width:auto;flex:none;padding:12px 20px;font-size:18px;opacity:.9}#fup{bottom:calc(150px + env(safe-area-inset-bottom,0px))}#fdn{bottom:calc(84px + env(safe-area-inset-bottom,0px))}#bg .bgl{filter:blur(8px);transform:scale(1.08)}#logo{transform-origin:center center;will-change:transform}
+:root{--wood:url(assets/03b9ec061d25d6df2365.jpg)}
+*{-webkit-tap-highlight-color:transparent}button,input,select{outline:none}
+#menu{background:rgba(24,13,6,.88);border:4px solid #3b2410;border-radius:8px;box-shadow:0 0 0 2px #0008,0 8px 24px #000a}
+button{background:var(--wood) center/cover;color:#ffe9c4;border:3px solid #2a170a;border-radius:6px;text-shadow:0 2px 0 #000b;box-shadow:inset 0 2px 0 #ffffff26,inset 0 -3px 0 #0006,0 3px 0 #150b04;letter-spacing:1px}
+button:active{transform:translateY(2px);filter:brightness(.88)}
+#qj,#jn{box-shadow:inset 0 3px 0 var(--ac),inset 0 -3px 0 #0006,0 3px 0 #150b04}
+#menu .tabs button{background:var(--wood) center/cover;color:#ffe9c4;filter:brightness(.65)}#menu .tabs button.on{filter:none;color:#fff;box-shadow:inset 0 -4px 0 var(--ac),0 3px 0 #150b04}
+input,select{background:#1d1008;border:3px solid #4a2c14;border-radius:6px;color:#ffe9c4}input:focus{border-color:var(--ac)}
+section{background:rgba(0,0,0,.28);border-radius:6px}
+.pk,#micq .pk2{background:rgba(24,13,6,.96);border:4px solid #3b2410;border-radius:8px}
+.csb{width:100%;text-align:left;position:relative;padding-right:30px}.csb:after{content:'\25BE';position:absolute;right:12px;top:50%;transform:translateY(-50%)}
+.cso{position:fixed;inset:0;background:#000b;z-index:99990;display:flex;align-items:center;justify-content:center}
+.csl{width:min(86vw,360px);max-height:80vh;overflow:auto;display:flex;flex-direction:column;gap:6px;padding:12px;background:rgba(24,13,6,.97);border:4px solid #3b2410;border-radius:8px}
+.csi{width:100%!important;text-align:left;flex:none!important}.csi.on{box-shadow:inset 8px 0 0 var(--ac),0 3px 0 #150b04}
+
+#lobby{display:block;padding:0;background:linear-gradient(90deg,#0008,#0000 40%,#0000 60%,#0008)}
+#menu,#menu .tabs{display:contents}
+.tab[data-t=play]{display:none!important}
+#logo{position:absolute;left:50%;top:calc(4px + env(safe-area-inset-top,0px));transform:translateX(-50%);width:min(36vw,340px);align-self:auto}
+#tb{position:absolute;left:14px;top:calc(10px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:8px;padding:6px 10px 6px 8px;background:var(--wood) center/cover;border:3px solid #2a170a;border-radius:8px;box-shadow:0 3px 0 #150b04,inset 0 2px 0 #ffffff22;z-index:3}
+#tb .lv{width:32px;height:32px;border-radius:50%;background:var(--wood) center/cover;border:3px solid #ffe9c4;display:flex;align-items:center;justify-content:center;font-size:17px;color:#ffe9c4;text-shadow:0 2px 0 #000}
+#tb input{width:150px;font-size:16px;padding:6px 8px}
+.tab[data-t=style],.tab[data-t=codes],.tab[data-t=set]{position:fixed;z-index:3;width:min(22vw,160px)!important;padding:13px 6px;font-size:15px;flex:none}
+.tab[data-t=style]{left:14px;top:calc(74px + env(safe-area-inset-top,0px))}
+.tab[data-t=codes]{left:14px;top:calc(132px + env(safe-area-inset-top,0px))}
+.tab[data-t=set]{right:14px;top:calc(10px + env(safe-area-inset-top,0px))}
+.pane[data-t=play]{display:contents!important;background:none}
+.pane[data-t=play] h3,.pane[data-t=play] .hint,#solo{display:none!important}
+#qj{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(36vw,300px)!important;padding:20px 10px;font-size:26px;z-index:3;box-shadow:inset 0 3px 0 var(--ac),inset 0 -3px 0 #0006,0 4px 0 #150b04}
+.pane[data-t=play] .row2{position:fixed;left:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(46vw,380px);z-index:3;background:rgba(24,13,6,.8);border:3px solid #3b2410;border-radius:8px;padding:8px}
+.pane[data-t=style],.pane[data-t=codes],.pane[data-t=set]{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88vw,430px);max-height:84vh;overflow:auto;z-index:50;background:rgba(24,13,6,.97);border:4px solid #3b2410;border-radius:10px;padding:14px;box-shadow:0 0 0 100vmax rgba(0,0,0,.6)}
+.pclose{width:100%;flex:none;order:-1}
+
+:root{--dwood:url(assets/bfedee8e7e169867e893.jpg)}
+#bg{background:#1a0f09 var(--dwood) center/cover}.bgl{display:none!important}
+.tab[data-t=style],.tab[data-t=codes],.tab[data-t=set]{width:84px!important;height:84px;padding:0!important;font-size:0!important;overflow:visible}
+.tab[data-t=style]{background:url(assets/22d92b8145d406d26a01.png) center/62% no-repeat,var(--wood) center/cover;top:calc(66px + env(safe-area-inset-top,0px))}
+.tab[data-t=codes]{background:url(assets/cfb50f7834b537f224fa.png) center/62% no-repeat,var(--wood) center/cover;top:calc(188px + env(safe-area-inset-top,0px))}
+.tab[data-t=set]{background:url(assets/34df9b8569dd4d52ec82.png) center/62% no-repeat,var(--wood) center/cover}
+#menu .tabs button.tab[data-t=style],#menu .tabs button.tab[data-t=codes],#menu .tabs button.tab[data-t=set]{filter:none}
+.tab::after{content:attr(data-l);position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);font-size:15px;white-space:nowrap;color:#ffe9c4;text-shadow:0 2px 0 #000,0 0 4px #000;letter-spacing:1px}
+button{transition:transform .12s ease,filter .15s,box-shadow .15s}
+.tab:hover{filter:brightness(1.15)}
+@keyframes popin{from{opacity:0;transform:translate(-50%,-44%) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.pane[data-t=style].on,.pane[data-t=codes].on,.pane[data-t=set].on{animation:popin .24s cubic-bezier(.2,1.2,.4,1)}
+@keyframes fadein{from{opacity:0}to{opacity:1}}@keyframes slideup{from{transform:translateY(26px);opacity:0}to{transform:none;opacity:1}}
+.cso{animation:fadein .18s ease-out}.csl{animation:slideup .22s ease-out}
+@keyframes dropin{from{opacity:0;transform:translate(-50%,-34px)}to{opacity:1;transform:translate(-50%,0)}}
+#lobby.in #logo{animation:dropin .8s cubic-bezier(.2,1.3,.4,1) backwards}
+@keyframes slidel{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}@keyframes slider{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+#lobby.in #tb,#lobby.in .tab[data-t=style],#lobby.in .tab[data-t=codes],#lobby.in .pane[data-t=play] .row2{animation:slidel .6s ease-out backwards}#lobby.in .tab[data-t=set],#lobby.in .tab[data-t=frd],#lobby.in #qj{animation:slider .6s ease-out backwards}
+@keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+
+#pick.on .pk{animation:popin2 .22s ease-out}@keyframes popin2{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+#micq.on .pk2{animation:popin2 .22s ease-out}
+
+:root{--ac:#e07b22}
+#lobby #menu .tabs button.tab[data-t=style],#lobby #menu .tabs button.tab[data-t=codes],#lobby #menu .tabs button.tab[data-t=set],#lobby #menu .tabs button.tab[data-t=frd]{position:fixed;z-index:3;width:84px!important;height:84px;padding:0!important;font-size:0!important;overflow:visible;flex:none;border:3px solid #2a170a;border-radius:10px;background-color:#6b4423}
+#lobby #menu .tabs button.tab[data-t=style]{background-image:url(assets/22d92b8145d406d26a01.png),var(--wood);background-position:center,center;background-size:62%,cover;background-repeat:no-repeat,no-repeat;left:14px;top:calc(66px + env(safe-area-inset-top,0px))}
+#lobby #menu .tabs button.tab[data-t=codes]{background-image:url(assets/cfb50f7834b537f224fa.png),var(--wood);background-position:center,center;background-size:62%,cover;background-repeat:no-repeat,no-repeat;left:14px;top:calc(188px + env(safe-area-inset-top,0px))}
+#lobby #menu .tabs button.tab[data-t=set]{background-image:url(assets/34df9b8569dd4d52ec82.png),var(--wood);background-position:center,center;background-size:62%,cover;background-repeat:no-repeat,no-repeat;right:14px;left:auto;top:calc(10px + env(safe-area-inset-top,0px))}
+#lobby #menu .tabs button.tab[data-t=frd]{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='22' cy='20' r='9' fill='%23111'/><path d='M4 54c0-13 8-19 18-19s18 6 18 19z' fill='%23111'/><circle cx='45' cy='24' r='8' fill='%23333'/><path d='M34 54c0-10 5-15 12-15s14 5 14 15z' fill='%23333'/></svg>"),var(--wood);background-position:center,center;background-size:62%,cover;background-repeat:no-repeat,no-repeat;right:14px;left:auto;top:calc(130px + env(safe-area-inset-top,0px))}
+.tab::after{position:absolute}
+#tbp{display:flex;align-items:center;gap:8px;padding:0;background:none!important;border:0!important;box-shadow:none!important;text-shadow:0 2px 0 #000;font-size:20px;color:#ffe9c4;width:auto!important}
+#tbn{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.subtabs{display:flex;gap:6px;flex-wrap:wrap}.subtabs button{flex:1 1 40%;width:auto!important;padding:9px 4px;font-size:13px}.subtabs button.on{box-shadow:inset 0 -5px 0 var(--ac),0 3px 0 #150b04}
+.grp{display:none;flex-direction:column;gap:8px}.grp.on{display:flex}
+.fr{display:flex;align-items:center;gap:8px;padding:8px;background:rgba(0,0,0,.3);border-radius:6px}.fr .fn{flex:1;font-size:15px;color:#ffe9c4}.fr .fs{font-size:12px;opacity:.8}
+.dot{width:12px;height:12px;border-radius:50%;background:#777;flex:none}.dot.on{background:#4cff6a}
+.fr button{flex:0 0 auto!important;width:auto!important;padding:6px 10px;font-size:13px}
+#flist{display:flex;flex-direction:column;gap:6px}
+#cam.show{opacity:1!important;width:min(34vw,230px)!important;pointer-events:none}
+
+.pane[data-t=frd],.pane[data-t=prof]{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88vw,430px);max-height:84vh;overflow:auto;z-index:50;background:rgba(24,13,6,.97);border:4px solid #3b2410;border-radius:10px;padding:14px;box-shadow:0 0 0 100vmax rgba(0,0,0,.6)}
+.pane[data-t=frd].on,.pane[data-t=prof].on{animation:popin .24s cubic-bezier(.2,1.2,.4,1)}
+#st{position:fixed;left:50%;bottom:calc(8px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:4;font-size:13px;color:#ffe9c4;text-shadow:0 2px 0 #000;text-align:center;max-width:44vw;pointer-events:none}
+#lobby #menu .tabs button.tab[data-t=style]{top:calc(86px + env(safe-area-inset-top,0px))!important}
+#lobby #menu .tabs button.tab[data-t=codes]{top:calc(208px + env(safe-area-inset-top,0px))!important}
+
+#lobby #menu .tabs button.tab[data-t=style],#lobby #menu .tabs button.tab[data-t=codes],#lobby #menu .tabs button.tab[data-t=set],#lobby #menu .tabs button.tab[data-t=frd]{background-image:var(--wood)!important;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
+.tab::before{content:'';position:absolute;left:14%;top:14%;width:72%;height:72%;background-repeat:no-repeat;background-position:center;background-size:contain;filter:drop-shadow(0 0 2px #ffe9c4) drop-shadow(0 0 1px #ffe9c4);pointer-events:none}
+.tab[data-t=style]::before{background-image:url(assets/22d92b8145d406d26a01.png)}
+.tab[data-t=codes]::before{background-image:url(assets/cfb50f7834b537f224fa.png)}
+.tab[data-t=set]::before{background-image:url(assets/34df9b8569dd4d52ec82.png)}
+.tab[data-t=frd]::before{background-image:url(assets/4cc4417e9471b050fd09.png)}
+.rgb{display:flex;align-items:center;gap:10px;padding:2px 0}.rgb .rl{width:18px;font-size:16px;text-align:center}
+input[type=range].rgbs{-webkit-appearance:none;appearance:none;height:26px;border-radius:0;background:transparent;border:0;padding:0;flex:1}
+input[type=range].rgbs::-webkit-slider-runnable-track{height:14px;border-radius:0;border:3px solid #2a170a;background:linear-gradient(90deg,#000,var(--c))}
+input[type=range].rgbs::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:28px;border-radius:0;background:#ffe9c4;border:3px solid #2a170a;margin-top:-11px;box-shadow:0 3px 0 #000}
+#cr{--c:#ff2a2a}#cg{--c:#2aff2a}#cb{--c:#2a6bff}
+#rgbprev{height:34px;border-radius:0;border:3px solid #2a170a;background:#fff}
+
+#wm{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:84px;opacity:.38;pointer-events:none;z-index:2}
+#logo{position:fixed;display:none}body.inlobby #logo{display:block}
+body.in.inlobby #logo{animation:dropin .8s cubic-bezier(.2,1.3,.4,1) backwards}
+#skel{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:40;display:none}
+@font-face{font-family:"GorillaTitle";src:url(assets/f2d9e989667641bffae5.otf) format("opentype");font-display:block}
+#ldscr{position:fixed;inset:0;z-index:99992;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vmin;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s;background:#111 url(assets/f2d9a3ba2ae7a1b390e8.jpg) center/cover no-repeat;font-family:"GorillaTitle",monospace;-webkit-user-select:none;user-select:none}
+#ldscr::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.35)}
+#ldscr>*{position:relative}
+#ldscr.on{opacity:1;visibility:visible}
+#ldscr .ltxt{font-size:min(9vmin,72px);color:#fff;letter-spacing:.08em;text-shadow:0 .5vmin 0 #000,.4vmin 0 0 #000,-.4vmin 0 0 #000}
+#ldscr .bar{width:min(70vw,560px);height:min(6vmin,40px);border:.8vmin solid #000;background:rgba(0,0,0,.55)}
+#ldscr .bar i{display:block;height:100%;width:0;background:#7cff3a}
+#ldscr .pct{font-size:min(6vmin,44px);color:#fff;text-shadow:0 .4vmin 0 #000}
+#ldscr #ok{display:none;font:inherit;font-size:min(8vmin,64px);letter-spacing:.08em;color:#000;background:#7cff3a;border:.9vmin solid #000;border-radius:0;padding:1.2vmin 5vmin;cursor:pointer;box-shadow:0 1vmin 0 #000;text-shadow:none;width:auto;animation:ldpulse 1s ease-in-out infinite}
+#ldscr #ok:active{transform:translateY(.6vmin);box-shadow:0 .4vmin 0 #000}
+#ldscr #ok.show{display:block}
+@keyframes ldpulse{50%{transform:scale(1.06)}}
+#intro img{width:min(78vmin,720px);height:min(78vmin,720px);border:min(1.4vmin,12px) solid #000;background:#fff;display:block;box-sizing:border-box;image-rendering:auto}
+
+#rbw{position:fixed;inset:0;pointer-events:none;z-index:60;opacity:0;transition:opacity .6s;mix-blend-mode:color;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);background-size:200% 100%;animation:rbwa 2.2s linear infinite}
+#rbw.on{opacity:.7}@keyframes rbwa{from{background-position:0 0}to{background-position:200% 0}}
+#admin{position:fixed;left:50%;top:12%;transform:translateX(-50%);width:min(86vw,560px);display:none;gap:8px;z-index:99000;background:rgba(20,12,6,.95);border:4px solid #000;border-radius:8px;padding:10px}
+#admin input{flex:1;min-width:0;font-size:18px;padding:10px}#admin button{width:auto;flex:0 0 auto;padding:10px 14px}
+#boot{position:fixed;inset:0;background:#fff;z-index:99990}
+#intro{position:fixed;inset:0;background:#fff;z-index:99995;display:flex;align-items:center;justify-content:center;opacity:0;animation:introa 3.6s linear forwards}
+
+@keyframes introa{0%{opacity:0}25%{opacity:1}65%{opacity:1}99%{opacity:0}100%{opacity:0;visibility:hidden}}
+
+
+
+</style><link rel="stylesheet" href="css/pico.css?v=v45-gmotion-10"></head><body>
+<div id="boot"></div><div id="rbw"></div><div id="admin"><input id="admt" maxlength="120" autocomplete="off" placeholder="..."><button id="adms" type="button">SEND</button><button id="admx" type="button">X</button></div><div id="intro"><img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAABlBMVEX///+Pj49+t5X2AAAAlklEQVR42u3MsREAIAzEsA/77xwGACqKNHLtU3WOKq8u88pnAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALPABu+EBf8gVaIUAAAAAElFTkSuQmCC"></div><div id="ldscr"><div class="ltxt" id="ltxt">CARREGANDO...</div><div class="bar"><i id="fill"></i></div><div class="pct" id="pct">0%</div><button id="ok" type="button">CONFIRMAR</button></div>
+
+<div id="bg"><div class="bgl on" id="bg0"></div><div class="bgl" id="bg1"></div></div><canvas id="c"></canvas><div id="uw"></div><div id="hud"></div><div id="xh"></div><div id="joy"><div id="jk"></div></div><button id="fup">▲</button><button id="fdn">▼</button><button id="selb">SELECT</button><div id="hud2"></div><div id="mic">MIC ON · PRESS Y TO MUTE</div><div id="mic2">MIC ON · PRESS Y TO MUTE</div>
+<div id="cam"><video id="v" playsinline muted></video><canvas id="ov"></canvas></div>
+<div id="lobby"><img id="wm" alt="" src="assets/5bd6013ad2fc3608d7d7.png"><div id="tb"><button id="tbp" type="button"><span class="lv">1</span><span id="tbn">Gorilla</span></button></div><img id="logo" alt="Gorilla Rush" src="assets/9bd7ac9171dad6031832.png">
+<div id="menu">
+<div class="tabs"><button class="tab on" data-t="play">PLAY</button><button class="tab" data-t="style">STYLE</button><button class="tab" data-t="codes">CODES</button><button class="tab" data-t="set">SETTINGS</button><button class="tab" data-t="frd">FRIENDS</button><button class="tab" data-t="prof" style="display:none">PROFILE</button></div>
+<section class="pane on" data-t="play"><h3>NAME</h3><input id="nick" maxlength="12" placeholder="Your name" autocomplete="off">
+<h3>ROOM</h3><button id="solo" class="big" style="display:none">SOLO</button>
+<div class="row2"><input id="code" maxlength="8" placeholder="ROOM CODE" autocapitalize="characters" style="text-transform:uppercase"><button id="jn" style="flex:0 0 auto">JOIN CODE</button></div>
+<div class="hint">Room code: you pick Casual, Infection or Hunt</div>
+</section>
+<section class="pane" data-t="codes"><h3>CODES</h3><div class="row2"><input id="cdin" placeholder="Code" autocomplete="off" autocapitalize="off"><button id="cdgo" style="flex:0 0 auto">REDEEM</button></div><div class="hint">Type a code and tap REDEEM.</div></section>
+<section class="pane" data-t="style"><h3>COLOR</h3><div id="sws" style="display:none"></div><input type="color" id="col" value="#ffffff" style="display:none"><div id="rgbprev"></div><div class="rgb"><span class="rl">R</span><input type="range" class="rgbs" id="cr" min="0" max="255" value="255"></div><div class="rgb"><span class="rl">G</span><input type="range" class="rgbs" id="cg" min="0" max="255" value="255"></div><div class="rgb"><span class="rl">B</span><input type="range" class="rgbs" id="cb" min="0" max="255" value="255"></div>
+<h3>ACCESSORIES</h3>
+<select id="accg"><option value="">Glasses: None</option><option value="g_white">Glasses: White Circle</option><option value="g_sun">Glasses: Sunglasses</option><option value="g_pointy">Glasses: Pointy Sunglasses</option><option value="g_blue">Glasses: Blue</option><option value="g_2026">Glasses: 2026</option></select>
+<select id="acch"><option value="">Head: None</option><option value="h_top">Head: Top Hat</option><option value="h_party">Head: Party Hat</option><option value="h_banana">Head: Banana Peel</option><option value="h_penguin">Head: Penguin Hat</option><option value="h_ushanka">Head: Ushanka</option></select>
+<select id="accc"><option value="">Clothes: None</option><option value="c_hawaii">Clothes: Hawaiian T-shirt</option><option value="c_dum">Clothes: Dum T-shirt</option></select>
+<h3>HAT FIT</h3>
+<div class="row2"><span class="lb">Height</span><input type="range" id="ahy" min="-8" max="8" step="0.5" value="0"></div>
+<div class="row2"><span class="lb">Forward</span><input type="range" id="ahz" min="-8" max="8" step="0.5" value="0"></div>
+<h3>GLASSES FIT</h3>
+<div class="row2"><span class="lb">Height</span><input type="range" id="agy" min="-12" max="12" step="0.5" value="0"></div>
+<div class="row2"><span class="lb">Forward</span><input type="range" id="agz" min="-12" max="12" step="0.5" value="0"></div>
+<div class="row2"><span class="lb">Size</span><input type="range" id="ags" min="0.5" max="2.5" step="0.05" value="1"></div>
+<div id="bdgp" style="display:none;flex-direction:column;gap:7px"><h3>BADGE</h3><select id="bdgon"><option value="1">Badge: Finger Painter</option><option value="2">Badge: AAC</option><option value="3">Badge: Owner</option><option value="0">Badge: Off</option></select><div class="row2"><span class="lb">Y</span><input type="range" id="bgy" min="-12" max="12" step="0.5" value="0"></div><div class="row2"><span class="lb">X</span><input type="range" id="bgx" min="-12" max="12" step="0.5" value="0"></div><div class="row2"><span class="lb">Z</span><input type="range" id="bgz" min="-12" max="12" step="0.5" value="0"></div></div></section>
+<section class="pane" data-t="set"><h3>SETTINGS</h3><div class="subtabs"><button type="button" class="on" data-g="gfx">GRAPHICS</button><button type="button" data-g="wld">WORLD</button><button type="button" data-g="ctl">CONTROLS</button><button type="button" data-g="inf">INFO</button></div><div class="grp on" data-g="gfx"><select id="gfx"><option value="0">Graphics: Low</option><option value="1">Graphics: Medium</option><option value="2">Graphics: High</option></select></div><div class="grp" data-g="wld"><select id="dn"><option value="0">Time: Day &amp; night cycle</option><option value="1" selected>Time: Always day</option><option value="2">Time: Always night</option></select><select id="fl"><option value="0" selected>Flashlight: Auto (dark places)</option><option value="1">Flashlight: On</option><option value="2">Flashlight: Off</option></select><div class="hint">Press F (keyboard) to switch the flashlight. Auto turns it on at night and in dark places.</div><select id="psz" style="display:none"><option value="0.5">Player size: Big</option><option value="0.37">Player size: Normal (mirror height)</option><option value="0.25">Player size: Small</option><option value="0.18" selected>Player size: Smaller</option><option value="0.14">Player size: Tiny</option><option value="0.1">Player size: Smallest</option></select><select id="tex" style="display:none"><option value="2026">Textures: 2026 (sharp)</option><option value="2021">Textures: 2021 (blurry)</option></select></div><div class="grp" data-g="ctl"><aside id="pico-bar"><strong>Controle e diagnóstico</strong><button id="pico-solo" disabled>JOGAR NA TELA</button><button id="pico-diagnostic">SALVAR DIAGNÓSTICO</button><details><summary>Botões WebVR / instruções</summary><p>WebXR usa o layout da API. Legado: ajuste os índices abaixo. Segure clique do touchpad para menu. Gatilho confirma. No menu, calibre apontando para a frente.</p><label>Touchpad<select id="padClick"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label><label>Gatilho<select id="padTrig"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label><label>Menu/App<select id="padApp"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label><p>Andar sem botão: gire o controle para apoiar a mão no chão; empurre para baixo/trás, levante e repita. Só translação física não é medida pelo controle 3DoF.</p><a href="../monke-go/?device=picog2&v=1.3">Voltar ao MonkeGo 1.3 anterior</a> · <a href="downloads/Gorilla-Rush-v45-PicoG2.apk">APK tela + navegador VR</a> · <a href="downloads/Gorilla-Rush-v45-projeto.zip">Projeto completo</a></details><button id="qj" class="big">QUICK JOIN</button></aside><select id="mv" style="display:none"><option value="0" selected>Move: Hands only (Gorilla Tag)</option><option value="1">Move: Hands + touch &amp; hold</option></select><select id="ht"><option value="1">Hand tracking: Precise</option><option value="0" selected>Hand tracking: Fast</option></select><select id="htr"><option value="a" selected>Tracking rate: Auto</option><option value="s">Tracking rate: Smooth</option><option value="b">Tracking rate: Balanced</option><option value="f">Tracking rate: FPS priority</option></select><select id="htw"><option value="w" selected>Tracking engine: Worker (fast)</option><option value="c">Tracking engine: Compatible</option></select><select id="htshow"><option value="0" selected>Show hand skeleton: Off</option><option value="1">Show hand skeleton: On</option></select><div class="hint">Move like Gorilla Tag: touch the ground or walls with your hands and push. Show your hands to the camera. WASD / gamepad optional.</div><div class="hint">Mic: press Y (Triangle) on a PS4/PS5 controller. You only hear players who are close to you.</div></div><div class="grp" data-g="inf"><select id="lang"><option value="en">Language: English</option><option value="pt">Idioma: Português</option><option value="es">Idioma: Español</option><option value="fr">Langue : Français</option><option value="de">Sprache: Deutsch</option><option value="it">Lingua: Italiano</option><option value="ru">Язык: Русский</option><option value="ja">言語: 日本語</option></select><div class="hint small">Hawaiian T-shirt: “Gorilla Tag Hawaiian T-shirt” by That-one-ripper (Sketchfab, CC BY 4.0)</div><div class="hint small">Pointy Sunglasses: “Gorilla Tag Pointy Sunglasses” by JR_VR (Sketchfab, CC BY 4.0)</div><div class="hint small">Pointy Sunglasses: “Gorilla Tag Pointy Sunglasses” by JR_VR (Sketchfab, CC BY 4.0)</div></div></section><section class="pane" data-t="frd"><h3>FRIENDS</h3><div class="row2"><input id="ftag" maxlength="6" placeholder="FRIEND HASHTAG" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase"><button id="fadd" type="button" style="flex:0 0 auto">ADD</button></div><div id="flist"></div><div class="hint">Your hashtag: <b id="myhash">#-----</b></div></section><section class="pane" data-t="prof"><h3>PROFILE</h3><div id="profnick"></div><div class="row2"><span class="lb">LEVEL</span><b id="pflv">1</b></div><div class="row2"><span class="lb">MATCHES</span><b id="pfmt">0</b></div><div class="row2"><span class="lb">HASHTAG</span><b id="pfht">#-----</b><button id="pfcp" type="button" style="flex:0 0 auto">COPY</button></div></section>
+<div id="st">Loading…</div></div></div>
+<div id="micq"><div class="pk2" style="position:relative"><button id="mqx" aria-label="Close" style="position:absolute;top:6px;right:8px;width:34px;height:34px;padding:0;font-size:20px;line-height:1;background:#ffffff22;color:#fff;border:0;border-radius:50%">✕</button><h3>MICROPHONE</h3><div style="font-size:17px">DO YOU WANT TO JOIN WITH THE MICROPHONE ON OR OFF?</div><button id="mqon" class="big">MICROPHONE ON</button><button id="mqoff" style="background:#ffffff33;color:#fff">MICROPHONE OFF</button></div></div>
+<div id="pick"><div class="pk"><h3 id="pkt">ROOM</h3><button id="pkc" class="big">CASUAL</button><div class="sub">Just hang out · no tagging</div><button id="pki" class="big">INFECTION</button><div class="sub">Infected players spread it to everyone</div><button id="pkh" class="big">HUNT</button><div class="sub">Tag game · Hunt turns red stone · touch someone to pass it on</div><button id="pkx" style="background:#ffffff33;color:#fff">CANCEL</button></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="vr-entry"><span id="pico-status" role="status" aria-live="polite">Carregando projeto recebido…</span><button id="pico-vr" type="button" disabled>INICIAR VR</button></div><script src="js/boot.js?v=v45-gmotion-10"></script></body></html>

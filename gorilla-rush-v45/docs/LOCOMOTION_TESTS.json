@@ -1,0 +1,385 @@
+{
+  "checks": [
+    "Left hand floor push",
+    "Right hand floor push",
+    "Both hands floor push",
+    "Hand wall push",
+    "Fast stroke",
+    "Slow stroke",
+    "Stationary grounded body",
+    "Jump and land",
+    "Fall without tunneling",
+    "Body wall collision",
+    "Forward motion",
+    "Backward motion",
+    "Left/right lateral motion"
+  ],
+  "results": {
+    "assistDefault": false,
+    "left": {
+      "delta": [
+        0,
+        0,
+        -0.4500000000000001
+      ],
+      "peak": 2.0250000000000346,
+      "contact": 16,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "right": {
+      "delta": [
+        0,
+        -1.1102230246251565e-16,
+        -0.4500000000000001
+      ],
+      "peak": 2.0250000000000346,
+      "contact": 16,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "both": {
+      "delta": [
+        0,
+        0,
+        -0.4500000000000001
+      ],
+      "peak": 2.0250000000000346,
+      "contact": 32,
+      "tracking": [
+        "measured",
+        "measured"
+      ]
+    },
+    "back": {
+      "delta": [
+        0,
+        -1.1102230246251565e-16,
+        0.4000000000000003
+      ],
+      "peak": 1.8000000000000358,
+      "contact": 16,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "sideLeft": {
+      "delta": [
+        -0.39999999999999997,
+        0,
+        0
+      ],
+      "peak": 1.8000000000000276,
+      "contact": 16,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "sideRight": {
+      "delta": [
+        0.39999999999999997,
+        0,
+        0
+      ],
+      "peak": 1.8000000000000276,
+      "contact": 16,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "fast": {
+      "delta": [
+        0,
+        0,
+        -0.4
+      ],
+      "peak": 3.600000000000055,
+      "contact": 8,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "slow": {
+      "delta": [
+        0,
+        0,
+        -0.4000000000000004
+      ],
+      "peak": 0.7200000000000112,
+      "contact": 40,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "limits": {
+      "delta": [
+        0,
+        0,
+        -0.7777777777777667
+      ],
+      "peak": 8,
+      "contact": 8,
+      "tracking": [
+        "measured"
+      ]
+    },
+    "momentum": 0.6599999999999998,
+    "idle": {
+      "drift": 0,
+      "feet": 0,
+      "vy": 0,
+      "grounded": true
+    },
+    "palmSupport": {
+      "feet": 0.0422623155664783,
+      "supported": true,
+      "speed": 0
+    },
+    "jump": {
+      "height": 2.0985894760603085,
+      "feet": -1.1102230246251565e-16,
+      "grounded": true
+    },
+    "fall": {
+      "down": true,
+      "minFeet": -1.1102230246251565e-16,
+      "feet": 0,
+      "grounded": true
+    },
+    "wall": {
+      "delta": [
+        -0.46226230364554993,
+        -1.1102230246251565e-16,
+        0
+      ],
+      "peak": 1.799999999999792
+    },
+    "wallRest": {
+      "feet": 1.3695324074074038,
+      "grounded": false,
+      "supported": true,
+      "speed": 0
+    },
+    "wallReleased": {
+      "feet": -1.1102230246251565e-16,
+      "grounded": true,
+      "supported": false
+    },
+    "bodyWall": {
+      "x": 0.560096011920929,
+      "maxX": 0.5648
+    },
+    "freeAir": {
+      "drift": 1.1102230246251565e-16,
+      "contact": false
+    },
+    "routing": {
+      "left": true,
+      "right": true,
+      "bothVisible": [
+        "LR",
+        "LR",
+        "LR"
+      ],
+      "leftOnly": true,
+      "leftMask": [
+        "L",
+        "L",
+        "L"
+      ]
+    },
+    "poseLoss": true,
+    "reconnectReaction": 0,
+    "menu": true,
+    "estimated": {
+      "left": {
+        "forward": 1.5175981258299158,
+        "tracking": "estimated-3dof",
+        "otherAbsent": true
+      },
+      "right": {
+        "forward": 1.4460146308898514,
+        "tracking": "estimated-3dof",
+        "otherAbsent": true
+      }
+    },
+    "calibration": [
+      {
+        "neutralError": 0.0019075501115122795,
+        "drift": 0,
+        "feet": -1.1102230246251565e-16
+      },
+      {
+        "neutralError": 0.002585573035589539,
+        "drift": 0,
+        "feet": 0
+      }
+    ],
+    "touchpad": 3.5219907407415247,
+    "freeHands": [
+      {
+        "held": false,
+        "forward": 0.45000000000000007,
+        "momentum": 5.940000000000015,
+        "released": true,
+        "feet": 3.3306690738754696e-16,
+        "speed": 2.2274999999997416,
+        "grounded": true
+      },
+      {
+        "held": true,
+        "forward": 0.45000000000000007,
+        "momentum": 5.940000000000015,
+        "released": true,
+        "feet": 3.3306690738754696e-16,
+        "speed": 2.2274999999997416,
+        "grounded": true
+      }
+    ],
+    "heldWallRest": {
+      "feet": 1.3695324074074038,
+      "grounded": false,
+      "supported": true,
+      "speed": 0
+    },
+    "heldWallReleased": {
+      "feet": -1.1102230246251565e-16,
+      "grounded": true,
+      "supported": false
+    },
+    "freeWrist": [
+      {
+        "held": false,
+        "strokes": [
+          {
+            "forward": 0.9432464870152513,
+            "released": true
+          },
+          {
+            "forward": 0.9992517381760313,
+            "released": true
+          },
+          {
+            "forward": 1.041924090389808,
+            "released": true
+          }
+        ],
+        "feet": 2.220446049250313e-16,
+        "speed": 0
+      },
+      {
+        "held": true,
+        "strokes": [
+          {
+            "forward": 0.9432464870152513,
+            "released": true
+          },
+          {
+            "forward": 0.9992517381760257,
+            "released": true
+          },
+          {
+            "forward": 1.0419240903898082,
+            "released": true
+          }
+        ],
+        "feet": 2.220446049250313e-16,
+        "speed": 0
+      }
+    ],
+    "padIsolation": [
+      {
+        "assist": false,
+        "touched": false,
+        "drift": 0
+      },
+      {
+        "assist": false,
+        "touched": true,
+        "drift": 0
+      },
+      {
+        "assist": true,
+        "touched": false,
+        "drift": 0
+      },
+      {
+        "assist": true,
+        "touched": true,
+        "drift": 0
+      }
+    ],
+    "padDisabledDrift": 0,
+    "throws": [
+      {
+        "average": 3.5999999999995804,
+        "released": true,
+        "speed": 3.9599999999995386,
+        "expected": 3.959999999999539
+      },
+      {
+        "average": 0.7199999999999169,
+        "released": true,
+        "speed": 0.7919999999999087,
+        "expected": 0.7919999999999087
+      }
+    ],
+    "teleportThrow": {
+      "released": false,
+      "speed": 0
+    },
+    "frameRates": [
+      {
+        "fps": 30,
+        "forward": 0.4,
+        "throwSpeed": 1.4666666666668804
+      },
+      {
+        "fps": 60,
+        "forward": 0.3999999999999998,
+        "throwSpeed": 1.4666666666662396
+      },
+      {
+        "fps": 72,
+        "forward": 0.40000000000000013,
+        "throwSpeed": 1.4399999999998327
+      },
+      {
+        "fps": 90,
+        "forward": 0.4000000000000004,
+        "throwSpeed": 1.4666666666668806
+      }
+    ],
+    "scales": [
+      {
+        "size": 0.14,
+        "forward": 0.39999999999999986,
+        "throwSpeed": 1.7599999999997948
+      },
+      {
+        "size": 0.25,
+        "forward": 0.39999999999999986,
+        "throwSpeed": 1.7599999999997948
+      },
+      {
+        "size": 0.5,
+        "forward": 0.39999999999999986,
+        "throwSpeed": 1.7599999999997948
+      }
+    ],
+    "poseJump": {
+      "discontinuity": true,
+      "released": false,
+      "throwSpeed": 0,
+      "speedBefore": 3.599999999999584,
+      "speedAfter": 3.599999999999584
+    },
+    "legacyPosition": true,
+    "minSkinY": 0.03250955640422393,
+    "maxHorizontal": 8
+  },
+  "errors": [],
+  "limitations": "Full game frames and real model/triangle/body collision. Two positional WebXR sources are fixtures, not proof that stock PICO G2 supplies two positional controllers. Actual rendering and legacy 3DoF are exercised by check_browser.mjs. No physical headset/FPS/latency test."
+}

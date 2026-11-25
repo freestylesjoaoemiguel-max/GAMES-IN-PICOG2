@@ -1,0 +1,107 @@
+GILLA PLAYER MODEL LICENSE
+==========================
+
+Last updated 17 November 2026 · Version 3
+
+This license is between you and Content Media LLC, a Florida limited liability company operating as Play
+Gilla, which holds the rights in GILLA on behalf of GILLA's owners and grants this license with their
+authority ("we", "us" and "our"). It covers the official GILLA player model: the files in
+Gilla_PlayerModel.zip from gillavr.com/player-model (the Blender and FBX files and the textures), wherever you
+got them, and any copy or changed version of those files ("the model").
+
+You get this license only by downloading the model yourself from gillavr.com/player-model and accepting this
+license and our Terms of Service (gillavr.com/terms) there, by ticking the boxes and pressing Accept. If you
+don't agree, don't download or use the model. You must be at least the age our Terms of Service set for
+playing Gilla where you live. If you're under 18, or under the age of adulthood where you live, a parent or
+guardian has to read this license and agree to it for you.
+
+Got the model some other way, such as from a friend, a Discord server, a file site or a link straight to the
+file? Then you don't have a license, and only we can give you one: see section 3.
+
+1. WHAT YOU CAN DO
+We give you a limited, personal, non-exclusive licence, which you can't transfer or sub-license and which we
+can revoke (see section 4), to:
+  - make profile pictures, thumbnails, videos, streams, animations and fan art, such as renders, edits and
+    memes, that are about GILLA or show the model as GILLA's character ("your content");
+  - post, publish, display, stream and share your content anywhere, and earn money from it through ads,
+    sponsorships, subscriptions, memberships or donations on the platforms where you post or stream it;
+  - change the model to make your content: pose it, recolour it, repaint its textures, and change its
+    materials, rig and mesh, as long as it's still recognisably GILLA's monkey.
+Your content means finished pictures, videos and animations. Sharing your content is fine. Sharing the model's
+files, changed or not, isn't (see section 2). The example pictures in the download are ours too: you can use
+them as your content, the same way.
+Please credit GILLA (gillavr.com) where you can: it's appreciated, not required.
+
+2. WHAT YOU CAN'T DO
+  - Sell, rent, lend or trade the model or a changed version of it.
+  - Charge for things made with it beyond what section 1 allows, such as commissions, merchandise, prints, 3D
+    prints, NFTs, or paid packs, templates or downloads.
+  - Use the model itself to advertise someone else's product, brand or service. A sponsor segment in your
+    video is fine, as long as the model isn't the ad.
+  - Share the model's files, changed or not, with anyone, or upload them anywhere, such as model and asset
+    sites, file hosts or Discord servers. To pass it on, link people to gillavr.com/player-model so they get
+    it from us and accept this license. Anyone you give the files to gets no license (see section 3).
+  - Sub-license the model, or let or help anyone else use it in a way this license doesn't allow.
+  - Put the model, or a copy or close imitation of it, in a standalone product, game, mod, map or app, or use
+    it as an avatar in VRChat or anywhere else people play, chat or wear one.
+  - Change, distort or misuse GILLA's name or logo, or use the model in a way that pretends to be GILLA, its
+    makers or anyone else, or makes it look like we made, sponsor, approve or are connected with you or your
+    thing.
+  - Use the model to train AI, or give it to AI tools to make new models, characters or copies of it.
+  - Use it in anything sexual, hateful, harassing or illegal, or in anything that breaks our Terms of Service.
+  - Claim the model or GILLA's characters as your own, or try to register any rights in them.
+  - Remove or change this license, or the copyright notices and license information we've put in the files.
+
+3. WHO OWNS IT
+The model, GILLA and its characters are protected by copyright. Content Media LLC holds those rights on behalf
+of GILLA's owners: GILLA © 2026 Content Media LLC. All rights reserved. This license only lets you use the
+model the way it says. It doesn't give you ownership of the model or any other rights in it, and anything it
+doesn't give you, we keep. You own what you add to your content, but the model in it stays ours, and this
+license still applies to it.
+
+Copyright protects the model however you got it, without you having to accept anything. A copy from anyone but
+us comes with no license, even when this license is with it. So if you got the model from a friend or anywhere
+else, using it, such as posing or rendering it, making or posting content with it, or sharing it, infringes
+our copyright, and we can act on it, including with copyright takedown notices. Having a copy doesn't make it
+yours. To use the model, download your own copy from gillavr.com/player-model and accept this license there.
+From then on, this license covers you.
+
+4. REVOKING THIS LICENSE
+  - We can revoke your license at any time and for any reason. We don't have to give you advance notice.
+  - We revoke it by sending you a notice: by email, by a message on Discord, or by a message where you posted.
+    Your license ends when we send it.
+  - We can also withdraw this license for everyone by posting a notice at gillavr.com/player-model. It ends
+    for everyone when we post it, and we take the download down.
+  - If you break this license or our Terms of Service, your license ends straight away, without us having to
+    do anything.
+  - When your license ends, stop making anything new with the model straight away. Within 7 days, delete every
+    copy of its files that you have or control, and take down every post that uses it that you control. If our
+    notice says that what you've already posted can stay up, it can.
+  - If you don't, we can use any remedy the law gives us, including copyright takedown notices where your use
+    infringes our rights, and banning you from GILLA.
+  - As far as the law allows, revoking or ending this license doesn't make us liable to you.
+
+5. NEW VERSIONS OF THIS LICENSE
+We may publish new versions of this license at gillavr.com/player-model, each with a new date and version
+number. A new version applies to you only once you accept it, for example by accepting it on the download
+page. Until then, the version you accepted keeps applying to you, unless we revoke it under section 4.
+
+6. NO PROMISES
+The model is free and given as it is. As far as the law allows, we make no promises about it, and we aren't
+responsible for any loss or damage that comes from using it. Nothing in this license takes away rights you
+have under consumer laws that can't be signed away.
+
+7. EVERYTHING ELSE
+  - This license and our Terms of Service are the whole agreement between you and us about the model. If they
+    disagree about the model, this license wins.
+  - We can give you permission to do something this license doesn't allow, but only in a written document
+    signed on behalf of Content Media LLC that says it changes this license for you. That permission wins over
+    this license and the Terms of Service, only for what it covers. An ordinary support reply isn't
+    permission.
+  - If part of this license can't be enforced, the rest still stands. If we don't act on something straight
+    away, we can still act on it later.
+  - This license is governed by the laws of the State of Florida and of the United States, except where the
+    law where you live says otherwise.
+
+That's it. Questions, or want permission for something this license doesn't allow? Email support@gillavr.com
+and ask.

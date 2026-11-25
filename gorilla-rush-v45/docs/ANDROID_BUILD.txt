@@ -1,0 +1,42 @@
+REAL JAVA/DEX/APK BUILD. STATIC VALIDATION ONLY.
+No headset, emulator, installation, PICO stereo or controller-pose test was performed.
+
+Verifies
+Verified using v1 scheme (JAR signing): true
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Gorilla Rush v45 Screen Edition Development, OU=Unvalidated Device Build, O=Independent Project, C=BR
+Signer #1 certificate SHA-256 digest: 0cb44f0eba29f3a3b002b88863f78ec56583b146b57acc8ca0ff44a5ee098117
+Signer #1 certificate SHA-1 digest: 8143b94637f82cdc733671c612ca42541be1abbd
+Signer #1 certificate MD5 digest: d8ade91284847bc946d3e7777325cb94
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 2048
+Signer #1 public key SHA-256 digest: 3a84982e8daca6df2e0faf384f0685397f9d5dc8c1dce02631a77af6fc730987
+Signer #1 public key SHA-1 digest: 6212521632273d9d332dc3b16183800962f7a843
+Signer #1 public key MD5 digest: 2f5db5a38910c0357b71a5e2a7a0e973
+
+package: name='com.picog2.gorillarushv45' versionCode='10' versionName='1.0.8' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+minSdkVersion:'23'
+targetSdkVersion:'28'
+uses-permission: name='android.permission.INTERNET'
+application-label:'Gorilla Rush v45 • Tela + link VR'
+application-icon-160:'res/drawable/icon.xml'
+application: label='Gorilla Rush v45 • Tela + link VR' icon='res/drawable/icon.xml'
+launchable-activity: name='com.picog2.gorillarushv45.MainActivity'  label='' icon=''
+feature-group: label=''
+  uses-gl-es: '0x20000'
+  uses-feature-not-required: name='android.hardware.touchscreen'
+  uses-feature: name='android.hardware.screen.landscape'
+  uses-implied-feature: name='android.hardware.screen.landscape' reason='one or more activities have specified a landscape orientation'
+main
+supports-screens: 'small' 'normal' 'large' 'xlarge'
+supports-any-density: 'true'
+locales: '--_--'
+densities: '160'
+
+SHA-256: 0176a4442515a12a4c6f96fa4553df512ef1719ad7e26a11805d5022aec40ebf
+Size: 25071976 bytes

@@ -1,0 +1,104 @@
+
+> pulse-saber-g2@1.0.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: defaults are medium, one-saber assist and normal difficulty
+ok 1 - defaults are medium, one-saber assist and normal difficulty
+  ---
+  duration_ms: 2.491801
+  type: 'test'
+  ...
+# Subtest: settings clamp untrusted values
+ok 2 - settings clamp untrusted values
+  ---
+  duration_ms: 0.280518
+  type: 'test'
+  ...
+# Subtest: swept segment catches a note between frames
+ok 3 - swept segment catches a note between frames
+  ---
+  duration_ms: 0.410281
+  type: 'test'
+  ...
+# Subtest: a note cannot score twice
+ok 4 - a note cannot score twice
+  ---
+  duration_ms: 0.181276
+  type: 'test'
+  ...
+# Subtest: wrong lane and too early do not score
+ok 5 - wrong lane and too early do not score
+  ---
+  duration_ms: 0.127508
+  type: 'test'
+  ...
+# Subtest: strict direction rejects button and sideways movement
+ok 6 - strict direction rejects button and sideways movement
+  ---
+  duration_ms: 0.13844
+  type: 'test'
+  ...
+# Subtest: bomb hurts and never scores
+ok 7 - bomb hurts and never scores
+  ---
+  duration_ms: 0.164866
+  type: 'test'
+  ...
+# Subtest: unhit bomb is safe
+ok 8 - unhit bomb is safe
+  ---
+  duration_ms: 0.159812
+  type: 'test'
+  ...
+# Subtest: miss reduces energy and breaks combo
+ok 9 - miss reduces energy and breaks combo
+  ---
+  duration_ms: 0.318868
+  type: 'test'
+  ...
+# Subtest: pause freezes judgement and rejects cuts
+ok 10 - pause freezes judgement and rejects cuts
+  ---
+  duration_ms: 0.383117
+  type: 'test'
+  ...
+# Subtest: practice continues with zero energy, normal ends
+ok 11 - practice continues with zero energy, normal ends
+  ---
+  duration_ms: 0.351998
+  type: 'test'
+  ...
+# Subtest: accuracy includes misses and rank is deterministic
+ok 12 - accuracy includes misses and rank is deterministic
+  ---
+  duration_ms: 0.150928
+  type: 'test'
+  ...
+# Subtest: teleport-sized sweeps cannot clear notes
+ok 13 - teleport-sized sweeps cannot clear notes
+  ---
+  duration_ms: 0.079318
+  type: 'test'
+  ...
+# Subtest: every bundled chart is sorted, reachable, finite and single-controller
+ok 14 - every bundled chart is sorted, reachable, finite and single-controller
+  ---
+  duration_ms: 7.629478
+  type: 'test'
+  ...
+# Subtest: external props have finite interleaved triangle data and verified hashes
+ok 15 - external props have finite interleaved triangle data and verified hashes
+  ---
+  duration_ms: 18.056265
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 92.915367

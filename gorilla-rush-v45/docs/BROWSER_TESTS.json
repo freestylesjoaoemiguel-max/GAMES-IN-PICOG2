@@ -1,0 +1,74 @@
+{
+  "passed": [
+    "Both supplied maps and skinned avatar load with DecompressionStream unavailable; 68 payload hashes tested separately",
+    "Real frame loop requests legacy presentation, draws both eye projection/view matrices and submits frames",
+    "Right wrist matches collider target and measured orientation in actual miniature player scale",
+    "Unconnected left hand hidden locally in single-right fixture; supplied GLB preserved",
+    "Continuous hand sweep stops on actual triangles in both supplied maps",
+    "Every sampled hand/finger skin vertex remains above floor throughout push, lift and gravity, not just the wrist collider",
+    "Actual full v45 frame: three ground strokes move forward without trigger/joystick; lifting releases and stationary hand stops",
+    "Actual mesh stays above floor during 360-degree anchored roll and 50ms gravity frames; trigger closes fingers without changing contact physics; lifting releases",
+    "Actual skinned hand rotates 360 degrees about all three axes",
+    "Immersive menu becomes visible in scene and cancels locomotion without throwing player",
+    "Controller loss cancels contact and explicitly reports missing pose",
+    "WebXR reads selected source targetRaySpace; pose loss cannot fall back to stale legacy controller"
+  ],
+  "errors": [],
+  "neutral": {
+    "error": 3.04434233847692e-13,
+    "gap": 1.6280579355608324e-14,
+    "wrist": [
+      69.905,
+      29.490528401805054,
+      -24.748586086856402
+    ],
+    "target": [
+      69.90499999999999,
+      29.490528401805047,
+      -24.748586086856406
+    ],
+    "PS": 0.25,
+    "mesh": 2
+  },
+  "mapContacts": [
+    {
+      "contact": true,
+      "clearance": 1.0019999999999998
+    },
+    {
+      "contact": true,
+      "clearance": 1.0020000000000133
+    }
+  ],
+  "movement": {
+    "minSkinY": 0.040982377556939786,
+    "maxWristError": 1.8610729195778454e-15,
+    "strokes": [
+      1.4871430698747459,
+      1.417889065426858,
+      1.4459303163638824
+    ],
+    "forward": 4.350962451665486,
+    "release": true,
+    "drift": 0,
+    "trigger": false,
+    "keys": false,
+    "buttons": [],
+    "scale": 0.25
+  },
+  "anchor": {
+    "minSkinY": 0.1573722042612531,
+    "maxAnchorDrift": 0,
+    "contacts": 32,
+    "held": true,
+    "released": true
+  },
+  "rotation": {
+    "forwardError": 2.2878827954792387e-8,
+    "rollError": 1.275847806039117e-7
+  },
+  "limitations": [
+    "Mocked WebVR display/WebXR frame and controller; initial real stereo WebGL draw. Deterministic physics steps run real game/model/triangle collision with only compositor rendering stubbed.",
+    "No physical G2, real immersive compositor, native SDK, Android installation, latency/FPS or multiplayer test."
+  ]
+}

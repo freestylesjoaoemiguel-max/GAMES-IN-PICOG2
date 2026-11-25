@@ -1,0 +1,1316 @@
+{
+  "drive_file_id": "18jvpQ-GywpUh_D2ToaoyKRhdvKUau470",
+  "md5": "7f57c645cfba2d59979b729eec3f481b",
+  "files": [
+    {
+      "path": "LEIA-ME.txt",
+      "bytes": 2830,
+      "sha256": "32601db6b9616e218a3c459327ebb5bab1a39fce5ef44000d8352832d6f03614"
+    },
+    {
+      "path": "projeto-godot/i18n.gd",
+      "bytes": 1206,
+      "sha256": "a216cb5fc8d20d7f488aebc98cdd78fee7c7d8a5b6241c0fa04e9eeb02440eb4"
+    },
+    {
+      "path": "projeto-godot/main.gd",
+      "bytes": 52229,
+      "sha256": "1a6ff9a7782d2c7acc378d73ffd88a36168bf28bd533809e66e120f58b47ef06"
+    },
+    {
+      "path": "projeto-godot/arm_modifier.gd.uid",
+      "bytes": 20,
+      "sha256": "d5479c15366e019791c884c22ccffd452407d9126cb57d77781f9b654d1326fc"
+    },
+    {
+      "path": "projeto-godot/bones.gd.uid",
+      "bytes": 20,
+      "sha256": "653912ad42af3bf8e71e3d57f51f1ebb44bd4f3304c6a72876a19b80300cc138"
+    },
+    {
+      "path": "projeto-godot/touch_controls.gd.uid",
+      "bytes": 20,
+      "sha256": "117a9940e40fd383a711a538b5ed0daaf1cde270555e72888e5ea325b8c034c2"
+    },
+    {
+      "path": "projeto-godot/saw_split_visual.gd",
+      "bytes": 4713,
+      "sha256": "5bee3fcbe751261091ec728feafc016caaca6400f30d77f43e6ea08445eb01c7"
+    },
+    {
+      "path": "projeto-godot/grinner_prototipo.gd",
+      "bytes": 5025,
+      "sha256": "0d858ef50c3912cb956ddb510e89ecbd5eaca17f64a82172a2db63e2cfb3a50b"
+    },
+    {
+      "path": "projeto-godot/gore_effect.gd",
+      "bytes": 1149,
+      "sha256": "cc9f2ed81322abb02957e1f8b0c2dc4abdd69d29505a1415638ad98f8f4e72ab"
+    },
+    {
+      "path": "projeto-godot/injury_visual.gd.uid",
+      "bytes": 20,
+      "sha256": "162a0c58e84b6caef6c89cc1e21271ec631b642776ba4f976686d252e90b8215"
+    },
+    {
+      "path": "projeto-godot/vr_box.gd.uid",
+      "bytes": 19,
+      "sha256": "4bcd88dc6357cf0d62b1e3f7b163d3b32092570523cb1fa9dc53ff3f236ac93d"
+    },
+    {
+      "path": "projeto-godot/ragdoll.gd",
+      "bytes": 7239,
+      "sha256": "2619586e554600a4785291cc5433b29047eb90acf977716082edfcd51e64a9fd"
+    },
+    {
+      "path": "projeto-godot/menu.gd.uid",
+      "bytes": 20,
+      "sha256": "0ebb7cd77f18b1e7bf2061681a7c9bfd1fe946cd31d6758116787e19c6ba95f9"
+    },
+    {
+      "path": "projeto-godot/Grinner-remodelado_grinner_fur.png",
+      "bytes": 1711619,
+      "sha256": "89eea497bf4e14b9132048a91ca71c3921a5a2b0eb40437ae85de35276ac0143"
+    },
+    {
+      "path": "projeto-godot/chainsaw_visual.gd",
+      "bytes": 2575,
+      "sha256": "075c31049b65f45ec58c4a4033aa317ff60391cc3bf4fe24d377acf3a886d8fa"
+    },
+    {
+      "path": "projeto-godot/icon_gilamobi_foreground.png",
+      "bytes": 803,
+      "sha256": "0808d4df2d3e594a25c5ab259ac758d905a182d4e49d946f080ec9d8bca2fb8f"
+    },
+    {
+      "path": "projeto-godot/network.gd.uid",
+      "bytes": 20,
+      "sha256": "e98115c416db2e6a3e8ffc5df4748efc9c30537c9817fc80c4d74ef9cbb2559e"
+    },
+    {
+      "path": "projeto-godot/grinner_from_gilla_0.png",
+      "bytes": 5102062,
+      "sha256": "d3f0715b720b2da22bdc300a24c153ecb6a584c03ff1bffaa8abe45b8cdb2ce5"
+    },
+    {
+      "path": "projeto-godot/mirror.gd",
+      "bytes": 4176,
+      "sha256": "40d46829e2caffd51ceebcfaa2d27351ecf1d42facae2f17edef660d5862bfdc"
+    },
+    {
+      "path": "projeto-godot/Grinner-remodelado_grinner_fur.png.import",
+      "bytes": 889,
+      "sha256": "a2e777819e98b8b9d62d40c8bb062cfa0786a5389ecade9724b9d9b64e54a4f1"
+    },
+    {
+      "path": "projeto-godot/profile_name.gd.uid",
+      "bytes": 20,
+      "sha256": "9539e0d43b6d9e8bf6aa3b6e90b9ef953a1c526389919c32a15e90129d996487"
+    },
+    {
+      "path": "projeto-godot/vr_box.gd",
+      "bytes": 15743,
+      "sha256": "86229750c0c4edb0223cd9250c263be325baed48a9fd1748912c75f69a213aa4"
+    },
+    {
+      "path": "projeto-godot/sandbox_npc.gd.uid",
+      "bytes": 19,
+      "sha256": "ac3ca8431f08b0f09049f82a47b816de5bd8f3bc46efe629ed8f75e367d0b49f"
+    },
+    {
+      "path": "projeto-godot/voice_face.gd",
+      "bytes": 9124,
+      "sha256": "829ed18b1b87ec5adf092fa662bc72ef0a3374715701e194c9689f8a0b085ae5"
+    },
+    {
+      "path": "projeto-godot/injury_visual.gd",
+      "bytes": 9820,
+      "sha256": "541b942090c8b573f4b62d5a44d8e895bc77d5ced9185bb8598352c8fef044ad"
+    },
+    {
+      "path": "projeto-godot/vr_icon.gd.uid",
+      "bytes": 20,
+      "sha256": "c6c7f1db1ed9065755380ddacc2d2f29815a9f3c1a63d54bfcb1035a8463a5c8"
+    },
+    {
+      "path": "projeto-godot/camera_test.gd.uid",
+      "bytes": 20,
+      "sha256": "2f5456c3f06e016572937d67df1ba89404e683fdef3eb633be16031bc42b3aa3"
+    },
+    {
+      "path": "projeto-godot/backrooms_builder.gd",
+      "bytes": 13267,
+      "sha256": "d9e8e4f58388477471b15e34eccba9539bf8446696efbc8c668b1c2811064239"
+    },
+    {
+      "path": "projeto-godot/public_directory.gd.uid",
+      "bytes": 20,
+      "sha256": "1673dcaff5255924fd11f5b4066993e16760c0df8c6b5da9fee50244e585ee1b"
+    },
+    {
+      "path": "projeto-godot/base_builder.gd.uid",
+      "bytes": 20,
+      "sha256": "d368f0426ae4bb4b31f6c8063815bb4e46a64267fcde2e039cd8d0e224e32ad5"
+    },
+    {
+      "path": "projeto-godot/voice_codec.gd.uid",
+      "bytes": 20,
+      "sha256": "8e07b8756330ed37afe7b3aec82b2ff89a1e33b1fdf96b05e6164ac03c468e27"
+    },
+    {
+      "path": "projeto-godot/Grinner-remodelado_grinner_fur_dark.png.import",
+      "bytes": 905,
+      "sha256": "ab83b8dccca00fd20220d8d850f5f6241965894e7e1bd5b0dbea9909aaa59795"
+    },
+    {
+      "path": "projeto-godot/Grinner-remodelado.glb.import",
+      "bytes": 935,
+      "sha256": "26c27de2f1b23f68fffad688ce38f097ab690d8b9b6ed135fdeb6e757bb36c01"
+    },
+    {
+      "path": "projeto-godot/network.gd",
+      "bytes": 20135,
+      "sha256": "bef41c5f0af22817ce1692b09c1b776a16dad5530082bfa43c27acfa8e41644b"
+    },
+    {
+      "path": "projeto-godot/ragdoll_body.gd",
+      "bytes": 893,
+      "sha256": "c2094cc0e14df2806a38fee71d4da3c1005a03c0b9a364c55eb57f67f4bd8645"
+    },
+    {
+      "path": "projeto-godot/ragdoll.gd.uid",
+      "bytes": 20,
+      "sha256": "308bf827c2e5b9ecd1975b8b8165ca1b94efae9a3c629642de0e39e004c40395"
+    },
+    {
+      "path": "projeto-godot/vr_hud.gd.uid",
+      "bytes": 20,
+      "sha256": "3cd112c85a851f46dddf445d8b54ebc5c83e2208402db8fda6b4da23c7f7db13"
+    },
+    {
+      "path": "projeto-godot/Gilla_PlayerModel.fbx",
+      "bytes": 664924,
+      "sha256": "1dc80f9f5321e899d7c82ea802720ecbb98c92c2540ce4dd43c35cd726b0fb58"
+    },
+    {
+      "path": "projeto-godot/chat_bubble.gd",
+      "bytes": 1340,
+      "sha256": "9953a38bdfe73a53ea98df0a2ec08657011cc4af1136a4408589fa258cbb069f"
+    },
+    {
+      "path": "projeto-godot/remote_avatar.gd",
+      "bytes": 11981,
+      "sha256": "d57f708d0ab31f640a38102fc2c08b628d1a9f43a6bbef1ac3357444596c6f66"
+    },
+    {
+      "path": "projeto-godot/vr_hud.gd",
+      "bytes": 2652,
+      "sha256": "f30b3fbc6f755bdbf88c39acfc87f6d64dfc8ebc36f5b1e758b9f9cebf93df12"
+    },
+    {
+      "path": "projeto-godot/Gilla_Albedo.png.import",
+      "bytes": 770,
+      "sha256": "273e8f58291dfb67c2b088c1818bdf1704e09754cfccc2e5df1179d0b716a141"
+    },
+    {
+      "path": "projeto-godot/ragdoll_body.gd.uid",
+      "bytes": 19,
+      "sha256": "8942655593078470dbff7bde6319d3f2e6450baad844a3492b4f16af2f9ccf4a"
+    },
+    {
+      "path": "projeto-godot/remote_avatar.gd.uid",
+      "bytes": 20,
+      "sha256": "d996332fe9f40dd5e299370e863a802b7904bb5c0e25c24ecb00d2571a24328b"
+    },
+    {
+      "path": "projeto-godot/gore_effect.gd.uid",
+      "bytes": 20,
+      "sha256": "ac0a301561966c890e6cd720a9ceee8d248131d1bfaaa17bd426b510d519bb34"
+    },
+    {
+      "path": "projeto-godot/Grinner-remodelado.glb",
+      "bytes": 2039912,
+      "sha256": "e347c99fecf0e6f91ef2c9f71266e11787b5f0eb92dff1ed5e3aefb3ec671dd9"
+    },
+    {
+      "path": "projeto-godot/Gilla_Eye.png",
+      "bytes": 4077,
+      "sha256": "3864b01910ba113f657e9bcb78279e1cc22267998214d6b61e3fd4ecf0782fc5"
+    },
+    {
+      "path": "projeto-godot/grinner_from_gilla_0.png.import",
+      "bytes": 860,
+      "sha256": "1fa710871d2f2d4a5fbc8e0dcfd10b3dbe84583f07a7e66804f18d898a62dce3"
+    },
+    {
+      "path": "projeto-godot/chat_text.gd",
+      "bytes": 602,
+      "sha256": "d5436b71ff10b19ae68dd001b22232873b861c7436d92e1fb5b4347cf8e0ac2b"
+    },
+    {
+      "path": "projeto-godot/export_presets.cfg",
+      "bytes": 1037,
+      "sha256": "2ea50c32e408ebc06f83f40e469b56e1ca76bd78e8aab30c1cfd7a8a826f3c39"
+    },
+    {
+      "path": "projeto-godot/voice_codec.gd",
+      "bytes": 911,
+      "sha256": "e746c1da4c4be5eb54b8ff069abafff0d8ececcce170ccc8c06b4b78a3894f8f"
+    },
+    {
+      "path": "projeto-godot/grinner_from_gilla.glb.import",
+      "bytes": 935,
+      "sha256": "23ad956ea1a8945f984313bcf6e4ab483e75b0da2242d882eb9a9735e48e16f1"
+    },
+    {
+      "path": "projeto-godot/icon_gilamobi_foreground.png.import",
+      "bytes": 806,
+      "sha256": "9488b5304b3c6db397ad36597541f394ff078bc28a368703e7caeba5c05a8bb1"
+    },
+    {
+      "path": "projeto-godot/THIRD_PARTY_HAND_TRACKING.txt",
+      "bytes": 416,
+      "sha256": "37f0a510b2b5457df49afcb0d57e60db2dcfc7d7c456e5f52848d2aa8f5ec4ff"
+    },
+    {
+      "path": "projeto-godot/cosmetics.gd",
+      "bytes": 10800,
+      "sha256": "18e606e1c87e7000daf929929bd9e261f8c4e37b79b000273bccf96eae733cda"
+    },
+    {
+      "path": "projeto-godot/project.godot",
+      "bytes": 658,
+      "sha256": "c7b9e74ae18c24b6527756ad282b2a18883317e8024814bf8d0292936503909d"
+    },
+    {
+      "path": "projeto-godot/voice_face.gd.uid",
+      "bytes": 20,
+      "sha256": "8fc04e7dabb87f42a9815c30166c4910292f255ba757523924b4ce5aa86f3150"
+    },
+    {
+      "path": "projeto-godot/public_directory.gd",
+      "bytes": 4262,
+      "sha256": "ad0219a6035fcef6fa95d90a14e36c3df56e70943e68001327939462abb0ca15"
+    },
+    {
+      "path": "projeto-godot/avi_writer.gd",
+      "bytes": 2740,
+      "sha256": "d5780c736f5f127d9abe023fdabb054e0c5b356f33cf4bc240de431791abcdfa"
+    },
+    {
+      "path": "projeto-godot/camera_test.gd",
+      "bytes": 9023,
+      "sha256": "e1c10cddd0aff717e1740d52e328b30038fb77208bd6fc3d2d9b7924a2d2738e"
+    },
+    {
+      "path": "projeto-godot/facial_animation.gd",
+      "bytes": 903,
+      "sha256": "fe2f0d0fc07350c68c9afd7f48655999087554576b0d17777a340fcb9b565dee"
+    },
+    {
+      "path": "projeto-godot/hand_overlay.gd",
+      "bytes": 1017,
+      "sha256": "b0f5e9f7b47326ef1dc5c0ddc71a9602c4f2e96a89032aa7c872a62fe7d8c37f"
+    },
+    {
+      "path": "projeto-godot/sandbox_builder.gd.uid",
+      "bytes": 20,
+      "sha256": "16137e460dd98a326e0d28a5f04bdecc8f0fabb3a3435b43704f42180d366d37"
+    },
+    {
+      "path": "projeto-godot/split_visual.gd",
+      "bytes": 3945,
+      "sha256": "e03860becd6aadba4a9819098f8e5ea49e881f62b7374f5e0159dd9d94454eb4"
+    },
+    {
+      "path": "projeto-godot/chat_text.gd.uid",
+      "bytes": 19,
+      "sha256": "8d963b8efb827044a0769bd723c74c00c2821189fe6ce59bf548d09e5e7ccabb"
+    },
+    {
+      "path": "projeto-godot/LICENSE.txt",
+      "bytes": 7870,
+      "sha256": "14c6f6c236c933309f864914d0b6e089766f3fdeb3c2530f35e6633b7ac9492a"
+    },
+    {
+      "path": "projeto-godot/saw_split_visual.gd.uid",
+      "bytes": 20,
+      "sha256": "dd53b00eaddfc4e335411ec4939c50f79717d332db7c909ac390a741ee8d0b9e"
+    },
+    {
+      "path": "projeto-godot/cosmetics.gd.uid",
+      "bytes": 20,
+      "sha256": "23b70a0d92fe8fd224e234e3cb0afdb70b8f481f0a6f494f7c8d61aad071d4d1"
+    },
+    {
+      "path": "projeto-godot/Grinner-remodelado_grinner_fur_dark.png",
+      "bytes": 1405418,
+      "sha256": "d72bb58b700999368ae98a524eb70edc47b61cc202fa2e7a325bd1f08269409c"
+    },
+    {
+      "path": "projeto-godot/CREDITOS-MODELO.txt",
+      "bytes": 365,
+      "sha256": "51bd1c57edf703d4b2d3fe118073742f74e95c52291cd59f0c1b3d93e5f475ea"
+    },
+    {
+      "path": "projeto-godot/avi_writer.gd.uid",
+      "bytes": 20,
+      "sha256": "1e712ad91fad70044bfb164993d749817a7d2725ea4b6aae2e6b1fae7a8deae4"
+    },
+    {
+      "path": "projeto-godot/vr_icon.gd",
+      "bytes": 831,
+      "sha256": "4848f54445b46915e85de4cfda72f93a326b3c4c4b0ecf3048e6baff82f0a2b2"
+    },
+    {
+      "path": "projeto-godot/hammer_visual.gd.uid",
+      "bytes": 19,
+      "sha256": "a2e8d74d5c1a2e0e41714ff4e022afa4398f0fe1cfe47bc21ee510777ba15287"
+    },
+    {
+      "path": "projeto-godot/profile_name.gd",
+      "bytes": 626,
+      "sha256": "aa0fc8a2f08f055dfc25453638a083c9d6335518a238d9f7bc76825261cbe5e8"
+    },
+    {
+      "path": "projeto-godot/icon_gilamobi_192.png.import",
+      "bytes": 785,
+      "sha256": "c34377c9277cac7bece6e9284cc9e0c97af936692b635596277554753afacea8"
+    },
+    {
+      "path": "projeto-godot/menu.gd",
+      "bytes": 47239,
+      "sha256": "529476af01d737cd1879195fb9fc57a5fdaa17ed5bc970bb7a927242b7ed5793"
+    },
+    {
+      "path": "projeto-godot/sandbox_camera.gd",
+      "bytes": 5593,
+      "sha256": "fb28bb84ad9f6ea93b263a5e5d82d562f97cf365716bb348432840354706f570"
+    },
+    {
+      "path": "projeto-godot/chainsaw_visual.gd.uid",
+      "bytes": 20,
+      "sha256": "c634ed9111f3c3fe569d33b00fc74b0203ca1b917726bbedb52458b5af475c01"
+    },
+    {
+      "path": "projeto-godot/infection_round.gd",
+      "bytes": 2956,
+      "sha256": "77d06bef3c9cc8dc6ecc9aa054a65de4524659b363a9ea6c22cf75ced5fd2d39"
+    },
+    {
+      "path": "projeto-godot/hand_overlay.gd.uid",
+      "bytes": 20,
+      "sha256": "3015234827b4ad8c9e48cabf98703d125491caf3b8992404f923bb58c031dd0b"
+    },
+    {
+      "path": "projeto-godot/arm_modifier.gd",
+      "bytes": 2330,
+      "sha256": "15280700dc7e44a9c20d67346427a287ea18da0d4effd1f5799b88c497a81c28"
+    },
+    {
+      "path": "projeto-godot/grinner_from_gilla.glb",
+      "bytes": 6504964,
+      "sha256": "2b1d83eaecc1905ea3bad58f5c965b1dde6cc1a54792e2be240cc7970db60ce7"
+    },
+    {
+      "path": "projeto-godot/Gilla_PlayerModel.fbx.import",
+      "bytes": 961,
+      "sha256": "1dc2144acb2457b204c1033c657566c4bd2a5672d1c19351218f75f49f5d317f"
+    },
+    {
+      "path": "projeto-godot/grinner_prototipo.gd.uid",
+      "bytes": 19,
+      "sha256": "0fb8e44dda22270dd65346030923fc72ea061f7b4f25ff3c4e2c86e4a3f890b1"
+    },
+    {
+      "path": "projeto-godot/monster_model.gd",
+      "bytes": 3673,
+      "sha256": "922ba4584417960e65756a0a12967b9092cbcae9c2496d10ed88f05699119fac"
+    },
+    {
+      "path": "projeto-godot/touch_controls.gd",
+      "bytes": 21327,
+      "sha256": "7eee6b10c72eabaae4fd4aebc696f66c3e9b3d4973805f130eeea5baff6c6ce3"
+    },
+    {
+      "path": "projeto-godot/main.tscn",
+      "bytes": 155,
+      "sha256": "be5ac54bef9c193ca9d827bf0e6a8378c42efb087773f5f9ad9bd768b1dfb1ac"
+    },
+    {
+      "path": "projeto-godot/sandbox_npc.gd",
+      "bytes": 1689,
+      "sha256": "bc99fba0cc91148c9c9dbb9a4c06fee7c1e2fbab36ab7e4bb973b6fceb5b7277"
+    },
+    {
+      "path": "projeto-godot/icon_gilamobi_192.png",
+      "bytes": 51503,
+      "sha256": "7c23b80bc213e0c1f05d06aef9687d4d0453df951753cffbd39d34413bade655"
+    },
+    {
+      "path": "projeto-godot/intro.gd",
+      "bytes": 6783,
+      "sha256": "14c49ab0c2b827bbd18935f099250690a90986fe63382cb4e597e92bd4ce7873"
+    },
+    {
+      "path": "projeto-godot/i18n.gd.uid",
+      "bytes": 19,
+      "sha256": "eec18064167f9112de55fff762058f72627725fd11f13660651920e3de31146b"
+    },
+    {
+      "path": "projeto-godot/main.gd.uid",
+      "bytes": 19,
+      "sha256": "1076764f355cc73534f42a8a8131ed496e26b585edf505d71b41dd4a05343b42"
+    },
+    {
+      "path": "projeto-godot/chat_bubble.gd.uid",
+      "bytes": 19,
+      "sha256": "75f590373dbf717ec8a10429cd900cb97c55d41417327be932f6f82d9d980442"
+    },
+    {
+      "path": "projeto-godot/sandbox_builder.gd",
+      "bytes": 4847,
+      "sha256": "01b72290810eda7ac424ff87bf9b7cea142d512c2e189af4410d63beda9f3500"
+    },
+    {
+      "path": "projeto-godot/material_inspect.gd.uid",
+      "bytes": 19,
+      "sha256": "4a20b199a48e835a4edaa1f87ee552fcf2e8338824b973f3d6e18af513293500"
+    },
+    {
+      "path": "projeto-godot/infection_round.gd.uid",
+      "bytes": 20,
+      "sha256": "a9d43b19da1c42a8b82259b61e4f3534457d4eb622b63dfccb054e2827f4132e"
+    },
+    {
+      "path": "projeto-godot/Gilla_Eye.png.import",
+      "bytes": 761,
+      "sha256": "af35e1228cad3a4a5b0e747666200cff2111fb050d44e4b2b2cf14e7b9aea884"
+    },
+    {
+      "path": "projeto-godot/split_visual.gd.uid",
+      "bytes": 20,
+      "sha256": "1b0f251f344bfc76630c8269a0a000cdbcba96a2b6d03f6d19e4a6c24762710b"
+    },
+    {
+      "path": "projeto-godot/intro.gd.uid",
+      "bytes": 20,
+      "sha256": "7395e82f264fc49f297d625b6ec0adcc4abafb44748559c71e02f273af0e3382"
+    },
+    {
+      "path": "projeto-godot/sandbox_camera.gd.uid",
+      "bytes": 20,
+      "sha256": "5f7602ebee7215859ba44f434d21072cefbccfe7f56486fa9d4ffa0ba2f35cab"
+    },
+    {
+      "path": "projeto-godot/backrooms_builder.gd.uid",
+      "bytes": 20,
+      "sha256": "4d5936d56da2f0eae8252918924958e110cd825d8265335c4893378b05c8c7fd"
+    },
+    {
+      "path": "projeto-godot/Gilla_Albedo.png",
+      "bytes": 3138787,
+      "sha256": "6128ad7c9ca3103d6a909a9fc0e46f176b3c7da8dee0651a7695010c22db5637"
+    },
+    {
+      "path": "projeto-godot/facial_animation.gd.uid",
+      "bytes": 20,
+      "sha256": "44112316802176b753e6f13d59131c611a292816febdac1cca62a0a608026455"
+    },
+    {
+      "path": "projeto-godot/monster_model.gd.uid",
+      "bytes": 20,
+      "sha256": "9322ab10f454fb4d7c68c31d1290b02ac9e54b61fda1e1162cf99a8bb19f0f93"
+    },
+    {
+      "path": "projeto-godot/mirror.gd.uid",
+      "bytes": 19,
+      "sha256": "bf7b4940a73279b830d418d8d7e9791d06b8d9c036c7a9aff354af03067c4ec4"
+    },
+    {
+      "path": "projeto-godot/icon_gilamobi_background.png",
+      "bytes": 213088,
+      "sha256": "540f4aa4f8136a8307183214cf856c44a60c93459f3235c386cf1337c775a27e"
+    },
+    {
+      "path": "projeto-godot/vr_hand_control.gd.uid",
+      "bytes": 19,
+      "sha256": "57b51628e138643bcb92fa72cad0f913a3ee50137c89b1022be8dcf344022e77"
+    },
+    {
+      "path": "projeto-godot/inspect.gd.uid",
+      "bytes": 20,
+      "sha256": "86997919314b2caf3211af9d2c2da1d670590ec6e3a7adbc2ef103e25e9cce6e"
+    },
+    {
+      "path": "projeto-godot/GrinnerPrototipo.tscn",
+      "bytes": 176,
+      "sha256": "7e18ceaed5c26519ffde364057fd0c9ac8fb9fd36772d2a294d7bd2ebbe0f548"
+    },
+    {
+      "path": "projeto-godot/vr_lens.gdshader",
+      "bytes": 789,
+      "sha256": "be76ce7e95fe45215e3029fa66dd8d7bf54c1670385aaaa1f16958eb68dde9da"
+    },
+    {
+      "path": "projeto-godot/base_builder.gd",
+      "bytes": 20159,
+      "sha256": "8be36dc5ad159a5c5e3fca2c0f370c96b28261a5b2fc0f401412126d670aa9f5"
+    },
+    {
+      "path": "projeto-godot/icon_gilamobi_background.png.import",
+      "bytes": 806,
+      "sha256": "5e174b4b04f9088915408c2c39011f14faac0f8dc730bd643dd0002185ac1d62"
+    },
+    {
+      "path": "projeto-godot/vr_hand_control.gd",
+      "bytes": 7367,
+      "sha256": "8172e1c7809ba06fba09bcdce708b52beaaff2085d45d1796a22e0e30d73851d"
+    },
+    {
+      "path": "projeto-godot/vr_lens.gdshader.uid",
+      "bytes": 18,
+      "sha256": "ece34fcaa6d6f6d3a293e8612c6264069bb7f51e6c3a2a56ffd93c662720ec6d"
+    },
+    {
+      "path": "projeto-godot/fonts/LilitaOne-Regular.ttf.import",
+      "bytes": 753,
+      "sha256": "dd2c1fb98c235b7220929110aee381cc0615ffe613ddcd0c31bbe4a4a68958df"
+    },
+    {
+      "path": "projeto-godot/fonts/DEJAVU_LICENSE.txt",
+      "bytes": 3859,
+      "sha256": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9"
+    },
+    {
+      "path": "projeto-godot/fonts/DejaVuSans.ttf",
+      "bytes": 759720,
+      "sha256": "57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e"
+    },
+    {
+      "path": "projeto-godot/fonts/LILITA_ONE_LICENSE.txt",
+      "bytes": 4392,
+      "sha256": "255d5debbb80eb2ea762644311f266a279e8778f00156655a516e2b7781a63e1"
+    },
+    {
+      "path": "projeto-godot/fonts/LilitaOne-Regular.ttf",
+      "bytes": 28092,
+      "sha256": "f5b641c45c69d772ee4eda687bc9fda411d5cad6b0b45371491da4580cbc8d59"
+    },
+    {
+      "path": "projeto-godot/fonts/DejaVuSans.ttf.import",
+      "bytes": 733,
+      "sha256": "6d070029495de6fb7179c2c35c190a172f55666821fad58c3c0b26042af4945e"
+    },
+    {
+      "path": "projeto-godot/i18n/translations.json",
+      "bytes": 36673,
+      "sha256": "eebfb426b65574dc14f8eddab234078a0546f1dc7a88bfb7f09ae4b3cd7898c3"
+    },
+    {
+      "path": "projeto-godot/sounds/intro_impact.wav",
+      "bytes": 16802,
+      "sha256": "5da480a9e5820854f1c65e3346ab4c428fa43da8976012b0b41dfcff3b2a93b8"
+    },
+    {
+      "path": "projeto-godot/sounds/saw_cut.wav",
+      "bytes": 14156,
+      "sha256": "07b8b40d9277b52f296ffb38fbb990f56abb94fcdd5c02cb97b58ae64c205e2a"
+    },
+    {
+      "path": "projeto-godot/sounds/intro_pop.wav.import",
+      "bytes": 492,
+      "sha256": "ea8fde4225fbb450d3ef37416cefd3bbd3e8ce2a7859b77c67cc1151f2d5dcf3"
+    },
+    {
+      "path": "projeto-godot/sounds/intro_whoosh.wav",
+      "bytes": 19888,
+      "sha256": "5884c9c1637dcb952bbe2e3f2da176f541ac12ce926d0860bd8e05777018dda0"
+    },
+    {
+      "path": "projeto-godot/sounds/intro_impact.wav.import",
+      "bytes": 500,
+      "sha256": "ea914bdd61bebebc596b495fdb9c27cfc1f07812df43dba2f5c53e37ee7f413c"
+    },
+    {
+      "path": "projeto-godot/sounds/chainsaw_loop.wav",
+      "bytes": 176444,
+      "sha256": "80df3b3f12b8f017db7787cb58e8b338e3b24a3598b134e3c4717069a5555467"
+    },
+    {
+      "path": "projeto-godot/sounds/intro_pop.wav",
+      "bytes": 7100,
+      "sha256": "316633e4856fde2723d87de1d9a4e8decc1372c7ccd6cf8ac7d54e6f39771354"
+    },
+    {
+      "path": "projeto-godot/sounds/intro_whoosh.wav.import",
+      "bytes": 500,
+      "sha256": "43302d34d25eb19776a4e42a915bc3da4b841e8777a2ccd4acc9d6fa46b56f94"
+    },
+    {
+      "path": "projeto-godot/sounds/chainsaw_loop.wav.import",
+      "bytes": 504,
+      "sha256": "2e4ade5ad0335016906a649f765b496ca4fb024ae2ecff75a3a366007158e19a"
+    },
+    {
+      "path": "projeto-godot/sounds/saw_cut.wav.import",
+      "bytes": 486,
+      "sha256": "63eacb52ce83ec0af534bb988cb842f08659fdf0b2c9ca665fa24256017041d8"
+    },
+    {
+      "path": "projeto-godot/textures/loading_background.jpg.import",
+      "bytes": 796,
+      "sha256": "04bbd28512b5d34b52c99320aa10e1445bdb6d99bac2e5554b0ee264ae5fa969"
+    },
+    {
+      "path": "projeto-godot/textures/menu_pt.jpg.import",
+      "bytes": 763,
+      "sha256": "d2e7caa8f2e3625eabdbd09f594c143ecd67923ff6c57c25d6a4dc6de5844d3f"
+    },
+    {
+      "path": "projeto-godot/textures/loading_ru.jpg",
+      "bytes": 139633,
+      "sha256": "38f2755593ef10a66abac46302a1381ca5590cc4870ff9ae0445042378043d7c"
+    },
+    {
+      "path": "projeto-godot/textures/floor_base.png.import",
+      "bytes": 773,
+      "sha256": "1f7a0e9401ab56bd3a5743a24b53e96cad3d050493cfc27407a6f44c04cd95f6"
+    },
+    {
+      "path": "projeto-godot/textures/concrete_base.png",
+      "bytes": 60347,
+      "sha256": "fc6dc2202274e33b474efcefdfc31767767918baf7cd0f9510b5888b9c3e21dc"
+    },
+    {
+      "path": "projeto-godot/textures/menu_en.jpg.import",
+      "bytes": 764,
+      "sha256": "e0a331a3ca57f7035deef03331a1908f802537bdc81182ba9c883f11a3e78b10"
+    },
+    {
+      "path": "projeto-godot/textures/concrete_base.png.import",
+      "bytes": 782,
+      "sha256": "aee8fa1158bf9f9412e21f76e99a520a037438b2e8ee1bee6df19cbcc82e47f6"
+    },
+    {
+      "path": "projeto-godot/textures/menu_ru.jpg",
+      "bytes": 155980,
+      "sha256": "dca93d5237b37ed605df6ebdac1bc79cfdb5ab0d7b580df6f56f5b4ed0dc6ce5"
+    },
+    {
+      "path": "projeto-godot/textures/grinner_fur_dark.png.import",
+      "bytes": 791,
+      "sha256": "0cb8e781e5539e9514ab11eab6feb19dedd3d7f6fe83b3c92debc99b3e65cd34"
+    },
+    {
+      "path": "projeto-godot/textures/loading_ru.jpg.import",
+      "bytes": 773,
+      "sha256": "9eeea73463efe07ec43aa70ef3a7d9c2c539252e911bab9d4aa844b3825d0244"
+    },
+    {
+      "path": "projeto-godot/textures/menu_ru.jpg.import",
+      "bytes": 763,
+      "sha256": "2f7678a4ba4d6d8c750b71dd41e520b78bb288820f756acd20dd114b730648d3"
+    },
+    {
+      "path": "projeto-godot/textures/kinawjr_avatar.png",
+      "bytes": 215995,
+      "sha256": "1eed281ab48b9f7ac0f162a1751aca1c4fd142c8aefeb4a3f4a539601f61e8d9"
+    },
+    {
+      "path": "projeto-godot/textures/kinawjr_avatar.png.import",
+      "bytes": 785,
+      "sha256": "d7ecee153b5a95f7227080ecbbd578c715a3fa5450908d8b2539738ce1b66057"
+    },
+    {
+      "path": "projeto-godot/textures/menu_pt.jpg",
+      "bytes": 155453,
+      "sha256": "0ec4c66f8428cab4923eef3b73de00b9c1804c5efd9c60c356296cd006aa9495"
+    },
+    {
+      "path": "projeto-godot/textures/ceiling_base.png",
+      "bytes": 61841,
+      "sha256": "d7cf04dcffa2540e564c5e529467d636494e78d3187b46398cdedb518f48792e"
+    },
+    {
+      "path": "projeto-godot/textures/grinner_fur_dark.png",
+      "bytes": 1405418,
+      "sha256": "d72bb58b700999368ae98a524eb70edc47b61cc202fa2e7a325bd1f08269409c"
+    },
+    {
+      "path": "projeto-godot/textures/menu_en.jpg",
+      "bytes": 151857,
+      "sha256": "97bedcfd29a0163acd7f9ca91863bb406efb656ea5e0d88f47fd9a02dc9daa5d"
+    },
+    {
+      "path": "projeto-godot/textures/loading_en.jpg.import",
+      "bytes": 773,
+      "sha256": "f423786351f6176594d1dda58ec922b5872152b4342d752a3df32c5d4f81aad7"
+    },
+    {
+      "path": "projeto-godot/textures/loading_background.jpg",
+      "bytes": 139194,
+      "sha256": "93b0dbb7b506f61dfddd1508fa4a17f3e663837200301d4c25452baf5a878b00"
+    },
+    {
+      "path": "projeto-godot/textures/loading_pt.jpg",
+      "bytes": 139121,
+      "sha256": "9edda1b5e175d90b7960e1fa840640d569f51de545f113dcf08505ca785e229a"
+    },
+    {
+      "path": "projeto-godot/textures/floor_base.png",
+      "bytes": 61809,
+      "sha256": "f81f0c1deeb20702fd9ab023aa2993c161f12e143f47a2889ed2182081e882ac"
+    },
+    {
+      "path": "projeto-godot/textures/loading_pt.jpg.import",
+      "bytes": 773,
+      "sha256": "bdafa3e4b6b31fde14d9a9cabf8b1b1472c2009f997c94a9aaf5fa391f28c5b4"
+    },
+    {
+      "path": "projeto-godot/textures/menu_reference.jpg.import",
+      "bytes": 784,
+      "sha256": "4b3d68cb7d528ab6d4a02a262938e3fa0328f231f4c2b4ac0419d6361026dc01"
+    },
+    {
+      "path": "projeto-godot/textures/menu_reference.jpg",
+      "bytes": 150342,
+      "sha256": "bad72e621663be2458c4c639e01f93ab356daff98efdae085cb2c8d89db65719"
+    },
+    {
+      "path": "projeto-godot/textures/grinner_fur.png",
+      "bytes": 1711619,
+      "sha256": "89eea497bf4e14b9132048a91ca71c3921a5a2b0eb40437ae85de35276ac0143"
+    },
+    {
+      "path": "projeto-godot/textures/loading_en.jpg",
+      "bytes": 138346,
+      "sha256": "a55af45562b814879bf86d374c811632d8a367537ccf87839bc1c95cc497300d"
+    },
+    {
+      "path": "projeto-godot/textures/grinner_fur.png.import",
+      "bytes": 776,
+      "sha256": "21074af12f5db45c809badf8b98838d901aa55b35095ac83376e6a49bba41b9e"
+    },
+    {
+      "path": "projeto-godot/textures/ceiling_base.png.import",
+      "bytes": 779,
+      "sha256": "11d449baa334eb74d6c1daf9e342bf12d7fb27044598d9cf2962a2595425861e"
+    },
+    {
+      "path": "projeto-godot/addons/CameraServerExtension/CameraServerExtension.gdextension.uid",
+      "bytes": 20,
+      "sha256": "b6c29ad052ac23c6a350d5638f0aa53c710721f890516166038ee0c6b3836657"
+    },
+    {
+      "path": "projeto-godot/addons/CameraServerExtension/LICENSE",
+      "bytes": 1074,
+      "sha256": "143a1b19141c351bd32478c790a8f25bf38545918198ebe2859882bd0e1f5326"
+    },
+    {
+      "path": "projeto-godot/addons/CameraServerExtension/CameraServerExtension.gdextension",
+      "bytes": 381,
+      "sha256": "86539dc722b01862bfe2413235957f07b8dfb08e4cbcc138c2a4c8e46a57c5e3"
+    },
+    {
+      "path": "projeto-godot/addons/CameraServerExtension/x86_64/libcameraserver-extension.linux.so",
+      "bytes": 999144,
+      "sha256": "74473842146e9359d2bf64d0437101edeb94be2b14f8184203c8e3c6f19c286c"
+    },
+    {
+      "path": "projeto-godot/addons/CameraServerExtension/arm64/libcameraserver-extension.android.so",
+      "bytes": 842608,
+      "sha256": "1cd6b875495980890577ed5b12ae9b27c860c7816d934947b77460174a822981"
+    },
+    {
+      "path": "projeto-godot/addons/CameraServerExtension/arm32/libcameraserver-extension.android.so",
+      "bytes": 828852,
+      "sha256": "a309e4586dcb500bf29cec219d9da8db94caf02c0da0928ed5226a924f88c80b"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/simples.png.import",
+      "bytes": 777,
+      "sha256": "2be9af303f48add69a2a1dc1e799fda790c83afd7bf01a70d95e019b010fd600"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/simples_clean.png.import",
+      "bytes": 795,
+      "sha256": "32f214efcad89f7734971d30561ed087e3a104fbbed74a3814c2754a16e4ee67"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/principal_clean.png",
+      "bytes": 664302,
+      "sha256": "82ca973944ef6c9a2c2274efcc1e11ca284f16f593fc2ce3a37c9195559bfe37"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/simples.png",
+      "bytes": 777164,
+      "sha256": "589821cf69385e2d835d140e62030527d09c99bcb240623d41f480b122537e8e"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/dois_bracos_clean.png.import",
+      "bytes": 807,
+      "sha256": "2afa35350af09cc96b8033fe0677970b2dcebe9728c5cf4c8be857572c4b492c"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/dois_bracos_clean.png",
+      "bytes": 681232,
+      "sha256": "f47b41607e0f102e2f7b4bf9b946ec3a55aea7c10c3a0252590249d5e3b12ebf"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/principal.png",
+      "bytes": 776299,
+      "sha256": "3255587fc42d89f6f0c73d41e8ad28a0d130cbc77c5fbaca48825299bcfef1fb"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/simples_clean.png",
+      "bytes": 598722,
+      "sha256": "bdad5e2bb9a4dd795f3b424d94773ddc18ab18fd5d2b59870b62c723db47911d"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/dois_bracos.png.import",
+      "bytes": 790,
+      "sha256": "344c2d97c1a596a20411a825d30684afb7af403a93e7d29bc2812c072efc673c"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/principal_clean.png.import",
+      "bytes": 802,
+      "sha256": "e910f5b0c6eaeec34e4ae492db2991a56de440506b6fdc315404eff1b98ed4f3"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/dois_bracos.png",
+      "bytes": 793127,
+      "sha256": "70f5b3c2293292129c7b5b8edf490649136081c9b22d4cf60df38e1e6d100bed"
+    },
+    {
+      "path": "projeto-godot/textures/mode_previews/principal.png.import",
+      "bytes": 783,
+      "sha256": "4b15e9b56665cfafb868691edb9b21d512beb7f3d75dc86417b587cd663d1e5c"
+    },
+    {
+      "path": "projeto-godot/textures/flags/br.png",
+      "bytes": 4700,
+      "sha256": "92a60ed8e57dfb07512dff1ebfd68bd325b288054e84baaa3b7168f184fce012"
+    },
+    {
+      "path": "projeto-godot/textures/flags/us.png",
+      "bytes": 2769,
+      "sha256": "3c4f8bf266e7bf86279185b50678ef281581f3d32c03ff33ca2e32711f79fa42"
+    },
+    {
+      "path": "projeto-godot/textures/flags/br.png.import",
+      "bytes": 755,
+      "sha256": "a653c2ba5bf1e7bfc1926e31d38d0fe08b512a0807f9290dfd37e21109686a87"
+    },
+    {
+      "path": "projeto-godot/textures/flags/ru.png.import",
+      "bytes": 755,
+      "sha256": "243ba3b9497782c3ea3632c2b646180a4e5f76a374efd0b2a98d5d7be1204535"
+    },
+    {
+      "path": "projeto-godot/textures/flags/ru.png",
+      "bytes": 1453,
+      "sha256": "b4e05b6f3866af8419cb607fad9ee760a43203d77857ff1e81ce56809d7890f9"
+    },
+    {
+      "path": "projeto-godot/textures/flags/us.png.import",
+      "bytes": 755,
+      "sha256": "606be69e301e7e18cdfea7dab9ee408682d0ed035b2659e76373370e264ae0b6"
+    },
+    {
+      "path": "android-java/com/google/mediapipe/tasks/core/logging/RemoteLoggingClient.java",
+      "bytes": 391,
+      "sha256": "a54313298f5edeefd156ff86a8d835fc9f98133f698545b74b85309ea76f26df"
+    },
+    {
+      "path": "android-java/io/godot/camera/GodotCameraServer.java",
+      "bytes": 6255,
+      "sha256": "f98632c62f9b440fee033b7ae28d05829be6aeb4dd7d46a6271de890ec71985c"
+    },
+    {
+      "path": "android-java/io/godot/camera/GodotHandTracking.java",
+      "bytes": 9468,
+      "sha256": "f64cad256febc7885cd73ee90d006b6919fed45bf8d2da65df800fed24e66eff"
+    },
+    {
+      "path": "android-java/io/godot/camera/NativeVoiceCapture.java",
+      "bytes": 5791,
+      "sha256": "7e8480300d35d3d103fb52c0fc1344401757fc8bde491b54b0e7428b6db7063e"
+    },
+    {
+      "path": "android-java/io/godot/camera/VideoColor.java",
+      "bytes": 950,
+      "sha256": "e83de218b0eeff0aa6624fa54eda4a3a4c8328083762d22e5ff36f7c19c3eedc"
+    },
+    {
+      "path": "android-java/io/godot/camera/SandboxVideoPublisher.java",
+      "bytes": 3683,
+      "sha256": "b99ec05c194a14560eadb532a93a112b542b49b8db0bee179f76237cbcb2ab97"
+    },
+    {
+      "path": "android-java/io/godot/camera/GodotCameraFeed.java",
+      "bytes": 8296,
+      "sha256": "55728ab9a75f4d4806728f1fdc3e9a0d2c96de3a21249f159fb095245e568d9c"
+    },
+    {
+      "path": "android-java/io/godot/camera/TestFrameConverter.java",
+      "bytes": 1596,
+      "sha256": "ddf7350fc239824cbb1d60732ca225cff0e5c1801bb62ca92bfaaec0ebddaa6b"
+    },
+    {
+      "path": "android-java/io/godot/camera/FastCamera.java",
+      "bytes": 6903,
+      "sha256": "b8d5f93061bd165ac3cf4159ed172ea513386009acba8edd2b21d7bb28a28333"
+    },
+    {
+      "path": "android-java/io/godot/camera/FrameConverter.java",
+      "bytes": 1990,
+      "sha256": "bbadb82058024b04073c649d1cf5cd658395c4c4af66e3b22cb414eab66303f1"
+    },
+    {
+      "path": "android-java/io/godot/camera/TestNoPreview.java",
+      "bytes": 1000,
+      "sha256": "f8072488ac65be6c84eb5a64c2a9ab093d56ac63e7b10bef87465c07af232d98"
+    },
+    {
+      "path": "android-java/io/godot/camera/SandboxVideoRecorder.java",
+      "bytes": 6516,
+      "sha256": "599db522f1751293076775f16917419fa0f03f33ec9e70865c70e8ee98ad64e5"
+    },
+    {
+      "path": "android-java/io/godot/camera/DeviceOrientation.java",
+      "bytes": 2333,
+      "sha256": "4381bb309af0ba78b089e37ce549600f41ec5cbf041c8f8c63bfdb0c54652476"
+    },
+    {
+      "path": "camera-extension/.clang-tidy",
+      "bytes": 785,
+      "sha256": "d9358b50208d7ce0d5e5f03561303581770100f7ae6d7cc42d9e1f8dc06222db"
+    },
+    {
+      "path": "camera-extension/README.md",
+      "bytes": 4012,
+      "sha256": "6ae74d5dbb111294f28613de03c5a9c43c8047eb7a6a2c26191c291e968a6442"
+    },
+    {
+      "path": "camera-extension/LICENSE",
+      "bytes": 1074,
+      "sha256": "143a1b19141c351bd32478c790a8f25bf38545918198ebe2859882bd0e1f5326"
+    },
+    {
+      "path": "camera-extension/.gitmodules",
+      "bytes": 90,
+      "sha256": "6b579e601168eb697a7dcd573dc2860f03080c88fb7bcf40e46ab5510af414bb"
+    },
+    {
+      "path": "camera-extension/.gitignore",
+      "bytes": 2603,
+      "sha256": "49b4fda5083eae16d9d8ebaa697a1ab1d96218361a3089eaa2b5d844fef864f9"
+    },
+    {
+      "path": "camera-extension/.clang-format",
+      "bytes": 6778,
+      "sha256": "e45973f0896fe0c12971d00642c716335e34e8107cf4092a272e8db8a0fcdf16"
+    },
+    {
+      "path": "camera-extension/SConstruct",
+      "bytes": 1296,
+      "sha256": "c1e5a00d835aba9c79a6c98a7c9261f8f2f0e5c9d1d99c6f5e764ff86339dca8"
+    },
+    {
+      "path": "camera-extension/android/settings.gradle",
+      "bytes": 199,
+      "sha256": "dabed7b75a21c27229eea9da547fa5fcaf6aa782b89c87f09d26bfb34a6eaccd"
+    },
+    {
+      "path": "camera-extension/android/gradlew",
+      "bytes": 5766,
+      "sha256": "63135287117a1e6d12c84580f1f49c61d1ba02218ecd28660605e97f976e7d65"
+    },
+    {
+      "path": "camera-extension/android/gradlew.bat",
+      "bytes": 2763,
+      "sha256": "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b"
+    },
+    {
+      "path": "camera-extension/android/build.gradle",
+      "bytes": 539,
+      "sha256": "aff8350282f4a8ff547022661b9035ac60db0b904585348893e8347aa0f94736"
+    },
+    {
+      "path": "camera-extension/android/gradle.properties",
+      "bytes": 1358,
+      "sha256": "4443da28b45f4228957c857cc189a0c333d6bc5d5fddb861fe400c57da781cc1"
+    },
+    {
+      "path": "camera-extension/android/.gitignore",
+      "bytes": 109,
+      "sha256": "953e05d6ae9332078d4473241b9313699bd9b53bdaeb241694f8cca20a82218d"
+    },
+    {
+      "path": "camera-extension/src/camera_server.cpp",
+      "bytes": 1674,
+      "sha256": "a558da59e9120bda0ae63d6e5bb93f6905f1b0f0b7be73134bf9d42b7f23c767"
+    },
+    {
+      "path": "camera-extension/src/buffer_decoder.cpp",
+      "bytes": 6557,
+      "sha256": "ce99926e571a468131486183720d03ea02726076aba6694e31f3802504ed5723"
+    },
+    {
+      "path": "camera-extension/src/camera_feed.h",
+      "bytes": 1206,
+      "sha256": "ca28f566008763f6a12dcb4c1efdcaa06bd0633bbefeea588f3f65f0f9cb9335"
+    },
+    {
+      "path": "camera-extension/src/camera_feed.cpp",
+      "bytes": 1589,
+      "sha256": "265c8daf30de67804c0691c2d69972ce2a765c0024e7ad13f91ef0e902018c1d"
+    },
+    {
+      "path": "camera-extension/src/camera_server.h",
+      "bytes": 965,
+      "sha256": "4fc1c2f96be76e8b446b6769aa90f0e04624cbe5d2fcb8d5d170aac8f5bec4b0"
+    },
+    {
+      "path": "camera-extension/src/buffer_decoder.h",
+      "bytes": 4220,
+      "sha256": "9ef0f1c5f9e69ea85dd0a5974996969e288baeae0d8fb87938ccab636610362b"
+    },
+    {
+      "path": "camera-extension/src/register_types.cpp",
+      "bytes": 1071,
+      "sha256": "6b86eb9074135ee652d76297de647447c7295fcf6ae4913273af40b4a1223023"
+    },
+    {
+      "path": "camera-extension/.github/workflows/build-web.yml",
+      "bytes": 886,
+      "sha256": "70c7f3c30fbff17f06abb50bd8dcb4674abeebe68a8394f967f972bf5f1923ab"
+    },
+    {
+      "path": "camera-extension/.github/workflows/build-macos.yml",
+      "bytes": 1015,
+      "sha256": "d73864b9ee1eb52752e66eed4c42d22ce5bb321c45cf481b8fb208be818f7b49"
+    },
+    {
+      "path": "camera-extension/.github/workflows/build.yml",
+      "bytes": 605,
+      "sha256": "8d7264312588a26fb4f751c526a990379cf0130695d2d315966ae61e70e7fc3b"
+    },
+    {
+      "path": "camera-extension/.github/workflows/build-linux.yml",
+      "bytes": 1362,
+      "sha256": "ef9efed827fceab4dc3209ced889ea2cead241df330fff92eeb5fd2ecfa83e37"
+    },
+    {
+      "path": "camera-extension/.github/workflows/build-ios.yml",
+      "bytes": 970,
+      "sha256": "9fac9c131aae3b12913b95d1db5a88f65ed02ef2f9250d93af54385dd0b92daa"
+    },
+    {
+      "path": "camera-extension/.github/workflows/build-android.yml",
+      "bytes": 1532,
+      "sha256": "9dba3fdfdb575c4c3e795d17b7dd2f735a66cf876bcd1c20d119ebae11f34104"
+    },
+    {
+      "path": "camera-extension/.github/workflows/release.yml",
+      "bytes": 1877,
+      "sha256": "c694331dafb007fce06970328edd99f362ef7dead34cad7db5984dc67279eb9f"
+    },
+    {
+      "path": "camera-extension/.github/workflows/build-windows.yml",
+      "bytes": 827,
+      "sha256": "defebbebb7128a9cf651a32d170f00927d9ca419632f70158cef2b0e065efa30"
+    },
+    {
+      "path": "camera-extension/addons/CameraServerExtension/plugin.gd",
+      "bytes": 262,
+      "sha256": "50f30ce50b754c965ed7aa4b6e1b85a5c2c2c3de95acbad62ef13942a7543f5a"
+    },
+    {
+      "path": "camera-extension/addons/CameraServerExtension/plugin.cfg",
+      "bytes": 106,
+      "sha256": "f7f42f005096db1bdf89d828a7c6a16f43793059eae3979bebcdfc1d258fd3cf"
+    },
+    {
+      "path": "camera-extension/addons/CameraServerExtension/CameraServerExtension.gdextension",
+      "bytes": 1612,
+      "sha256": "6c09fe15790ea2cd215e0bfcb100d6deed54212587afc5cd1a42ef14a29ed2ea"
+    },
+    {
+      "path": "camera-extension/addons/CameraServerExtension/android_export_plugin.gd",
+      "bytes": 634,
+      "sha256": "b729f45d616235617203f17b18f68daf3c93d1dfb499e4e23265133e258b7b27"
+    },
+    {
+      "path": "camera-extension/src/linux/camera_server_linux.h",
+      "bytes": 1591,
+      "sha256": "985fe31c2d16a576e6bae42cfcdf0536df9248a09e7e0ae1e5a9d6835145970e"
+    },
+    {
+      "path": "camera-extension/src/linux/camera_server_linux.cpp",
+      "bytes": 6789,
+      "sha256": "c1e56e4330a34f6eeeed2d2c041d7e111eb56b674f00daf615af5d118d89de7e"
+    },
+    {
+      "path": "camera-extension/src/linux/portal.h",
+      "bytes": 566,
+      "sha256": "303494b42b873011a89a9a29db7f0472c87245ff05923f1ed34bc3ff2bcbbaa6"
+    },
+    {
+      "path": "camera-extension/src/linux/camera_feed_linux.cpp",
+      "bytes": 8587,
+      "sha256": "baa294ec37bdaf36d88f8284123d5efe08e709fe505d8d3bc20a18a18702c396"
+    },
+    {
+      "path": "camera-extension/src/linux/camera_feed_linux.h",
+      "bytes": 1881,
+      "sha256": "32f6be37b73f7ef0b2789d01bb8ee8f33cb4e8166abf74767bfdaddd5f3c70d1"
+    },
+    {
+      "path": "camera-extension/src/linux/portal.cpp",
+      "bytes": 1771,
+      "sha256": "6d908f9a7923b9a4d2cc0cd6b8c5bf11d9fcd58c69fc5a5b64e56764c224470e"
+    },
+    {
+      "path": "camera-extension/src/apple/camera_feed_apple.mm",
+      "bytes": 5703,
+      "sha256": "e457d3aaae304b2059363282a23bceff0f742b154759fdc4505a952428410fce"
+    },
+    {
+      "path": "camera-extension/src/apple/camera_server_apple.mm",
+      "bytes": 4200,
+      "sha256": "5c77950812f5aaf0e3b2e17419e6e06179ff6ea5ad79982fe4e9c24dc360be7f"
+    },
+    {
+      "path": "camera-extension/src/apple/camera_feed_apple.h",
+      "bytes": 1194,
+      "sha256": "81999abe211eef24910ba3e53dc607a8b35efae708af582b5824d9462a96dd44"
+    },
+    {
+      "path": "camera-extension/src/apple/camera_server_apple.h",
+      "bytes": 561,
+      "sha256": "280220b25cbf58b46a5c4985dbf3ba19ab3d4b89cb7cc33a92d9cad993e657de"
+    },
+    {
+      "path": "camera-extension/src/android/camera_server_android.cpp",
+      "bytes": 2812,
+      "sha256": "ac3131fd006631c3edf306daa3af83e385532aa8821e4762a8e914b96ed79cb2"
+    },
+    {
+      "path": "camera-extension/src/android/jni.cpp",
+      "bytes": 351,
+      "sha256": "c604c9365f6317bd39a5958385cc96df81006041b20a9fac752e1654e3bd60b7"
+    },
+    {
+      "path": "camera-extension/src/android/jni.h",
+      "bytes": 111,
+      "sha256": "53f80e3fdcab55a57b3e6cb46f7c739ee169a0ceeb4b2cac7f7ae9129bae0cef"
+    },
+    {
+      "path": "camera-extension/src/android/camera_server_android.h",
+      "bytes": 815,
+      "sha256": "6180964634e4af9ebb42db116a24ae51838ec9298fdb908aea6d2aa84bc6fc29"
+    },
+    {
+      "path": "camera-extension/src/android/camera_feed_android.cpp",
+      "bytes": 5477,
+      "sha256": "b6a74a10d7510c67428a6bb6d4447b30c2e267c1215a0f3bf7d05bdd832480f3"
+    },
+    {
+      "path": "camera-extension/src/android/camera_feed_android.h",
+      "bytes": 1760,
+      "sha256": "5b4b3bdc4b4357f18fa8d0c083b14461ae78e68c50090abd1b30c3333e943f41"
+    },
+    {
+      "path": "camera-extension/src/windows/camera_feed_windows.cpp",
+      "bytes": 7400,
+      "sha256": "b34d85391f6e9c50e6fb02f4b9d834df17a81231ef1cb1d9978e7a1133d50734"
+    },
+    {
+      "path": "camera-extension/src/windows/camera_feed_windows.h",
+      "bytes": 2181,
+      "sha256": "e7c19b86c53a5bf0aa808bb4ce493a363f44bcbb2a3cf1f5d7eaa54f8b360b43"
+    },
+    {
+      "path": "camera-extension/src/windows/camera_server_windows.h",
+      "bytes": 350,
+      "sha256": "b222e5188009115232466cfff99ed1c2b3c0c24e89cfa303601c38ace6ee1d3a"
+    },
+    {
+      "path": "camera-extension/src/windows/camera_server_windows.cpp",
+      "bytes": 2880,
+      "sha256": "200fa4e29ac37546e60c8b17b44ea6a3183013f90a04720875f031b4ecb1652a"
+    },
+    {
+      "path": "camera-extension/src/dummy/camera_server_dummy.cpp",
+      "bytes": 288,
+      "sha256": "01d962954194fd7e998dc9e47225d4253e7eb3e4e36a2f6560062da1b6f1f7d2"
+    },
+    {
+      "path": "camera-extension/src/dummy/camera_feed_dummy.h",
+      "bytes": 223,
+      "sha256": "4b44de79cb4dd65464f6fba97e289c27d3bce2cafd6e67eb2d3796075b120ec8"
+    },
+    {
+      "path": "camera-extension/src/dummy/camera_server_dummy.h",
+      "bytes": 265,
+      "sha256": "4444a7ff9d2b2aa15e95b8ea0223df5dc41a06ca9b3ae2ca26854d711211c361"
+    },
+    {
+      "path": "camera-extension/src/dummy/camera_feed_dummy.cpp",
+      "bytes": 272,
+      "sha256": "49ca78b4257f705ef24f5ef35b04946835cd916b5d52e5356fe5cad53a7d90cf"
+    },
+    {
+      "path": "camera-extension/android/src/main/AndroidManifest.xml",
+      "bytes": 279,
+      "sha256": "5947a767994e110b566f915bc8493846a5c1ec0be829cfa0f791010612ae7af1"
+    },
+    {
+      "path": "camera-extension/android/src/main/java/io/godot/camera/GodotCameraServer.java",
+      "bytes": 6267,
+      "sha256": "aee71a4c821748cf209165da1007c7e07cc00c27cc353fc3908530e631518a59"
+    },
+    {
+      "path": "camera-extension/android/src/main/java/io/godot/camera/GodotCameraFeed.java",
+      "bytes": 8153,
+      "sha256": "a452e723018dab78133f654d32eb5fcb907ae245515bca27f0a8ef2ad7904561"
+    },
+    {
+      "path": "camera-extension/android/gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 200,
+      "sha256": "f1da2d7623b57de31dd95970e88eba2e09ca099ee427c29aaa980ac8b73f2901"
+    },
+    {
+      "path": "camera-extension/android/gradle/wrapper/gradle-wrapper.jar",
+      "bytes": 59203,
+      "sha256": "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637"
+    },
+    {
+      "path": "ferramentas-referencia/build_dex_v51.py",
+      "bytes": 1318,
+      "sha256": "480536eb90f23c45553ab8b00d117bb70b07c598f0caa4acf82fcb990438435a"
+    },
+    {
+      "path": "ferramentas-referencia/patch_v51_template.py",
+      "bytes": 2686,
+      "sha256": "bbc6fc5855e5bfab2722965c62caa6f53b661bba26f7baf807d3d5050ff50f02"
+    },
+    {
+      "path": "ferramentas-referencia/build.gradle",
+      "bytes": 243,
+      "sha256": "73a6a7d7c5cb6044d91a32f5ac67ab2b8b9697c909e0a80f426e74e5f2557a22"
+    },
+    {
+      "path": "ferramentas-referencia/settings.gradle",
+      "bytes": 37,
+      "sha256": "c6dd495cc3e8bfe26dbf012cd9eb0a3d493acddfae4a14a2b69b7e781a10bf74"
+    },
+    {
+      "path": "modelos/hand_landmarker.task",
+      "bytes": 7819105,
+      "sha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1"
+    }
+  ]
+}

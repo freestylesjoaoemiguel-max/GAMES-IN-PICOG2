@@ -1,0 +1,105 @@
+{
+  "passed": [
+    "Generic touchpad XR source with zero/emulated position uses 3DoF arm, not a hidden wrist at XR origin",
+    "Neutral gorilla wrist in first-person frustum with bent articulated elbow",
+    "Actual skinned gorilla hand follows controller pitch, yaw AND roll, not just a moving pointer",
+    "Actual gorilla wrist completes 360 degrees on all three axes without an Euler-angle clamp or flipped hand",
+    "Opening VR menu keeps tracked hand visible; laser originates at gorilla wrist",
+    "GPU pixel readback proves avatar renders around the visible wrist (not only bone transforms)",
+    "Moving/resting hand in free air creates no false surface propulsion",
+    "Actual game pushes body upward from floor contact with open hand, no trigger and no double integration",
+    "Trigger holds only a genuinely contacting hand; articulated arm stays attached to anchor",
+    "Release detaches hand and keeps bounded measured launch velocity",
+    "Three open-hand floor strokes advance the real player horizontally with gravity enabled and no buttons/joystick/keyboard",
+    "Pose loss shows resting hand and explicit warning rather than claiming live tracking"
+  ],
+  "errors": [],
+  "pixelProof": 2483,
+  "neutral": {
+    "wrist": [
+      0.22000015043136195,
+      99.74999972238456,
+      -0.6499998016808762
+    ],
+    "target": [
+      0.22,
+      99.75,
+      -0.65
+    ],
+    "projection": [
+      0.36253023713510024,
+      -0.5492884724551953,
+      0.6940016000288172
+    ],
+    "forwardError": 1.5379879684334196e-13,
+    "rollError": 2.2500358426643623e-14,
+    "elbowSlack": 0.5468855265527574
+  },
+  "menu": {
+    "wrist": [
+      0.22000015043190335,
+      99.74999972238355,
+      -0.6499998016801598
+    ],
+    "target": [
+      0.22,
+      99.75,
+      -0.65
+    ],
+    "projection": [
+      0.362530237136392,
+      -0.5492884724580176,
+      0.6940016000284778
+    ],
+    "forwardError": 2.0542491638036532e-13,
+    "rollError": 1.3803316963571453e-13,
+    "elbowSlack": 0.5468855265534984
+  },
+  "rotation360": {
+    "maxForwardError": 1.8641473757403984e-8,
+    "maxRollError": 5.796028085865548e-8
+  },
+  "walkDistance": 2.372147736223908,
+  "strokes": [
+    {
+      "before": [
+        0,
+        1.1000000000000003,
+        0
+      ],
+      "after": [
+        -3.5464890634733674e-11,
+        1.1,
+        -0.7907166687241894
+      ],
+      "forward": 0.7907166687241894
+    },
+    {
+      "before": [
+        -3.5464890634733674e-11,
+        1.1,
+        -0.7907166687241894
+      ],
+      "after": [
+        -7.092984576440104e-11,
+        1.1000000000000003,
+        -1.5814322024740484
+      ],
+      "forward": 0.7907155337498589
+    },
+    {
+      "before": [
+        -7.092984576440104e-11,
+        1.1000000000000003,
+        -1.5814322024740484
+      ],
+      "after": [
+        -1.063948005239099e-10,
+        1.1000000000000003,
+        -2.372147736223908
+      ],
+      "forward": 0.7907155337498597
+    }
+  ],
+  "limitations": "Real Chromium/WebGL and supplied skinned model; XR pose/session is a fixture, no physical PICO G2 or actual immersive session validation."
+}
