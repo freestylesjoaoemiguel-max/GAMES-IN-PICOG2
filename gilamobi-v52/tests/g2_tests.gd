@@ -6,7 +6,9 @@ var passed: Array[String]=[]
 var failed: Array[String]=[]
 func check(ok: bool,label: String) -> void:
     if ok: passed.append(label)
-    else: failed.append(label)
+    else:
+        failed.append(label)
+        push_error("G2 regression: "+label)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
     var motion:=Motion.new()
