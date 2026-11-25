@@ -1,0 +1,52 @@
+name: Build GilaMobi v52 WebXR
+on:
+  pull_request:
+    paths: ['gilamobi-v52/source/**', 'gilamobi-v52/tools/**', 'gilamobi-v52/tests/**', '.github/workflows/build-gilamobi-v52.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: '4.4.1'
+          use-dotnet: false
+          include-templates: true
+      - name: Import and export the actual supplied Godot project
+        run: |
+          set -o pipefail
+          bash gilamobi-v52/tools/build.sh 2>&1 | tee /tmp/gila-build.log
+      - name: Surface build errors
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/gila-build.log').read_text() if Path('/tmp/gila-build.log').exists() else 'Toolchain setup failed'
+          errors=[x for x in s.splitlines() if 'ERROR' in x or 'Error' in x or 'at:' in x]
+          print('::error title=Godot build::'+ ('\n'.join(errors[-65:]) or s[-5000:]).replace('%','%25').replace('\n','%0A'))
+          PY
+      - name: Keep generated web export on the same working branch
+        if: success() && (github.head_ref || github.ref_name) == 'arena/2eb20bb8-games-in-picog2'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gilamobi-v52/web gilamobi-v52/docs/BUILD.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Build GilaMobi v52 WebXR export with Godot 4.4.1"
+            git push origin HEAD:arena/2eb20bb8-games-in-picog2
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GilaMobi-v52-WebXR-build-reports
+          path: |
+            gilamobi-v52/build/*.log
+            gilamobi-v52/docs/
+            gilamobi-v52/web/

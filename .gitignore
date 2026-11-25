@@ -62,3 +62,8 @@ __pycache__/
 /gorilla-rush-v45/node_modules/
 /gorilla-rush-v45/build/
 /gorilla-rush-v45/downloads/
+
+# Separate GilaMobi v52 source port; imports, toolchains and archives are generated.
+/gilamobi-v52/source/.godot/
+/gilamobi-v52/downloads/
+/gilamobi-v52/build/
