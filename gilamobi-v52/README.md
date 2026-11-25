@@ -64,7 +64,7 @@ No headset, use HTTPS; `localhost` no headset não é seu PC. O workflow **Build
 
 ## Evidências e arquivos
 
-**Registro da compilação anterior 1.0.0:** [GitHub Actions 45530833066](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45530833066). Foram aprovados **37 testes do motor** e **22 verificações no navegador**. Os testes incluem gesto estimado contra o piso real, soltura, raio no menu e download AVI, além de entrada/saída/reentrada em sessão.
+**Compilação aprovada 1.0.1:** [GitHub Actions 45654558497](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45654558497). Foram aprovados **56 testes do motor** e **27 verificações no navegador**. Os testes incluem gesto estimado contra o piso real, soltura, raio no menu e download AVI, além de entrada/saída/reentrada em sessão.
 
 **Download do projeto completo:** nessa compilação, abra **Artifacts → GilaMobi-v52-WebXR-build-reports** (aproximadamente 68 MB). O ZIP inclui fontes modificadas, referências recebidas, export Web, ferramentas, testes, instruções e relatórios. É necessário entrar no GitHub; artefatos têm prazo de expiração. O projeto também permanece versionado nesta pasta do repositório.
 

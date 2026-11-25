@@ -141,7 +141,11 @@ func run() -> void:
             var remote=game.network.peers["remote_fixture"]
             remote._process(1.0)
             var received:Quaternion=remote.goals[0].global_basis.get_rotation_quaternion()
-            ok=ok and absf(received.dot(q))>.9999 and remote.rotation_valid[0] and not remote.rotation_valid[1]
+            remote.arm_modifiers[0]._process_modification()
+            var hand_index:int=remote.rig.find_bone("hand_L")
+            var hand_pose:Transform3D=remote.rig.get_bone_global_pose(hand_index)
+            var visible_palm:Basis=remote.rig.global_basis.orthonormalized()*hand_pose.basis.orthonormalized()*remote.arm_modifiers[0].g2_palm_local
+            ok=ok and absf(received.dot(q))>.9999 and absf(visible_palm.get_rotation_quaternion().dot(q))>.9999 and remote.rotation_valid[0] and not remote.rotation_valid[1]
         check(ok,"Remote full 360-degree rotation roundtrip axis %s"%axis)
     var peer=game.network.peers["remote_fixture"]
     check(peer.vr_label.visible and peer.vr_label.text=="[VR PICO G2]" and peer.vr_label.modulate==Color("ff0000"),"Remote VR badge exact text and red color")
