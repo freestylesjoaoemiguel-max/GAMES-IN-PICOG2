@@ -1,8 +1,8 @@
-# GilaMobi v52 — G2 Web 1.0.1
+# GilaMobi v52 — G2 Web 1.0.2
 
 Este é o **projeto Godot enviado**, com seus mapas, personagens e sistemas, não uma troca de nome em outro jogo. A versão web fica separada de OpenSaber, Gorilla Rush e MonkeGo.
 
-**Versão 1.0.1 publicada:** [Jogar GilaMobi v52](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gilamobi-v52/?v=1.0.1). [Publicação GitHub Pages concluída](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45657169000).
+**Versão 1.0.2 publicada:** [Jogar GilaMobi v52](https://freestylesjoaoemiguel-max.github.io/GAMES-IN-PICOG2/gilamobi-v52/?v=1.0.2).
 
 ## Compatibilidade — leia antes
 
@@ -13,11 +13,15 @@ Este é o **projeto Godot enviado**, com seus mapas, personagens e sistemas, nã
 - **Não testado num Pico G2 físico.** Firmware/navegador/versão do seu aparelho ainda não foram informados. Não há garantia de FPS, conforto, autonomia, instalação nem compatibilidade específica com o navegador instalado. Veja `docs/COMPATIBILITY.md`.
 - **Não é APK VR nativo.** A rota escolhida foi WebXR/GitHub Pages; o projeto Android original dependia de template/plugin nativo não fornecido por completo.
 
-## Correção 1.0.1
+## Correção 1.0.2
+
+**O corpo vira para onde você olha.** O yaw horizontal da cabeça agora orienta o torso e o estado enviado aos outros jogadores. O referencial WebXR não gira junto: não há rotação acumulada da câmera nem caminhada automática ao olhar. Inclinar a cabeça não inclina a cápsula do corpo.
+
+**Sua identificação também existe no avatar local:** `[VR PICO G2]` vermelho acima do nome verde, visível no espelho e na câmera Sandbox. Antes havia apenas a etiqueta remota e o espelho era desligado em VR. Agora o espelho fica ativo quando próximo/visível, com a resolução de qualidade existente; isso tem custo adicional de renderização ainda não medido no G2. O texto fica acima do avatar, não preso à visão em primeira pessoa.
 
 Movimento clássico do v52 restaurado, mantendo as mãos seguindo o controle. Corrigida a altura virtual 3DoF que podia impedir contato com o piso. O lobby permite escolher o nome; em VR os clientes atualizados mostram **[VR PICO G2] em vermelho** acima do **nome verde**, e recebem o giro completo das mãos. Veja `docs/CHANGELOG.md`.
 
-Reabra o jogo com `?v=1.0.1` e confira **1.0.1 no painel**. Os outros jogadores também precisam atualizar para ver a etiqueta e a rotação; versões antigas não conhecem esses campos. A versão anterior está preservada no histórico/artefato indicado no changelog.
+Reabra o jogo com `?v=1.0.2` e confira **1.0.2 no painel**. Os outros jogadores também precisam atualizar para ver a etiqueta e a rotação; versões antigas não conhecem esses campos. A versão anterior está preservada no histórico/artefato indicado no changelog.
 
 ## Como usar
 
@@ -64,9 +68,9 @@ No headset, use HTTPS; `localhost` no headset não é seu PC. O workflow **Build
 
 ## Evidências e arquivos
 
-**Compilação final aprovada 1.0.1:** [GitHub Actions 45655143379](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45655143379). Foram aprovados **56 testes do motor** e **27 verificações no navegador**. Os testes incluem gesto estimado contra o piso do jogo, altura virtual 3DoF, nome no lobby, etiqueta e cores, serialização/recepção do estado e rotação de 360° nos três eixos aplicada aos ossos das mãos remotas. Também cobrem soltura, raio no menu, download AVI e entrada/saída/reentrada em sessão.
+**Compilação final aprovada 1.0.2:** [GitHub Actions 45713294180](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45713294180). Foram aprovados **65 testes do motor** e **35 verificações no navegador**. As novas verificações incluem corpo acompanhando o olhar para esquerda/direita por vários frames sem feedback, poses mundiais das mãos preservadas, ausência de caminhada artificial, polos verticais, identificação local/recriação do personagem e leitura de pixels GL vermelhos/verdes realmente renderizados. Os testes também incluem gesto estimado contra o piso do jogo, altura virtual 3DoF, nome no lobby, etiqueta e cores, serialização/recepção do estado e rotação de 360° nos três eixos aplicada aos ossos das mãos remotas. Também cobrem soltura, raio no menu, download AVI e entrada/saída/reentrada em sessão.
 
-**Publicação concluída:** [GitHub Pages 45657169000](https://github.com/freestylesjoaoemiguel-max/GAMES-IN-PICOG2/actions/runs/45657169000), com as verificações dos jogos anteriores aprovadas. Esses resultados usam poses/sessões simuladas; não são ensaio em Pico G2 físico nem partida entre dois headsets pela internet.
+Esses resultados usam poses/sessões simuladas; não são ensaio em Pico G2 físico nem partida entre dois headsets pela internet.
 
 **Download do projeto completo:** nessa compilação, abra **Artifacts → GilaMobi-v52-WebXR-build-reports** (aproximadamente 68 MB). O ZIP inclui fontes modificadas, referências recebidas, export Web, ferramentas, testes, instruções e relatórios. É necessário entrar no GitHub; artefatos têm prazo de expiração. O projeto também permanece versionado nesta pasta do repositório.
 
