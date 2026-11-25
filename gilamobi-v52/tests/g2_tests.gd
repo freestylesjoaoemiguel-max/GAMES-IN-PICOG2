@@ -173,7 +173,7 @@ func run() -> void:
     # Real outgoing JSON -> incoming state dispatcher -> actual remote rig.
     rig.immersive=true
     rig._attach_player()
-    check(rig.local_identity.get_parent()==game.player and rig.local_identity.vr_label.visible and rig.local_identity.name_label.position.y==2.45,"Grinner rebuild recreates local identity at correct height")
+    check(rig.local_identity.get_parent()==game.player and rig.local_identity.vr_label.visible and is_equal_approx(rig.local_identity.name_label.position.y,2.45),"Grinner rebuild recreates local identity at correct height")
     check((game.sandbox_camera.lens.cull_mask & 4)!=0,"Sandbox recording camera includes complete local avatar and identity")
     for height in [0.0,1.6,2.8]:
         rig.head.position.y=height
